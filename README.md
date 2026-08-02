@@ -1,43 +1,81 @@
 # Broker Insight AI
 
-Krungsri Hackathon Prototype
+**Safe portfolio label:** Broker Insight AI - Krungsri Hackathon Prototype
 
-## Overview
+Broker Insight AI is a single-file web prototype for an insurance-broker workflow. It explores how a broker could review a simulated customer priority list, inspect customer information, read explainable signals, and prepare a follow-up conversation.
 
-Broker Insight AI is a single-file web prototype for an insurance-broker workflow. It presents a read-only view of customer prioritisation, customer information, simulated insights, conversation topics, and after-sales follow-up.
+## Krungsri Hackathon context
 
-## Problem and proposed concept
+The official project name is **Broker Insight AI**. This repository contains a demonstration prototype only; it is not a Krungsri production system.
 
-The prototype explores how AI-assisted summaries and explainable business-rule signals could support an insurance broker. The broker remains responsible for checking the information and making the final decision.
+## Problem
 
-## Intended users
+Insurance brokers may need to review customer information, identify which relationships need attention, and prepare an appropriate conversation. The prototype explores how a prioritised view and explainable summaries could support that review.
 
-The workflow is designed around an insurance-broker user who reviews customer information and uses prioritisation and summaries to support a conversation. The exact production user roles are not confirmed beyond the prototype interface.
+## Proposed solution
 
-## Key features shown in the prototype
+The interface combines simulated business-rule signals with simulated AI-style summaries. The broker remains responsible for checking the information and making the final decision.
+
+## Target user and main workflow
+
+The prototype is designed around an insurance-broker user. The production user roles are not confirmed beyond the current interface.
+
+1. Review the simulated customer priority list.
+2. Select a customer profile.
+3. Check the simulated KYC, financial-product, loan, insurance, transaction, and contact fields.
+4. Review the simulated importance score and its explanation.
+5. Read the simulated insight and suggested conversation topics.
+6. Review the simulated after-sales follow-up information.
+
+## Key prototype features
 
 - Customer priority list based on simulated business rules
-- Customer profile overview with simulated KYC, financial-product, loan, insurance, transaction, and CRM fields
+- Customer profile overview with simulated KYC and relationship information
 - Simulated importance score with an explanation
-- Simulated AI insight summary and conversation topics
-- After-sales relationship follow-up information
+- Simulated AI-style insight summary
+- Suggested conversation topics
+- Simulated after-sales relationship follow-up
 
-## Technology and how to open
+## Screenshots
 
-The prototype is a self-contained HTML, CSS, and JavaScript page with no build step or external dependency. Open `index.html` in a modern web browser.
+![Broker Insight AI dashboard](docs/screenshots/broker-insight-ai-dashboard.png)
 
-## Working and simulated scope
+![Broker Insight AI customer workflow](docs/screenshots/broker-insight-ai-customer-workflow.png)
 
-The page presents client-side prototype screens and interactions. Customer records, KYC fields, financial details, CRM information, importance scores, and AI summaries are simulated for demonstration.
+## Prototype versus production
 
-The source states that the prototype is not connected to real AI, a database, or a Krungsri internal system. It does not select an insurance product or create a sales script.
+This is a client-side static prototype. It is not connected to real AI, a database, a Krungsri internal system, or a production insurance system. It does not select an insurance product or create a sales script.
 
-## Data, privacy, and limitations
+All customer records, KYC fields, financial details, CRM information, scores, insights, and follow-up values are simulated. The score is not a certified prediction and does not represent a proven accuracy result.
 
-The source describes all displayed customer names, dates, activities, and business details as fictional prototype data. No real banking customer data, account information, credentials, or internal-system connection is included in the inspected source.
+## How to open
 
-The simulated score is not a certified prediction or a proven accuracy result. Verify competition and privacy requirements before changing this repository from Private visibility.
+Open `index.html` in a modern web browser. No build step, package manager, server, or external dependency is required.
 
-## Hackathon context
+## Demo
 
-This project is organized under the official product name **Broker Insight AI** for the **Krungsri Hackathon**.
+Live public demo is not enabled while the Hackathon repository remains private.
+
+## 60-second judging walkthrough
+
+1. Open `index.html`.
+2. Start with the priority list on the left.
+3. Select a different customer profile.
+4. Point out the simulated score, explanation, insight, conversation topics, and follow-up information.
+5. Explain that the screen demonstrates decision support only and contains fictional data.
+
+## Current limitations
+
+- No real AI service, database, authentication, or internal-system connection
+- No production user-role validation
+- No certified scoring or model-accuracy result
+- No product recommendation or automated sales-script generation
+- No public live demo while the Hackathon repository remains Private
+
+## Future development
+
+Future work would require verified competition requirements, approved data governance, validated user roles, and an explicit production integration plan. Those items are outside the scope of this static prototype.
+
+## License and reuse
+
+License and reuse permissions have not yet been published. All rights remain with the project contributors unless otherwise stated.
