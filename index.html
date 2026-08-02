@@ -1,0 +1,1062 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Broker Insight AI — ต้นแบบสำหรับการแข่งขัน Hackathon</title>
+  <style>
+    :root {
+      --ink: #17313a;
+      --ink-soft: #4e646b;
+      --muted: #74858b;
+      --line: #dce6e8;
+      --line-strong: #c8d8da;
+      --canvas: #f3f7f7;
+      --surface: #ffffff;
+      --surface-soft: #f7faf9;
+      --teal: #0b7875;
+      --teal-dark: #075d5b;
+      --teal-soft: #e4f3f1;
+      --high: #b5544f;
+      --high-soft: #fcedeb;
+      --medium: #ad7416;
+      --medium-soft: #fff4dd;
+      --low: #3e8061;
+      --low-soft: #e8f4ed;
+      --shadow: 0 12px 32px rgba(24, 56, 63, 0.07);
+      --radius-lg: 18px;
+      --radius-md: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-width: 1120px;
+      background: var(--canvas);
+    }
+
+    body {
+      margin: 0;
+      min-width: 1120px;
+      color: var(--ink);
+      background: var(--canvas);
+      font-family: Tahoma, "Leelawadee UI", Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .page-shell {
+      width: min(1480px, 100%);
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 24px 30px 28px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 17px 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .brand-block,
+    .panel-heading,
+    .detail-header,
+    .card-heading,
+    .customer-top,
+    .score-row,
+    .selected-customer {
+      display: flex;
+      align-items: center;
+    }
+
+    .brand-block {
+      gap: 13px;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 46px;
+      height: 46px;
+      place-items: center;
+      border-radius: 14px;
+      color: #ffffff;
+      background: var(--teal-dark);
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+    }
+
+    .eyebrow,
+    .card-kicker,
+    .info-label,
+    .relationship-label,
+    .selected-label {
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      margin-top: 1px;
+      color: var(--ink);
+      font-size: 25px;
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      color: var(--ink);
+      font-size: 16px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin-top: 4px;
+      color: var(--ink-soft);
+      font-size: 14px;
+    }
+
+    .header-status {
+      display: grid;
+      align-items: center;
+      min-height: 30px;
+      padding: 6px 11px;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      color: var(--ink-soft);
+      background: var(--surface-soft);
+      font-size: 11px;
+      font-weight: 800;
+      line-height: 1.35;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr);
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .panel,
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .priority-panel {
+      display: flex;
+      min-height: 0;
+      height: 100%;
+      flex-direction: column;
+      padding: 19px;
+    }
+
+    .panel-heading {
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .panel-heading h2 {
+      margin-top: 4px;
+    }
+
+    .customer-count {
+      padding: 5px 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--ink-soft);
+      background: var(--surface-soft);
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .panel-intro {
+      margin-top: 12px;
+      color: var(--ink-soft);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .customer-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 17px;
+    }
+
+    .customer-item {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      color: inherit;
+      background: var(--surface);
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+      transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+    }
+
+    .customer-item:hover {
+      border-color: #9fc9c6;
+      background: #f8fbfb;
+    }
+
+    .customer-item:focus-visible {
+      outline: 3px solid rgba(11, 120, 117, 0.22);
+      outline-offset: 2px;
+    }
+
+    .customer-item.is-selected {
+      border-color: #8fc8c3;
+      background: #f0f8f7;
+      box-shadow: inset 3px 0 0 var(--teal);
+    }
+
+    .customer-top {
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .customer-name {
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .customer-score {
+      color: var(--ink);
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .score-caption {
+      display: block;
+      margin-top: -3px;
+      color: var(--muted);
+      font-size: 9px;
+      text-align: right;
+    }
+
+    .customer-meta {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 9px;
+    }
+
+    .priority-pill,
+    .selected-status,
+    .review-tag {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .priority-pill {
+      padding: 4px 7px;
+    }
+
+    .priority-pill.high {
+      color: var(--high);
+      background: var(--high-soft);
+    }
+
+    .priority-pill.medium {
+      color: var(--medium);
+      background: var(--medium-soft);
+    }
+
+    .priority-pill.low {
+      color: var(--low);
+      background: var(--low-soft);
+    }
+
+    .customer-reason {
+      margin-top: 9px;
+      color: var(--ink-soft);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .panel-note {
+      margin-top: auto;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.55;
+    }
+
+    .details-area {
+      min-width: 0;
+    }
+
+    .detail-header {
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 42px;
+      padding: 0 2px 11px;
+    }
+
+    .detail-header h2 {
+      margin-top: 3px;
+    }
+
+    .selected-status {
+      gap: 6px;
+      padding: 6px 9px;
+      border: 1px solid #b8d9d5;
+      color: var(--teal-dark);
+      background: var(--teal-soft);
+    }
+
+    .selected-status::before {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--teal);
+      content: "";
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: 237px 218px 218px;
+      gap: 14px;
+    }
+
+    .card {
+      min-width: 0;
+      overflow: hidden;
+      padding: 16px 18px;
+    }
+
+    .snapshot-card {
+      grid-column: 1 / -1;
+    }
+
+    .card-heading {
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .heading-left {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .feature-index {
+      display: grid;
+      width: 24px;
+      height: 24px;
+      place-items: center;
+      border-radius: 8px;
+      color: var(--teal-dark);
+      background: var(--teal-soft);
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .heading-left h2 {
+      margin-top: 3px;
+    }
+
+    .selected-customer {
+      gap: 7px;
+      color: var(--ink-soft);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .selected-initials {
+      display: grid;
+      width: 27px;
+      height: 27px;
+      place-items: center;
+      border-radius: 9px;
+      color: var(--teal-dark);
+      background: var(--teal-soft);
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .snapshot-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 9px;
+      margin-top: 14px;
+    }
+
+    .info-group {
+      min-width: 0;
+      padding: 9px 11px;
+      border: 1px solid #e5edef;
+      border-radius: var(--radius-md);
+      background: var(--surface-soft);
+    }
+
+    .info-label,
+    .relationship-label {
+      display: block;
+      font-size: 9px;
+      letter-spacing: 0.08em;
+    }
+
+    .info-details {
+      display: grid;
+      gap: 4px;
+      margin: 6px 0 0;
+    }
+
+    .data-row {
+      display: grid;
+      grid-template-columns: 74px minmax(0, 1fr);
+      gap: 6px;
+      font-size: 10px;
+      line-height: 1.35;
+    }
+
+    .data-row dt {
+      color: var(--muted);
+    }
+
+    .data-row dd {
+      margin: 0;
+      overflow-wrap: anywhere;
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .single-value {
+      display: block;
+      margin-top: 6px;
+      color: var(--ink);
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .score-row {
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .score-value-box {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      min-width: 112px;
+      padding: 8px 11px;
+      border: 1px solid #cfe3e0;
+      border-radius: 13px;
+      color: var(--teal-dark);
+      background: var(--teal-soft);
+    }
+
+    .score-value-box strong {
+      font-size: 34px;
+      line-height: 1;
+      letter-spacing: -0.05em;
+    }
+
+    .score-value-box span {
+      color: var(--teal);
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .score-context {
+      min-width: 0;
+    }
+
+    .score-context .priority-pill {
+      margin-bottom: 5px;
+    }
+
+    .score-summary {
+      color: var(--ink-soft);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .reason-list,
+    .topic-list {
+      display: grid;
+      gap: 6px;
+      margin: 12px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .reason-list li,
+    .topic-list li {
+      position: relative;
+      padding-left: 15px;
+      color: var(--ink-soft);
+      font-size: 11px;
+      line-height: 1.55;
+    }
+
+    .reason-list li::before,
+    .topic-list li::before {
+      position: absolute;
+      top: 0.52em;
+      left: 1px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--teal);
+      content: "";
+    }
+
+    .mock-note,
+    .ai-note,
+    .discussion-note {
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    .mock-note {
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid var(--line);
+    }
+
+    .mock-note::before {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      margin: 0 5px 1px 0;
+      border-radius: 50%;
+      background: var(--medium);
+      content: "";
+    }
+
+    .insight-body {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      gap: 11px;
+      margin-top: 17px;
+    }
+
+    .insight-mark {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border: 1px solid #cfe3e0;
+      border-radius: 11px;
+      color: var(--teal-dark);
+      background: var(--teal-soft);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+    }
+
+    .insight-copy {
+      color: var(--ink);
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .ai-note {
+      margin-top: 10px;
+    }
+
+    .review-tag {
+      margin-top: 14px;
+      padding: 5px 8px;
+      color: var(--teal-dark);
+      background: var(--teal-soft);
+    }
+
+    .discussion-note {
+      margin-top: 13px;
+      padding-top: 9px;
+      border-top: 1px solid var(--line);
+    }
+
+    .relationship-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 9px;
+      margin-top: 17px;
+    }
+
+    .relationship-item {
+      min-width: 0;
+      padding: 9px 10px;
+      border: 1px solid #e5edef;
+      border-radius: var(--radius-md);
+      background: var(--surface-soft);
+    }
+
+    .relationship-value {
+      display: block;
+      margin-top: 4px;
+      overflow-wrap: anywhere;
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.55;
+    }
+
+    .relationship-item.engagement {
+      grid-column: 1 / -1;
+    }
+
+    .relationship-item.engagement .relationship-value {
+      color: var(--teal-dark);
+    }
+
+    @media (max-height: 820px) and (min-width: 1120px) {
+      .page-shell {
+        padding-top: 16px;
+        padding-bottom: 18px;
+      }
+
+      .topbar {
+        padding-top: 15px;
+        padding-bottom: 15px;
+      }
+
+      .dashboard-grid {
+        margin-top: 14px;
+      }
+
+      .priority-panel {
+        min-height: 680px;
+      }
+
+      .detail-grid {
+        grid-template-rows: 220px 202px 202px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <div class="brand-block">
+        <div class="brand-mark" aria-hidden="true">AI</div>
+        <div>
+          <div class="eyebrow">พื้นที่ทำงานนายหน้าประกัน</div>
+          <h1>Broker Insight AI</h1>
+          <p class="subtitle">ผู้ช่วย AI สำหรับนายหน้าประกัน</p>
+        </div>
+      </div>
+
+      <div class="header-meta">
+        <div class="prototype-label">
+          <span class="label-dot" aria-hidden="true"></span>
+          <span>ต้นแบบสำหรับการแข่งขัน Hackathon</span>
+          <span class="label-divider" aria-hidden="true">—</span>
+          <span>ข้อมูลจำลอง</span>
+        </div>
+        <div class="human-loop">
+          <span class="notice-icon" aria-hidden="true">!</span>
+          <p><strong>การทำงานร่วมกันระหว่าง AI กับมนุษย์:</strong> AI ช่วยสรุปและวิเคราะห์ข้อมูลเพื่อสนับสนุนการทำงาน นายหน้าประกันต้องตรวจสอบข้อมูลและเป็นผู้ตัดสินใจขั้นสุดท้าย แนวคิดในระบบจริงจะใช้เฉพาะข้อมูลจากระบบภายในที่ได้รับอนุญาตเท่านั้น ต้นแบบนี้ใช้ข้อมูลจำลอง และยังไม่ได้เชื่อมต่อ AI จริง ระบบให้คะแนน ฐานข้อมูล หรือระบบภายใน</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard-grid">
+      <aside class="priority-panel panel" aria-labelledby="priority-list-title">
+        <div class="panel-heading">
+          <div>
+            <div class="eyebrow">01 / รายการ</div>
+            <h2 id="priority-list-title">รายชื่อลูกค้าตามลำดับความสำคัญ</h2>
+          </div>
+          <span class="customer-count">3 โปรไฟล์</span>
+        </div>
+        <p class="panel-intro">ลูกค้าจำลอง เรียงตามตัวชี้วัดความสำคัญแบบจำลองที่อธิบายได้ด้วยกฎธุรกิจ</p>
+        <div id="priority-list" class="customer-list" role="list" aria-label="รายชื่อลูกค้าจำลองตามลำดับความสำคัญ"></div>
+        <p class="panel-note">ชื่อ ข้อมูล วันที่ และกิจกรรมของลูกค้าทั้งหมดเป็นข้อมูลสมมติ จัดทำขึ้นเพื่อการนำเสนอต้นแบบนี้เท่านั้น</p>
+      </aside>
+
+      <section class="details-area" aria-labelledby="customer-detail-title">
+        <div class="detail-header">
+          <div>
+            <div class="eyebrow">โปรไฟล์ที่เลือก</div>
+            <h2 id="customer-detail-title">รายละเอียดลูกค้า</h2>
+          </div>
+          <div id="selected-status" class="selected-status">เลือกโปรไฟล์ที่มีความสำคัญสูงสุดเป็นค่าเริ่มต้น</div>
+        </div>
+
+        <div class="detail-grid">
+          <section class="card snapshot-card" aria-labelledby="snapshot-title">
+            <div class="card-heading">
+              <div class="heading-left">
+                <span class="feature-index">01</span>
+                <div>
+                  <div class="card-kicker">ข้อมูลสำคัญในที่เดียว</div>
+                  <h2 id="snapshot-title">ภาพรวมข้อมูลลูกค้า</h2>
+                </div>
+              </div>
+              <div class="selected-customer">
+                <span id="selected-initials" class="selected-initials">นว</span>
+                <span id="selected-name">นที วาริน</span>
+              </div>
+            </div>
+
+            <div class="snapshot-grid">
+              <div class="info-group">
+                <span class="info-label">ข้อมูล KYC พื้นฐาน</span>
+                <dl id="kyc-details" class="info-details"></dl>
+              </div>
+              <div class="info-group">
+                <span class="info-label">ผลิตภัณฑ์ทางการเงิน</span>
+                <span id="products-value" class="single-value"></span>
+              </div>
+              <div class="info-group">
+                <span class="info-label">สถานะสินเชื่อ</span>
+                <span id="loan-value" class="single-value"></span>
+              </div>
+              <div class="info-group">
+                <span class="info-label">ประกันที่ถืออยู่</span>
+                <span id="policies-value" class="single-value"></span>
+              </div>
+              <div class="info-group">
+                <span class="info-label">สรุปข้อมูลธุรกรรม</span>
+                <span id="transactions-value" class="single-value"></span>
+              </div>
+              <div class="info-group">
+                <span class="info-label">ประวัติการติดต่อจาก CRM</span>
+                <span id="contact-value" class="single-value"></span>
+              </div>
+            </div>
+          </section>
+
+          <section class="card" aria-labelledby="score-title">
+            <div class="card-heading">
+              <div class="heading-left">
+                <span class="feature-index">02</span>
+                <div>
+                  <div class="card-kicker">เหตุผลประกอบคะแนน</div>
+                  <h2 id="score-title">คะแนนความสำคัญ</h2>
+                </div>
+              </div>
+            </div>
+
+            <div class="score-row">
+              <div class="score-value-box"><strong id="selected-score">88</strong><span>/100 จำลอง</span></div>
+              <div class="score-context">
+                <span id="selected-level" class="priority-pill high">ความสำคัญสูง</span>
+                <p id="score-summary" class="score-summary">ใกล้ครบกำหนดต่ออายุและไม่มีประวัติการติดต่อล่าสุด จึงควรจัดลำดับให้ติดตามก่อน</p>
+              </div>
+            </div>
+            <ul id="priority-reasons" class="reason-list"></ul>
+            <p class="mock-note">ตัวชี้วัดความสำคัญแบบจำลองจากกฎธุรกิจ — ไม่ใช่การคาดการณ์ที่ผ่านการรับรองหรือผลความแม่นยำที่พิสูจน์แล้ว</p>
+          </section>
+
+          <section class="card" aria-labelledby="insight-title">
+            <div class="card-heading">
+              <div class="heading-left">
+                <span class="feature-index">03</span>
+                <div>
+                  <div class="card-kicker">สรุปข้อมูลจำลองจาก AI</div>
+                  <h2 id="insight-title">ข้อมูลเชิงลึกจาก AI</h2>
+                </div>
+              </div>
+            </div>
+
+            <div class="insight-body">
+              <div class="insight-mark" aria-hidden="true">AI</div>
+              <div>
+                <p id="insight-copy" class="insight-copy"></p>
+                <p class="ai-note">ข้อมูลนี้เป็นตัวช่วยให้นายหน้าประกันตรวจสอบ และไม่ได้เลือกผลิตภัณฑ์ประกันให้</p>
+              </div>
+            </div>
+            <span class="review-tag">นายหน้าประกันต้องตรวจสอบก่อนนำไปใช้</span>
+          </section>
+
+          <section class="card" aria-labelledby="discussion-title">
+            <div class="card-heading">
+              <div class="heading-left">
+                <span class="feature-index">04</span>
+                <div>
+                  <div class="card-kicker">เตรียมประเด็นพูดคุย</div>
+                  <h2 id="discussion-title">หัวข้อแนะนำสำหรับการพูดคุย</h2>
+                </div>
+              </div>
+            </div>
+
+            <ul id="discussion-list" class="topic-list"></ul>
+            <p class="discussion-note">เป็นเพียงหัวข้อสำหรับพูดคุย ต้นแบบนี้ไม่ได้สร้างสคริปต์การขายหรือเลือกผลิตภัณฑ์</p>
+          </section>
+
+          <section class="card" aria-labelledby="relationship-title">
+            <div class="card-heading">
+              <div class="heading-left">
+                <span class="feature-index">05</span>
+                <div>
+                  <div class="card-kicker">การดูแลหลังการขาย</div>
+                  <h2 id="relationship-title">การดูแลความสัมพันธ์หลังการขายด้วย AI</h2>
+                </div>
+              </div>
+            </div>
+
+            <div class="relationship-grid">
+              <div class="relationship-item">
+                <span class="relationship-label">วันครบกำหนดต่ออายุกรมธรรม์</span>
+                <span id="relationship-renewal" class="relationship-value"></span>
+              </div>
+              <div class="relationship-item">
+                <span class="relationship-label">วันที่ติดต่อล่าสุด</span>
+                <span id="relationship-last-contact" class="relationship-value"></span>
+              </div>
+              <div class="relationship-item">
+                <span class="relationship-label">สถานะการชำระเบี้ย</span>
+                <span id="relationship-payment" class="relationship-value"></span>
+              </div>
+              <div class="relationship-item">
+                <span class="relationship-label">ช่วงเวลาที่แนะนำให้ติดตาม</span>
+                <span id="relationship-follow-up" class="relationship-value"></span>
+              </div>
+              <div class="relationship-item engagement">
+                <span class="relationship-label">การมีส่วนร่วมของลูกค้า (ความยินยอม)</span>
+                <span id="relationship-engagement" class="relationship-value"></span>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Fictional records for the presentation-only prototype.
+    const mockCustomers = [
+      {
+        id: "arun-viriya",
+        name: "นที วาริน",
+        initials: "นว",
+        score: 88,
+        level: "High",
+        shortReason: "ใกล้ครบกำหนดต่ออายุ · ไม่ได้ติดต่อลูกค้ามาระยะหนึ่ง",
+        scoreSummary: "ใกล้ครบกำหนดต่ออายุและไม่มีประวัติการติดต่อล่าสุด จึงควรจัดลำดับให้ติดตามก่อน",
+        snapshot: {
+          kyc: [
+            ["สถานะ", "ยืนยันแล้ว"],
+            ["ช่องทางติดต่อ", "โทรศัพท์"],
+            ["การทบทวน", "ควรทบทวนเมื่อติดต่อครั้งถัดไป"]
+          ],
+          products: "บัญชีออมทรัพย์ · กองทุนรวม",
+          loan: "สินเชื่อบ้าน · อยู่ระหว่างผ่อนชำระตามปกติ",
+          policies: "ประกันชีวิต · มีผลบังคับ; ครบกำหนดต่ออายุ 23 ส.ค. 2569",
+          transactions: "ชำระเบี้ยตามปกติในเดือน ก.ค. 2569",
+          contact: "ติดต่อล่าสุด: 6 ต.ค. 2568 · ทบทวนประจำปี"
+        },
+        priorityReasons: [
+          "กรมธรรม์ใกล้ครบกำหนดต่ออายุ (23 ส.ค. 2569)",
+          "ไม่ได้ติดต่อลูกค้าตั้งแต่ 6 ต.ค. 2568",
+          "ควรทบทวนความคุ้มครองก่อนต่ออายุ"
+        ],
+        insight: "กรมธรรม์ประกันชีวิตยังมีผลบังคับ แต่วันต่ออายุใกล้เข้ามาและไม่ได้ทบทวนข้อมูลมาระยะหนึ่ง นายหน้าประกันควรตรวจสอบรายละเอียดความคุ้มครองและข้อมูลการติดต่อให้เป็นปัจจุบัน",
+        discussion: [
+          "พูดคุยเรื่องการต่ออายุกรมธรรม์",
+          "ทบทวนความคุ้มครองและสิทธิประโยชน์ของกรมธรรม์ที่มีอยู่",
+          "ยืนยันว่าข้อมูลลูกค้าเป็นปัจจุบัน"
+        ],
+        relationship: {
+          renewal: "23 ส.ค. 2569",
+          lastContact: "6 ต.ค. 2568",
+          payment: "ชำระเรียบร้อย",
+          followUp: "ก่อนช่วงต่ออายุ",
+          engagement: "ได้รับความยินยอม · พบการมีส่วนร่วมล่าสุด"
+        }
+      },
+      {
+        id: "mali-chaiyo",
+        name: "มินตรา ชัยโย",
+        initials: "มช",
+        score: 56,
+        level: "Medium",
+        shortReason: "ข้อมูลความคุ้มครองอาจต้องทบทวน",
+        scoreSummary: "ข้อมูลความคุ้มครองและข้อมูลลูกค้าบางส่วนยังต้องยืนยัน",
+        snapshot: {
+          kyc: [
+            ["สถานะ", "ยืนยันแล้ว"],
+            ["ช่องทางติดต่อ", "สาขา"],
+            ["การทบทวน", "มีข้อมูลบางส่วนที่ต้องยืนยัน"]
+          ],
+          products: "บัญชีออมทรัพย์ · เงินฝากประจำ",
+          loan: "ไม่มีสินเชื่อที่ใช้งานอยู่",
+          policies: "ประกันชีวิต · มีผลบังคับ; ควรทบทวนข้อมูลกรมธรรม์",
+          transactions: "มีกิจกรรมบัญชีตามปกติ; ยังไม่ได้ทบทวนรายละเอียดกรมธรรม์ล่าสุด",
+          contact: "ติดต่อล่าสุด: 14 พ.ค. 2569 · ตรวจสอบบริการ"
+        },
+        priorityReasons: [
+          "ข้อมูลความคุ้มครองที่มีอยู่อาจต้องทบทวน",
+          "ข้อมูลลูกค้าบางส่วนต้องได้รับการยืนยัน",
+          "ไม่พบการต่ออายุที่ใกล้ถึงกำหนดในข้อมูลจำลอง"
+        ],
+        insight: "ข้อมูลจำลองแสดงว่ามีความคุ้มครองอยู่ แต่รายละเอียดความคุ้มครองและข้อมูลลูกค้าบางส่วนยังไม่ครบถ้วน นายหน้าประกันควรตรวจสอบข้อมูลระหว่างการพูดคุยครั้งถัดไป โดยระบบไม่ได้แนะนำผลิตภัณฑ์ใดเป็นการเฉพาะ",
+        discussion: [
+          "ทบทวนความคุ้มครองและสิทธิประโยชน์ของกรมธรรม์ที่มีอยู่",
+          "ยืนยันว่าข้อมูลลูกค้าเป็นปัจจุบัน",
+          "สอบถามว่าความต้องการของลูกค้าเปลี่ยนแปลงหรือไม่"
+        ],
+        relationship: {
+          renewal: "12 ก.พ. 2570",
+          lastContact: "14 พ.ค. 2569",
+          payment: "ชำระเรียบร้อย",
+          followUp: "ภายในรอบทบทวนปกติถัดไป",
+          engagement: "ไม่แสดงข้อมูล · ยังไม่ได้รับความยินยอม"
+        }
+      },
+      {
+        id: "kiet-anan",
+        name: "คีตะ อนันต์",
+        initials: "กอ",
+        score: 24,
+        level: "Low",
+        shortReason: "เพิ่งติดต่อล่าสุด · ยังไม่มีประเด็นเร่งด่วน",
+        scoreSummary: "มีการติดต่อล่าสุดและชำระเบี้ยตามปกติ จึงยังไม่ต้องติดตามอย่างเร่งด่วน",
+        snapshot: {
+          kyc: [
+            ["สถานะ", "ยืนยันแล้ว"],
+            ["ช่องทางติดต่อ", "ดิจิทัล"],
+            ["การทบทวน", "ยังไม่ถึงกำหนดทบทวน"]
+          ],
+          products: "บัญชีออมทรัพย์",
+          loan: "ไม่มีสินเชื่อที่ใช้งานอยู่",
+          policies: "ประกันคุ้มครอง · มีผลบังคับ",
+          transactions: "มีการชำระเบี้ยรายเดือนตามปกติ",
+          contact: "ติดต่อล่าสุด: 18 ก.ค. 2569 · ทบทวนสิทธิประโยชน์"
+        },
+        priorityReasons: [
+          "เพิ่งติดต่อลูกค้าเมื่อ 18 ก.ค. 2569",
+          "ไม่พบประเด็นเร่งด่วนด้านการต่ออายุหรือการชำระเบี้ยในข้อมูลจำลอง",
+          "ยังไม่มีประเด็นเร่งด่วนที่ต้องดำเนินการ"
+        ],
+        insight: "ข้อมูลจำลองในปัจจุบันเพียงพอสำหรับช่วงเวลานี้ มีการติดต่อล่าสุดและชำระเบี้ยเรียบร้อย ขณะนี้ยังไม่มีประเด็นเร่งด่วนที่ต้องดำเนินการ",
+        discussion: [
+          "ยืนยันว่าความคุ้มครองปัจจุบันยังเหมาะสม",
+          "อธิบายสิทธิประโยชน์ของกรมธรรม์ที่มีอยู่หากจำเป็น"
+        ],
+        relationship: {
+          renewal: "4 มี.ค. 2570",
+          lastContact: "18 ก.ค. 2569",
+          payment: "ชำระเรียบร้อย",
+          followUp: "รอบทบทวนตามกำหนดถัดไป",
+          engagement: "ได้รับความยินยอม · พบการมีส่วนร่วมล่าสุด"
+        }
+      }
+    ];
+
+    const initialCustomer = mockCustomers[0];
+    let selectedCustomerId = initialCustomer.id;
+
+    const getElement = (id) => document.getElementById(id);
+
+    const priorityClass = (level) => level.toLowerCase();
+    const levelLabels = {
+      High: "ความสำคัญสูง",
+      Medium: "ความสำคัญปานกลาง",
+      Low: "ความสำคัญต่ำ"
+    };
+    const levelLabel = (level) => levelLabels[level] || level;
+
+    function renderPriorityList() {
+      getElement("priority-list").innerHTML = mockCustomers.map((customer) => {
+        const isSelected = customer.id === selectedCustomerId;
+        return `
+        <button type="button" class="customer-item${isSelected ? " is-selected" : ""}" data-customer-id="${customer.id}" aria-pressed="${isSelected}" aria-label="เลือกข้อมูลลูกค้า ${customer.name}">
+          <div class="customer-top">
+            <span class="customer-name">${customer.name}</span>
+            <div>
+              <span class="customer-score">${customer.score}</span>
+              <span class="score-caption">คะแนนจำลอง</span>
+            </div>
+          </div>
+          <div class="customer-meta">
+            <span class="priority-pill ${priorityClass(customer.level)}">${levelLabel(customer.level)}</span>
+          </div>
+          <p class="customer-reason">${customer.shortReason}</p>
+        </button>
+      `;
+      }).join("");
+    }
+
+    function renderCustomer(customer) {
+      getElement("selected-initials").textContent = customer.initials;
+      getElement("selected-name").textContent = customer.name;
+      getElement("selected-score").textContent = customer.score;
+      getElement("selected-level").textContent = levelLabel(customer.level);
+      getElement("selected-level").className = `priority-pill ${priorityClass(customer.level)}`;
+      getElement("score-summary").textContent = customer.scoreSummary;
+      getElement("selected-status").textContent = customer.id === initialCustomer.id
+        ? "เลือกโปรไฟล์ที่มีความสำคัญสูงสุดเป็นค่าเริ่มต้น"
+        : `เลือกโปรไฟล์${levelLabel(customer.level)}`;
+
+      getElement("kyc-details").innerHTML = customer.snapshot.kyc.map(([label, value]) => `
+        <div class="data-row"><dt>${label}</dt><dd>${value}</dd></div>
+      `).join("");
+      getElement("products-value").textContent = customer.snapshot.products;
+      getElement("loan-value").textContent = customer.snapshot.loan;
+      getElement("policies-value").textContent = customer.snapshot.policies;
+      getElement("transactions-value").textContent = customer.snapshot.transactions;
+      getElement("contact-value").textContent = customer.snapshot.contact;
+
+      getElement("priority-reasons").innerHTML = customer.priorityReasons.map((reason) => `<li>${reason}</li>`).join("");
+      getElement("insight-copy").textContent = customer.insight;
+      getElement("discussion-list").innerHTML = customer.discussion.map((topic) => `<li>${topic}</li>`).join("");
+
+      getElement("relationship-renewal").textContent = customer.relationship.renewal;
+      getElement("relationship-last-contact").textContent = customer.relationship.lastContact;
+      getElement("relationship-payment").textContent = customer.relationship.payment;
+      getElement("relationship-follow-up").textContent = customer.relationship.followUp;
+      getElement("relationship-engagement").textContent = customer.relationship.engagement;
+    }
+
+    function selectCustomer(customerId) {
+      const customer = mockCustomers.find((item) => item.id === customerId);
+      if (!customer) {
+        return;
+      }
+
+      selectedCustomerId = customer.id;
+      renderPriorityList();
+      renderCustomer(customer);
+    }
+
+    renderPriorityList();
+    renderCustomer(initialCustomer);
+
+    getElement("priority-list").addEventListener("click", (event) => {
+      const customerButton = event.target.closest("button[data-customer-id]");
+      if (customerButton) {
+        selectCustomer(customerButton.dataset.customerId);
+      }
+    });
+  </script>
+</body>
+</html>
