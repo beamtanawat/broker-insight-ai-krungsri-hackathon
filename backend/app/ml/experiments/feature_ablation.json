@@ -1,0 +1,278 @@
+{
+  "feature_split_importance": [
+    {
+      "feature": "days_since_last_contact",
+      "thai_label": "จำนวนวันนับจากการติดต่อครั้งล่าสุด",
+      "split_importance": 232,
+      "importance_pct": 14.73
+    },
+    {
+      "feature": "total_liabilities",
+      "thai_label": "ภาระหนี้สินรวม",
+      "split_importance": 226,
+      "importance_pct": 14.35
+    },
+    {
+      "feature": "days_to_renewal",
+      "thai_label": "จำนวนวันก่อนถึงกำหนดต่ออายุกรมธรรม์",
+      "split_importance": 202,
+      "importance_pct": 12.83
+    },
+    {
+      "feature": "existing_coverage_amount",
+      "thai_label": "ทุนประกันความคุ้มครองรวม",
+      "split_importance": 171,
+      "importance_pct": 10.86
+    },
+    {
+      "feature": "relationship_tenure_months",
+      "thai_label": "ระยะเวลาที่เป็นลูกค้า (เดือน)",
+      "split_importance": 138,
+      "importance_pct": 8.76
+    },
+    {
+      "feature": "total_assets",
+      "thai_label": "มูลค่าสินทรัพย์รวม",
+      "split_importance": 92,
+      "importance_pct": 5.84
+    },
+    {
+      "feature": "relationship_tier_encoded",
+      "thai_label": "ระดับความสัมพันธ์ (Tier)",
+      "split_importance": 87,
+      "importance_pct": 5.52
+    },
+    {
+      "feature": "age",
+      "thai_label": "อายุของลูกค้า",
+      "split_importance": 81,
+      "importance_pct": 5.14
+    },
+    {
+      "feature": "has_overdue_followup",
+      "thai_label": "มีรายการติดตามค้างชำระ/เกินกำหนด",
+      "split_importance": 70,
+      "importance_pct": 4.44
+    },
+    {
+      "feature": "monthly_savings",
+      "thai_label": "ยอดเงินออมต่อเดือน",
+      "split_importance": 69,
+      "importance_pct": 4.38
+    },
+    {
+      "feature": "transaction_activity_90d",
+      "thai_label": "ความถี่การทำธุรกรรมรอบ 90 วัน",
+      "split_importance": 64,
+      "importance_pct": 4.06
+    },
+    {
+      "feature": "is_kyc_verified",
+      "thai_label": "สถานะยืนยันตัวตน KYC",
+      "split_importance": 59,
+      "importance_pct": 3.75
+    },
+    {
+      "feature": "contact_frequency_90d",
+      "thai_label": "ความถี่ในการติดต่อรอบ 90 วัน",
+      "split_importance": 29,
+      "importance_pct": 1.84
+    },
+    {
+      "feature": "num_financial_products",
+      "thai_label": "จำนวนผลิตภัณฑ์ทางการเงินที่ถือครอง",
+      "split_importance": 25,
+      "importance_pct": 1.59
+    },
+    {
+      "feature": "insurance_count",
+      "thai_label": "จำนวนกรมธรรม์ประกันที่มีผลบังคับ",
+      "split_importance": 16,
+      "importance_pct": 1.02
+    },
+    {
+      "feature": "income_band_numeric",
+      "thai_label": "ระดับรายได้เฉลี่ยต่อเดือน",
+      "split_importance": 14,
+      "importance_pct": 0.89
+    },
+    {
+      "feature": "has_active_loan",
+      "thai_label": "มีภาระสินเชื่อที่เปิดอยู่",
+      "split_importance": 0,
+      "importance_pct": 0.0
+    }
+  ],
+  "feature_shap_importance": [
+    {
+      "feature": "has_overdue_followup",
+      "thai_label": "มีรายการติดตามค้างชำระ/เกินกำหนด",
+      "mean_abs_shap": 1.6111
+    },
+    {
+      "feature": "relationship_tier_encoded",
+      "thai_label": "ระดับความสัมพันธ์ (Tier)",
+      "mean_abs_shap": 0.9249
+    },
+    {
+      "feature": "total_liabilities",
+      "thai_label": "ภาระหนี้สินรวม",
+      "mean_abs_shap": 0.7064
+    },
+    {
+      "feature": "days_to_renewal",
+      "thai_label": "จำนวนวันก่อนถึงกำหนดต่ออายุกรมธรรม์",
+      "mean_abs_shap": 0.4901
+    },
+    {
+      "feature": "existing_coverage_amount",
+      "thai_label": "ทุนประกันความคุ้มครองรวม",
+      "mean_abs_shap": 0.4885
+    },
+    {
+      "feature": "days_since_last_contact",
+      "thai_label": "จำนวนวันนับจากการติดต่อครั้งล่าสุด",
+      "mean_abs_shap": 0.4082
+    },
+    {
+      "feature": "is_kyc_verified",
+      "thai_label": "สถานะยืนยันตัวตน KYC",
+      "mean_abs_shap": 0.2573
+    },
+    {
+      "feature": "total_assets",
+      "thai_label": "มูลค่าสินทรัพย์รวม",
+      "mean_abs_shap": 0.0969
+    },
+    {
+      "feature": "transaction_activity_90d",
+      "thai_label": "ความถี่การทำธุรกรรมรอบ 90 วัน",
+      "mean_abs_shap": 0.0862
+    },
+    {
+      "feature": "age",
+      "thai_label": "อายุของลูกค้า",
+      "mean_abs_shap": 0.0832
+    },
+    {
+      "feature": "relationship_tenure_months",
+      "thai_label": "ระยะเวลาที่เป็นลูกค้า (เดือน)",
+      "mean_abs_shap": 0.0687
+    },
+    {
+      "feature": "monthly_savings",
+      "thai_label": "ยอดเงินออมต่อเดือน",
+      "mean_abs_shap": 0.0583
+    },
+    {
+      "feature": "num_financial_products",
+      "thai_label": "จำนวนผลิตภัณฑ์ทางการเงินที่ถือครอง",
+      "mean_abs_shap": 0.0413
+    },
+    {
+      "feature": "contact_frequency_90d",
+      "thai_label": "ความถี่ในการติดต่อรอบ 90 วัน",
+      "mean_abs_shap": 0.035
+    },
+    {
+      "feature": "insurance_count",
+      "thai_label": "จำนวนกรมธรรม์ประกันที่มีผลบังคับ",
+      "mean_abs_shap": 0.0204
+    },
+    {
+      "feature": "income_band_numeric",
+      "thai_label": "ระดับรายได้เฉลี่ยต่อเดือน",
+      "mean_abs_shap": 0.0203
+    },
+    {
+      "feature": "has_active_loan",
+      "thai_label": "มีภาระสินเชื่อที่เปิดอยู่",
+      "mean_abs_shap": 0.0
+    }
+  ],
+  "ablation_experiments": {
+    "Ablation 1 (Baseline - All 17 Features)": {
+      "feature_count": 17,
+      "cv_f1_mean": 0.8578,
+      "cv_f1_std": 0.0283,
+      "cv_roc_auc_mean": 0.9492,
+      "features_used": [
+        "age",
+        "income_band_numeric",
+        "relationship_tenure_months",
+        "relationship_tier_encoded",
+        "is_kyc_verified",
+        "total_assets",
+        "total_liabilities",
+        "monthly_savings",
+        "has_active_loan",
+        "num_financial_products",
+        "insurance_count",
+        "days_to_renewal",
+        "days_since_last_contact",
+        "contact_frequency_90d",
+        "transaction_activity_90d",
+        "existing_coverage_amount",
+        "has_overdue_followup"
+      ]
+    },
+    "Ablation 2 (Without Engagement/Contact Features)": {
+      "feature_count": 13,
+      "cv_f1_mean": 0.5889,
+      "cv_f1_std": 0.0623,
+      "cv_roc_auc_mean": 0.7821,
+      "features_used": [
+        "age",
+        "income_band_numeric",
+        "relationship_tenure_months",
+        "relationship_tier_encoded",
+        "is_kyc_verified",
+        "total_assets",
+        "total_liabilities",
+        "monthly_savings",
+        "has_active_loan",
+        "num_financial_products",
+        "insurance_count",
+        "days_to_renewal",
+        "existing_coverage_amount"
+      ]
+    },
+    "Ablation 3 (Without Insurance History Features)": {
+      "feature_count": 14,
+      "cv_f1_mean": 0.7392,
+      "cv_f1_std": 0.0151,
+      "cv_roc_auc_mean": 0.8779,
+      "features_used": [
+        "age",
+        "income_band_numeric",
+        "relationship_tenure_months",
+        "relationship_tier_encoded",
+        "is_kyc_verified",
+        "total_assets",
+        "total_liabilities",
+        "monthly_savings",
+        "has_active_loan",
+        "num_financial_products",
+        "days_since_last_contact",
+        "contact_frequency_90d",
+        "transaction_activity_90d",
+        "has_overdue_followup"
+      ]
+    },
+    "Ablation 4 (Financial & Demographics Only)": {
+      "feature_count": 7,
+      "cv_f1_mean": 0.2854,
+      "cv_f1_std": 0.0319,
+      "cv_roc_auc_mean": 0.5336,
+      "features_used": [
+        "age",
+        "income_band_numeric",
+        "total_assets",
+        "total_liabilities",
+        "monthly_savings",
+        "has_active_loan",
+        "num_financial_products"
+      ]
+    }
+  }
+}

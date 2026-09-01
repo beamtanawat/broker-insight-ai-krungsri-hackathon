@@ -1,0 +1,54 @@
+{
+  "model_name": "LightGBM Priority Classifier",
+  "model_version": "1.0.0",
+  "dataset_type": "Synthetic/Demonstration Data (Not Real Krungsri Production)",
+  "sample_count": 240,
+  "accuracy": 0.925,
+  "precision": 0.9195,
+  "recall": 0.8791,
+  "f1_score": 0.8989,
+  "roc_auc": 0.9604,
+  "confusion_matrix": {
+    "true_negative": 142,
+    "false_positive": 7,
+    "false_negative": 11,
+    "true_positive": 80,
+    "matrix_raw": [
+      [
+        142,
+        7
+      ],
+      [
+        11,
+        80
+      ]
+    ]
+  },
+  "classification_report": {
+    "0": {
+      "precision": 0.9281045751633987,
+      "recall": 0.9530201342281879,
+      "f1-score": 0.9403973509933775,
+      "support": 149.0
+    },
+    "1": {
+      "precision": 0.9195402298850575,
+      "recall": 0.8791208791208791,
+      "f1-score": 0.898876404494382,
+      "support": 91.0
+    },
+    "accuracy": 0.925,
+    "macro avg": {
+      "precision": 0.9238224025242281,
+      "recall": 0.9160705066745335,
+      "f1-score": 0.9196368777438797,
+      "support": 240.0
+    },
+    "weighted avg": {
+      "precision": 0.9248572609120277,
+      "recall": 0.925,
+      "f1-score": 0.9246539921125084,
+      "support": 240.0
+    }
+  }
+}

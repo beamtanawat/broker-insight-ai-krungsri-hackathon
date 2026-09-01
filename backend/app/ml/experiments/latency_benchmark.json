@@ -1,0 +1,7 @@
+{
+  "benchmark_iterations": 500,
+  "single_sample_prediction_latency_ms": 2.314,
+  "single_sample_shap_latency_ms": 0.194,
+  "total_combined_inference_latency_ms": 2.508,
+  "shap_overhead_percentage": 7.8
+}

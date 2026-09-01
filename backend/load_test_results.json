@@ -1,0 +1,135 @@
+[
+  {
+    "endpoint": "/auth/login",
+    "method": "POST",
+    "total_requests": 40,
+    "concurrency": 8,
+    "successful_requests": 15,
+    "failed_requests": 25,
+    "error_rate_pct": 62.5,
+    "total_time_seconds": 2.534,
+    "throughput_rps": 15.8,
+    "latency_ms": {
+      "min": 0.2,
+      "mean": 476.58,
+      "p50": 0.32,
+      "p95": 1343.49,
+      "p99": 1344.67,
+      "max": 1345.32
+    }
+  },
+  {
+    "endpoint": "/customers",
+    "method": "GET",
+    "total_requests": 40,
+    "concurrency": 8,
+    "successful_requests": 40,
+    "failed_requests": 0,
+    "error_rate_pct": 0.0,
+    "total_time_seconds": 0.086,
+    "throughput_rps": 465.8,
+    "latency_ms": {
+      "min": 11.68,
+      "mean": 15.23,
+      "p50": 14.78,
+      "p95": 18.51,
+      "p99": 23.07,
+      "max": 25.83
+    }
+  },
+  {
+    "endpoint": "/customers/77d0b9f5-670e-4e97-a97c-29ea518d0245",
+    "method": "GET",
+    "total_requests": 40,
+    "concurrency": 8,
+    "successful_requests": 40,
+    "failed_requests": 0,
+    "error_rate_pct": 0.0,
+    "total_time_seconds": 0.092,
+    "throughput_rps": 435.2,
+    "latency_ms": {
+      "min": 16.06,
+      "mean": 17.57,
+      "p50": 17.58,
+      "p95": 18.44,
+      "p99": 18.88,
+      "max": 19.05
+    }
+  },
+  {
+    "endpoint": "/customers/77d0b9f5-670e-4e97-a97c-29ea518d0245/analyze",
+    "method": "POST",
+    "total_requests": 40,
+    "concurrency": 8,
+    "successful_requests": 30,
+    "failed_requests": 10,
+    "error_rate_pct": 25.0,
+    "total_time_seconds": 0.24,
+    "throughput_rps": 166.5,
+    "latency_ms": {
+      "min": 0.2,
+      "mean": 45.38,
+      "p50": 46.35,
+      "p95": 104.49,
+      "p99": 104.76,
+      "max": 104.85
+    }
+  },
+  {
+    "endpoint": "/recommendations/analytics",
+    "method": "GET",
+    "total_requests": 40,
+    "concurrency": 8,
+    "successful_requests": 40,
+    "failed_requests": 0,
+    "error_rate_pct": 0.0,
+    "total_time_seconds": 0.052,
+    "throughput_rps": 764.7,
+    "latency_ms": {
+      "min": 6.52,
+      "mean": 8.1,
+      "p50": 7.8,
+      "p95": 9.08,
+      "p99": 15.01,
+      "max": 18.64
+    }
+  },
+  {
+    "endpoint": "/model/metrics",
+    "method": "GET",
+    "total_requests": 40,
+    "concurrency": 8,
+    "successful_requests": 40,
+    "failed_requests": 0,
+    "error_rate_pct": 0.0,
+    "total_time_seconds": 0.073,
+    "throughput_rps": 548.8,
+    "latency_ms": {
+      "min": 2.22,
+      "mean": 9.19,
+      "p50": 9.24,
+      "p95": 14.97,
+      "p99": 24.19,
+      "max": 29.97
+    }
+  },
+  {
+    "endpoint": "/analytics/overview",
+    "method": "GET",
+    "total_requests": 40,
+    "concurrency": 8,
+    "successful_requests": 40,
+    "failed_requests": 0,
+    "error_rate_pct": 0.0,
+    "total_time_seconds": 0.078,
+    "throughput_rps": 511.6,
+    "latency_ms": {
+      "min": 9.24,
+      "mean": 14.12,
+      "p50": 11.74,
+      "p95": 24.55,
+      "p99": 26.37,
+      "max": 27.36
+    }
+  }
+]

@@ -1,0 +1,38 @@
+{
+  "config_B_high_need": {
+    "top_1_match_rate_pct": 100.0,
+    "top_k_match_rate_pct": 100.0,
+    "ineligible_recommendation_rate_pct": 11.11,
+    "avg_latency_ms": 0.87,
+    "hard_gate": false,
+    "weights": {
+      "need_weight": 0.6,
+      "base_weight": 0.2,
+      "fit_weight": 0.2
+    }
+  },
+  "config_C_strict_eligibility": {
+    "top_1_match_rate_pct": 100.0,
+    "top_k_match_rate_pct": 100.0,
+    "ineligible_recommendation_rate_pct": 0.0,
+    "avg_latency_ms": 0.86,
+    "hard_gate": true,
+    "weights": {
+      "need_weight": 0.45,
+      "base_weight": 0.3,
+      "fit_weight": 0.25
+    }
+  },
+  "config_D_optimized_champion": {
+    "top_1_match_rate_pct": 100.0,
+    "top_k_match_rate_pct": 100.0,
+    "ineligible_recommendation_rate_pct": 0.0,
+    "avg_latency_ms": 0.86,
+    "hard_gate": true,
+    "weights": {
+      "need_weight": 0.5,
+      "base_weight": 0.25,
+      "fit_weight": 0.25
+    }
+  }
+}

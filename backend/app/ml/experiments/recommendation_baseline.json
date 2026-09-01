@@ -1,0 +1,22 @@
+{
+  "engine_version": "recommendation_engine_v1.0",
+  "status": "baseline_frozen",
+  "weights": {
+    "base_weight": 0.5,
+    "need_weight": 0.4,
+    "coverage_penalty": 0.6
+  },
+  "hard_eligibility_gate_active": false,
+  "evaluation_dataset_version": "1.0.0 (20 Synthetic Benchmark Profiles)",
+  "timestamp": "2026-08-30T15:24:00.414531+00:00",
+  "metrics": {
+    "top_1_match_rate_pct": 100.0,
+    "top_k_match_rate_pct": 100.0,
+    "ineligible_recommendation_rate_pct": 11.11,
+    "approval_rate_pct": 66.7,
+    "modification_rate_pct": 16.7,
+    "rejection_rate_pct": 16.6,
+    "recommendation_coverage_pct": 100.0,
+    "avg_latency_ms": 1.21
+  }
+}

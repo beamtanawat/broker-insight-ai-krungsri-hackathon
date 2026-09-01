@@ -1,0 +1,83 @@
+{
+  "model_version": "gemini-1.5-flash",
+  "prompt_version": "v1.0.0-unoptimized",
+  "optimization_status": "baseline_frozen",
+  "evaluation_dataset_version": "1.0.0 (6 Representative Scenarios)",
+  "timestamp": "2026-08-30T04:59:05.824913+00:00",
+  "metrics": {
+    "avg_input_tokens": 986.8,
+    "avg_output_tokens": 903.5,
+    "avg_total_tokens": 1890.3,
+    "avg_latency_ms": 8.57,
+    "p95_latency_ms": 8.67,
+    "cache_hit_rate": 0.0,
+    "error_rate": 0.0,
+    "fallback_rate": 0.0,
+    "guardrail_failure_rate": 0.0,
+    "structured_output_validity_pct": 100.0,
+    "quality_rubric_score": 3.7,
+    "estimated_cost_per_1k_requests_usd": 0.34506
+  },
+  "scenarios": [
+    {
+      "case_id": "TC-001",
+      "scenario": "high_priority_protection_gap",
+      "input_tokens": 994,
+      "output_tokens": 992,
+      "total_tokens": 1986,
+      "latency_ms": 8.71,
+      "quality_score": 4.0,
+      "passed": true
+    },
+    {
+      "case_id": "TC-002",
+      "scenario": "low_priority_well_covered",
+      "input_tokens": 989,
+      "output_tokens": 839,
+      "total_tokens": 1828,
+      "latency_ms": 8.56,
+      "quality_score": 3.6,
+      "passed": true
+    },
+    {
+      "case_id": "TC-003",
+      "scenario": "missing_incomplete_info",
+      "input_tokens": 931,
+      "output_tokens": 827,
+      "total_tokens": 1758,
+      "latency_ms": 8.55,
+      "quality_score": 4.0,
+      "passed": true
+    },
+    {
+      "case_id": "TC-004",
+      "scenario": "conflicting_signals",
+      "input_tokens": 1028,
+      "output_tokens": 996,
+      "total_tokens": 2024,
+      "latency_ms": 8.55,
+      "quality_score": 3.6,
+      "passed": true
+    },
+    {
+      "case_id": "TC-005",
+      "scenario": "existing_insurance_renewal",
+      "input_tokens": 1002,
+      "output_tokens": 935,
+      "total_tokens": 1937,
+      "latency_ms": 8.54,
+      "quality_score": 3.4,
+      "passed": true
+    },
+    {
+      "case_id": "TC-006",
+      "scenario": "first_time_buyer_young",
+      "input_tokens": 977,
+      "output_tokens": 832,
+      "total_tokens": 1809,
+      "latency_ms": 8.54,
+      "quality_score": 3.6,
+      "passed": true
+    }
+  ]
+}

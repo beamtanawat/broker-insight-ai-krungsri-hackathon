@@ -1,0 +1,109 @@
+{
+  "metadata": {
+    "pilot_version": "1.0.0-pilot",
+    "label": "Test Freeze Snapshot",
+    "created_by": "dbcf68e9-b462-4474-b922-6cfe7281ad02",
+    "created_at": "2026-08-30T14:36:05.047037+00:00",
+    "environment": "staging",
+    "model_version": "1.0.0",
+    "total_sessions": 0,
+    "total_feedbacks": 0,
+    "total_issues": 0
+  },
+  "dashboard_summary": {
+    "environment": "Pilot Sandbox",
+    "pilot_mode": true,
+    "total_sessions": 0,
+    "completed_sessions": 0,
+    "avg_session_duration_seconds": null,
+    "median_session_duration_seconds": null,
+    "participant_breakdown": {
+      "total_participants": 0,
+      "broker_participants": 0,
+      "manager_participants": 0,
+      "admin_participants": 0
+    },
+    "technical_kpis": {
+      "api_error_rate": 0.0,
+      "p50_latency_ms": 28.4,
+      "p95_latency_ms": 35.09,
+      "p99_latency_ms": 57.93,
+      "system_availability_pct": 100.0,
+      "failed_requests_count": 0
+    },
+    "ai_quality_kpis": {
+      "model_name": "LightGBM Priority Classifier",
+      "model_version": "1.0.0",
+      "f1_score": 0.8778,
+      "roc_auc": 0.9537,
+      "brier_score": 0.0757,
+      "calibration_ece": 0.0445,
+      "recommendation_ineligible_rate": 0.0,
+      "llm_fallback_rate": 0.0,
+      "guardrail_violation_rate": 0.0
+    },
+    "human_feedback": {
+      "total_feedback_count": 0,
+      "has_human_data": false,
+      "status_label": "Awaiting pilot data (n=0)",
+      "avg_overall_usefulness": null,
+      "avg_ease_of_use": null,
+      "avg_clarity_priority": null,
+      "avg_shap_usefulness": null,
+      "avg_insight_usefulness": null,
+      "avg_recommendation_usefulness": null,
+      "avg_trust_score": null,
+      "top_useful_features": [],
+      "top_confusing_parts": []
+    },
+    "scorecard": [
+      {
+        "dimension": "Technical Reliability",
+        "metric": "API 5xx Error Rate",
+        "target": "< 0.5%",
+        "actual": "0.00%",
+        "status": "PASS"
+      },
+      {
+        "dimension": "System Performance",
+        "metric": "P95 Latency",
+        "target": "< 200 ms",
+        "actual": "35.09 ms",
+        "status": "PASS"
+      },
+      {
+        "dimension": "AI Model Quality",
+        "metric": "LightGBM Priority F1",
+        "target": "≥ 0.85",
+        "actual": "0.8778 (N=240 holdout)",
+        "status": "PASS"
+      },
+      {
+        "dimension": "Recommendation Safety",
+        "metric": "Ineligible Recommendation Rate",
+        "target": "0.00%",
+        "actual": "0.00% (Strict Hard Gated)",
+        "status": "PASS"
+      },
+      {
+        "dimension": "Broker Usability",
+        "metric": "Avg Usefulness Rating (1-5)",
+        "target": "≥ 4.0 / 5.0",
+        "actual": "Awaiting pilot data (n=0)",
+        "status": "PENDING"
+      },
+      {
+        "dimension": "Trust & Explainability",
+        "metric": "SHAP & Insight Trust Rating",
+        "target": "≥ 4.0 / 5.0",
+        "actual": "Awaiting pilot data (n=0)",
+        "status": "PENDING"
+      }
+    ],
+    "recent_issues": [],
+    "generated_at": "2026-08-30T14:36:05.044819+00:00"
+  },
+  "sessions": [],
+  "feedbacks": [],
+  "issues": []
+}

@@ -1,0 +1,41 @@
+{
+  "model_version": "gemini-1.5-flash",
+  "prompt_version": "v2.0-optimized",
+  "optimization_status": "promoted_champion",
+  "evaluation_dataset_version": "1.0.0 (6 Representative Scenarios)",
+  "timestamp": "2026-08-30T04:59:05.827240+00:00",
+  "metrics": {
+    "avg_input_tokens": 579.7,
+    "avg_output_tokens": 996.7,
+    "avg_total_tokens": 1576.3,
+    "avg_latency_ms": 2.35,
+    "p95_latency_ms": 3.61,
+    "cache_hit_rate": 0.0,
+    "error_rate": 0.0,
+    "fallback_rate": 0.0,
+    "guardrail_failure_rate": 0.0,
+    "structured_output_validity_pct": 100.0,
+    "quality_rubric_score": 3.7,
+    "estimated_cost_per_1k_requests_usd": 0.22946
+  },
+  "comparison_against_baseline": {
+    "token_reduction_pct": 16.6,
+    "latency_reduction_pct": 72.6,
+    "cost_reduction_pct": 33.5,
+    "quality_score_change": 0.0,
+    "guardrail_safety_preserved": true,
+    "recommendation": "PROMOTE OPTIMIZED CONFIGURATION"
+  },
+  "cache_metrics": {
+    "cache_enabled": true,
+    "ttl_seconds": 3600,
+    "cache_entries_count": 12,
+    "hits": 0,
+    "misses": 18,
+    "total_queries": 18,
+    "hit_rate_pct": 0.0,
+    "avg_cached_latency_ms": 0.15,
+    "avg_uncached_latency_ms": 3.45,
+    "latency_reduction_pct": 95.8
+  }
+}
