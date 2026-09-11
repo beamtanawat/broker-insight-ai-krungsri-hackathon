@@ -74,7 +74,6 @@ const LIFE_EVENTS: LifeEventOption[] = [
 export default function MyProtectionPage() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
-  const [viewMode, setViewMode] = useState<"desktop" | "mobile">("desktop");
   const [selectedEvents, setSelectedEvents] = useState<string[]>(["motor_renewal"]);
   const [consultModalOpen, setConsultModalOpen] = useState(false);
   const [consultationSubmitted, setConsultationSubmitted] = useState(false);
@@ -117,7 +116,7 @@ export default function MyProtectionPage() {
           background: "linear-gradient(135deg, #0b1e36 0%, #1e3a8a 100%)",
           color: "#ffffff",
           borderRadius: "16px",
-          padding: viewMode === "mobile" ? "18px 14px" : "24px",
+          padding: "18px 14px",
           marginBottom: "20px",
           position: "relative",
           overflow: "hidden",
@@ -205,7 +204,7 @@ export default function MyProtectionPage() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: viewMode === "mobile" ? "1fr" : "repeat(3, 1fr)",
+                gridTemplateColumns: "1fr",
                 gap: "12px",
                 marginTop: "20px",
                 paddingTop: "16px",
@@ -318,7 +317,7 @@ export default function MyProtectionPage() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: viewMode === "mobile" ? "1fr" : "repeat(auto-fit, minmax(280px, 1fr))",
+                gridTemplateColumns: "1fr",
                 gap: "10px",
               }}
             >
@@ -535,72 +534,21 @@ export default function MyProtectionPage() {
       title="My Protection — ประกันสำหรับตัวคุณ (Customer View)"
       subtitle="มุมมองลูกค้า Gen Z: ตรวจสอบความคุ้มครอง รู้ชัดเจนว่าอะไรต้องทำ อะไรยังไม่ต้องทำ"
       actions={
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          {/* View Mode Toggle */}
-          <div
-            style={{
-              display: "inline-flex",
-              backgroundColor: "rgba(11, 30, 54, 0.06)",
-              borderRadius: "8px",
-              padding: "2px",
-            }}
-          >
-            <button
-              onClick={() => setViewMode("desktop")}
-              style={{
-                border: "none",
-                borderRadius: "6px",
-                padding: "5px 12px",
-                fontSize: "12px",
-                fontWeight: 700,
-                cursor: "pointer",
-                backgroundColor: viewMode === "desktop" ? "#ffffff" : "transparent",
-                color: viewMode === "desktop" ? "#0b1e36" : "var(--slate-600)",
-                boxShadow: viewMode === "desktop" ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
-              }}
-            >
-              💻 ขยายเต็มจอ
-            </button>
-            <button
-              onClick={() => setViewMode("mobile")}
-              style={{
-                border: "none",
-                borderRadius: "6px",
-                padding: "5px 12px",
-                fontSize: "12px",
-                fontWeight: 700,
-                cursor: "pointer",
-                backgroundColor: viewMode === "mobile" ? "#ffffff" : "transparent",
-                color: viewMode === "mobile" ? "#0b1e36" : "var(--slate-600)",
-                boxShadow: viewMode === "mobile" ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
-              }}
-            >
-              📱 iPhone 17 Pro Max (Preview)
-            </button>
-          </div>
-
-          <Link href="/customers/c0c0f992-b06d-4b9f-bbc6-9b4458a79491">
-            <Button variant="outline" size="sm" leftIcon="💼">
-              ดูมุมมองโบรกเกอร์ (Broker View)
-            </Button>
-          </Link>
-        </div>
+        <Link href="/customers/c0c0f992-b06d-4b9f-bbc6-9b4458a79491">
+          <Button variant="outline" size="sm" leftIcon="💼">
+            ดูมุมมองโบรกเกอร์ (Broker View)
+          </Button>
+        </Link>
       }
     >
-      {viewMode === "mobile" ? (
-        <SmartphoneMockup
-          onOpenConsult={() => {
-            setConsultNote("สวัสดีครับคุณสมชาย สนใจปรึกษาเรื่องต่อประกันรถยนต์ Honda City ใน 21 วัน และวางแผน Top-up ประกันกลุ่มครับ");
-            setConsultModalOpen(true);
-          }}
-        >
-          {protectionContent}
-        </SmartphoneMockup>
-      ) : (
-        <div style={{ maxWidth: "1200px", margin: "0 auto", paddingBottom: "40px" }}>
-          {protectionContent}
-        </div>
-      )}
+      <SmartphoneMockup
+        onOpenConsult={() => {
+          setConsultNote("สวัสดีครับคุณสมชาย สนใจปรึกษาเรื่องต่อประกันรถยนต์ Honda City ใน 21 วัน และวางแผน Top-up ประกันกลุ่มครับ");
+          setConsultModalOpen(true);
+        }}
+      >
+        {protectionContent}
+      </SmartphoneMockup>
 
       {/* Consultation Modal Simulator */}
       {consultModalOpen && (
