@@ -1,7 +1,12 @@
 import type { NextConfig } from "next";
 
+const isVercel = Boolean(process.env.VERCEL);
+
 const nextConfig: NextConfig = {
-  output: "standalone",
+  turbopack: {
+    root: __dirname,
+  },
+  ...(isVercel ? {} : { output: "standalone" }),
   async rewrites() {
     return [
       {
