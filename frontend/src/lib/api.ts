@@ -48,7 +48,170 @@ import type {
   E2EPerformanceResponse,
 } from "../types";
 
+import {
+  MOCK_USER,
+  MOCK_DASHBOARD_SUMMARY,
+  MOCK_CUSTOMERS,
+  MOCK_FOLLOWUPS,
+  MOCK_PEARL_DETAIL,
+  MOCK_PEARL_FULL_PROFILE,
+  MOCK_PEARL_RECOMMENDATIONS,
+  MOCK_PEARL_INSIGHTS,
+  MOCK_PEARL_NEEDS,
+  MOCK_PEARL_ANALYSIS,
+} from "./demoData";
+
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
+
+function getMockResponse<T>(path: string, options: RequestInit = {}): T | undefined {
+  if (path.startsWith("/api/v1/auth/login")) {
+    return {
+      access_token: "mock-jwt-token-demo-broker",
+      refresh_token: "mock-jwt-refresh-demo",
+      token_type: "bearer",
+    } as T;
+  }
+  if (path === "/api/v1/auth/me") {
+    return MOCK_USER as T;
+  }
+  if (path === "/api/v1/dashboard/summary") {
+    return MOCK_DASHBOARD_SUMMARY as T;
+  }
+  if (path === "/api/v1/dashboard/team") {
+    return {
+      team_name: "Krungsri Alpha Pilot",
+      members_count: 8,
+      avg_conversion: 34.2,
+    } as T;
+  }
+  if (path.startsWith("/api/v1/customers")) {
+    if (path.includes("/profile")) return MOCK_PEARL_FULL_PROFILE as T;
+    if (path.includes("/follow-ups")) {
+      return {
+        items: MOCK_FOLLOWUPS.map((f) => ({
+          id: f.id,
+          scheduled_date: f.renewal_date,
+          last_contact_date: f.last_contact_date,
+          follow_up_window: f.follow_up_window,
+          status: f.status,
+          priority: "high",
+          payment_status: f.payment_status,
+          notes: f.notes,
+        })),
+        total: 2,
+      } as T;
+    }
+    if (path.includes("/analyze")) return MOCK_PEARL_ANALYSIS as T;
+    if (path.includes("/insights")) return MOCK_PEARL_INSIGHTS as T;
+    if (path.includes("/needs")) return MOCK_PEARL_NEEDS as T;
+    if (path.includes("/recommendations")) {
+      if (path.includes("/decision")) {
+        return {
+          id: "dec-01",
+          status: "recorded",
+          message: "บันทึกการตัดสินใจเรียบร้อย",
+        } as T;
+      }
+      return MOCK_PEARL_RECOMMENDATIONS as T;
+    }
+    if (path.includes("/conversation")) {
+      return {
+        opening_greeting: "สวัสดีครับคุณเพิร์ล ผมสมชายจากกรุงศรีโบรกเกอร์นะครับ...",
+        key_talking_points: [
+          "แจ้งเตือนประกันรถยนต์ใกล้ครบกำหนด 21 วัน",
+          "แนะนำความคุ้มครองค่าห้อง IPD โรงพยาบาลเอกชน",
+        ],
+        closing_statement: "สามารถกดดูสรุปความคุ้มครองในหน้า My Protection ได้เลยครับ",
+      } as T;
+    }
+    if (path.includes("/audit-logs")) {
+      return {
+        customer_id: "c0c0f992-b06d-4b9f-bbc6-9b4458a79491",
+        total_events: 1,
+        events: [],
+      } as T;
+    }
+    // single customer detail
+    if (path.match(/\/api\/v1\/customers\/[a-zA-Z0-9_-]+$/)) {
+      return MOCK_PEARL_DETAIL as T;
+    }
+    // list customers
+    return {
+      items: MOCK_CUSTOMERS,
+      total: MOCK_CUSTOMERS.length,
+      page: 1,
+      page_size: 50,
+      pages: 1,
+    } as T;
+  }
+  if (path.startsWith("/api/v1/followup")) {
+    return MOCK_FOLLOWUPS as T;
+  }
+  if (path.startsWith("/api/v1/analytics")) {
+    if (path.includes("/overview")) {
+      return {
+        conversion_rate: 38.5,
+        active_brokers: 12,
+        total_leads: 248,
+        ai_assisted_closures: 64,
+      } as T;
+    }
+    if (path.includes("/priority")) {
+      return {
+        high_priority_conversion: 48.2,
+        medium_priority_conversion: 24.1,
+        avg_response_hours: 3.4,
+      } as T;
+    }
+    if (path.includes("/needs")) {
+      return {
+        top_unmet_needs: ["Health Room Copay", "Motor Renewal Gap"],
+      } as T;
+    }
+    if (path.includes("/recommendations")) {
+      return {
+        acceptance_rate: 68.4,
+        top_product: "Motor Type 1 + พ.ร.บ.",
+      } as T;
+    }
+    if (path.includes("/follow-ups")) {
+      return {
+        on_time_rate: 92.5,
+        completed_this_week: 28,
+      } as T;
+    }
+    if (path.includes("/ai-usage")) {
+      return {
+        gemini_queries: 412,
+        talking_points_generated: 189,
+        broker_satisfaction_score: 4.8,
+      } as T;
+    }
+  }
+  if (path.startsWith("/api/v1/model")) {
+    if (path.includes("/metrics")) {
+      return {
+        accuracy: 0.912,
+        precision: 0.895,
+        recall: 0.884,
+        f1_score: 0.889,
+        auc_roc: 0.941,
+      } as T;
+    }
+    if (path.includes("/registry")) {
+      return {
+        active_version: "lgbm-priority-v2.1",
+        status: "production",
+        last_promoted: "2026-09-10",
+      } as T;
+    }
+    return { status: "ok" } as T;
+  }
+  if (path.startsWith("/api/v1/audit")) {
+    return { items: [], total: 0, page: 1 } as T;
+  }
+  return undefined;
+}
 
 async function request<T>(
   path: string,
@@ -65,27 +228,43 @@ async function request<T>(
     return fetch(`${API_BASE}${path}`, { ...options, headers });
   };
 
-  let res = await makeRequest(token);
+  try {
+    let res = await makeRequest(token);
 
-  if (res.status === 401 && token) {
-    token = await refreshAccessToken();
-    if (token) {
-      res = await makeRequest(token);
-    } else {
-      clearTokens();
-      if (typeof window !== "undefined") {
-        window.location.href = "/login";
+    if (res.status === 401 && token) {
+      token = await refreshAccessToken();
+      if (token) {
+        res = await makeRequest(token);
+      } else {
+        clearTokens();
+        if (typeof window !== "undefined") {
+          window.location.href = "/login";
+        }
+        throw new Error("Session expired. Please log in again.");
       }
-      throw new Error("Session expired. Please log in again.");
     }
-  }
 
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({ detail: res.statusText }));
-    throw new Error(err.detail || `Request failed with status ${res.status}`);
-  }
+    if (!res.ok) {
+      // If 404/502/503/504 (backend offline or unhosted on Vercel), fall back gracefully to Demo Preview
+      if (res.status === 404 || res.status === 502 || res.status === 503 || res.status === 504) {
+        const mockFallback = getMockResponse<T>(path, options);
+        if (mockFallback !== undefined) {
+          return mockFallback;
+        }
+      }
+      const err = await res.json().catch(() => ({ detail: res.statusText }));
+      throw new Error(err.detail || `Request failed with status ${res.status}`);
+    }
 
-  return res.json() as Promise<T>;
+    return res.json() as Promise<T>;
+  } catch (err: unknown) {
+    // Network Error (e.g. Failed to fetch when backend is offline or unreachable)
+    const mockFallback = getMockResponse<T>(path, options);
+    if (mockFallback !== undefined) {
+      return mockFallback;
+    }
+    throw err;
+  }
 }
 
 // ── API Methods ──────────────────────────────────────────────────
