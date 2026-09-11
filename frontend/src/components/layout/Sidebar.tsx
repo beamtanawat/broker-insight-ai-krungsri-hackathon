@@ -23,7 +23,7 @@ const NAV_SECTIONS: NavSection[] = [
     items: [
       { label: "แดชบอร์ด (Dashboard)", href: "/dashboard", icon: "🏠" },
       { label: "รายชื่อลูกค้า (Customers)", href: "/customers", icon: "👥" },
-      { label: "AI Copilot", href: "/chat", icon: "💬" },
+      { label: "My Protection (ลูกค้า Gen Z)", href: "/my-protection", icon: "📱", badge: "Gen Z" },
     ],
   },
   {
@@ -79,32 +79,35 @@ export function Sidebar({ user, collapsed = false, onToggleCollapse, onMobileClo
           alignItems: "center",
           gap: "12px",
           borderBottom: "1px solid rgba(255,255,255,0.08)",
-          minHeight: "68px",
+          minHeight: "72px",
+          background: "linear-gradient(180deg, rgba(254, 203, 0, 0.06) 0%, transparent 100%)",
         }}
       >
         <div
           style={{
-            width: "34px",
-            height: "34px",
-            borderRadius: "8px",
-            backgroundColor: "var(--primary-600)",
+            width: "38px",
+            height: "38px",
+            borderRadius: "10px",
+            backgroundColor: "var(--krungsri-yellow)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            fontSize: "18px",
-            color: "white",
-            fontWeight: 800,
+            fontSize: "20px",
+            color: "#0b1e36",
+            fontWeight: 900,
             flexShrink: 0,
+            boxShadow: "0 0 14px rgba(254, 203, 0, 0.4)",
           }}
         >
           ⚡
         </div>
         {!collapsed && (
           <div style={{ overflow: "hidden" }}>
-            <div style={{ fontWeight: 800, color: "white", fontSize: "0.95rem", letterSpacing: "-0.01em", whiteSpace: "nowrap" }}>
-              Broker Insight AI
+            <div style={{ fontWeight: 800, color: "white", fontSize: "1.0rem", letterSpacing: "-0.01em", whiteSpace: "nowrap" }}>
+              Broker Insight <span style={{ color: "var(--krungsri-yellow)" }}>AI</span>
             </div>
-            <div style={{ fontSize: "0.6875rem", color: "var(--slate-400)", whiteSpace: "nowrap" }}>
+            <div style={{ fontSize: "0.6875rem", color: "var(--slate-400)", whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: "6px", marginTop: "2px" }}>
+              <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#22c55e", display: "inline-block", boxShadow: "0 0 6px #22c55e" }} />
               Krungsri Financial Advisory
             </div>
           </div>
@@ -115,11 +118,11 @@ export function Sidebar({ user, collapsed = false, onToggleCollapse, onMobileClo
       <div
         style={{
           flex: 1,
-          padding: "16px 12px",
+          padding: "18px 12px",
           overflowY: "auto",
           display: "flex",
           flexDirection: "column",
-          gap: "20px",
+          gap: "22px",
         }}
       >
         {NAV_SECTIONS.map((section, idx) => {
@@ -137,15 +140,15 @@ export function Sidebar({ user, collapsed = false, onToggleCollapse, onMobileClo
                     fontSize: "0.6875rem",
                     fontWeight: 700,
                     textTransform: "uppercase",
-                    color: "var(--slate-500)",
-                    letterSpacing: "0.08em",
-                    padding: "0 8px 8px 8px",
+                    color: "var(--slate-400)",
+                    letterSpacing: "0.09em",
+                    padding: "0 10px 8px 10px",
                   }}
                 >
                   {section.title}
                 </div>
               )}
-              <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
                 {visibleItems.map((item) => {
                   const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
                   return (
@@ -158,20 +161,29 @@ export function Sidebar({ user, collapsed = false, onToggleCollapse, onMobileClo
                         display: "flex",
                         alignItems: "center",
                         gap: "10px",
-                        padding: collapsed ? "10px" : "9px 12px",
+                        padding: collapsed ? "10px" : "10px 14px",
                         justifyContent: collapsed ? "center" : "flex-start",
                         borderRadius: "var(--radius-md)",
-                        fontSize: "0.84rem",
-                        fontWeight: isActive ? 600 : 500,
-                        backgroundColor: isActive ? "var(--primary-700)" : "transparent",
-                        color: isActive ? "white" : "var(--slate-300)",
-                        transition: "all var(--transition-fast)",
+                        fontSize: "0.85rem",
+                        fontWeight: isActive ? 700 : 500,
+                        backgroundColor: isActive ? "rgba(254, 203, 0, 0.14)" : "transparent",
+                        borderLeft: isActive ? "3px solid var(--krungsri-yellow)" : "3px solid transparent",
+                        color: isActive ? "#ffffff" : "var(--slate-300)",
+                        transition: "all var(--motion-fast)",
                       }}
                       onMouseEnter={(e) => {
-                        if (!isActive) (e.currentTarget as HTMLElement).style.backgroundColor = "var(--bg-sidebar-hover)";
+                        if (!isActive) {
+                          (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(255, 255, 255, 0.08)";
+                          (e.currentTarget as HTMLElement).style.color = "#ffffff";
+                          (e.currentTarget as HTMLElement).style.transform = "translateX(2px)";
+                        }
                       }}
                       onMouseLeave={(e) => {
-                        if (!isActive) (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
+                        if (!isActive) {
+                          (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
+                          (e.currentTarget as HTMLElement).style.color = "var(--slate-300)";
+                          (e.currentTarget as HTMLElement).style.transform = "none";
+                        }
                       }}
                     >
                       <span style={{ fontSize: "16px", flexShrink: 0 }}>{item.icon}</span>
@@ -184,12 +196,12 @@ export function Sidebar({ user, collapsed = false, onToggleCollapse, onMobileClo
                         <span
                           style={{
                             fontSize: "0.625rem",
-                            fontWeight: 700,
-                            padding: "1px 6px",
-                            backgroundColor: "rgba(59, 130, 246, 0.25)",
-                            color: "#93c5fd",
+                            fontWeight: 800,
+                            padding: "2px 7px",
+                            backgroundColor: "rgba(254, 203, 0, 0.2)",
+                            color: "var(--krungsri-yellow)",
                             borderRadius: "var(--radius-full)",
-                            border: "1px solid rgba(59, 130, 246, 0.4)",
+                            border: "1px solid rgba(254, 203, 0, 0.4)",
                           }}
                         >
                           {item.badge}
@@ -219,17 +231,19 @@ export function Sidebar({ user, collapsed = false, onToggleCollapse, onMobileClo
           <div style={{ display: "flex", alignItems: "center", gap: "10px", overflow: "hidden" }}>
             <div
               style={{
-                width: "32px",
-                height: "32px",
+                width: "34px",
+                height: "34px",
                 borderRadius: "50%",
-                backgroundColor: "#1e3a8a",
-                color: "#bfdbfe",
+                backgroundColor: "#0f2744",
+                border: "2px solid var(--krungsri-yellow)",
+                color: "var(--krungsri-yellow)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontWeight: 700,
-                fontSize: "0.8rem",
+                fontWeight: 800,
+                fontSize: "0.85rem",
                 flexShrink: 0,
+                boxShadow: "0 0 10px rgba(254, 203, 0, 0.25)",
               }}
             >
               {user.full_name?.charAt(0) || "U"}

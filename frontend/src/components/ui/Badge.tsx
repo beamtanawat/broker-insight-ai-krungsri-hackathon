@@ -10,7 +10,9 @@ export type BadgeVariant =
   | "info"
   | "neutral"
   | "outline"
-  | "ai";
+  | "ai"
+  | "gold"
+  | "krungsri";
 
 export type BadgeSize = "sm" | "md" | "lg";
 
@@ -70,6 +72,16 @@ const VARIANT_STYLES: Record<BadgeVariant, { bg: string; text: string; border: s
     bg: "#eff6ff",
     text: "#1e40af",
     border: "#bfdbfe",
+  },
+  gold: {
+    bg: "rgba(254, 203, 0, 0.16)",
+    text: "#854d0e",
+    border: "rgba(254, 203, 0, 0.4)",
+  },
+  krungsri: {
+    bg: "rgba(254, 203, 0, 0.16)",
+    text: "#854d0e",
+    border: "rgba(254, 203, 0, 0.4)",
   },
 };
 

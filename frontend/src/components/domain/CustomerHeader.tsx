@@ -45,103 +45,107 @@ export function CustomerHeader({
       style={{
         display: "flex",
         justifyContent: "space-between",
-        alignItems: "flex-start",
+        alignItems: "center",
         gap: "var(--space-4)",
         flexWrap: "wrap",
-        padding: "var(--space-5)",
+        padding: "20px 24px",
         backgroundColor: "var(--bg-surface)",
+        background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
         border: "1px solid var(--border-subtle)",
-        borderRadius: "var(--radius-lg)",
-        boxShadow: "var(--shadow-xs)",
+        borderLeft: "4px solid var(--krungsri-yellow)",
+        borderRadius: "var(--radius-xl)",
+        boxShadow: "var(--shadow-card)",
         ...style,
       }}
     >
       {/* Identity */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-2)", minWidth: 0 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3)", flexWrap: "wrap" }}>
-          {/* Avatar initial */}
-          <div
-            aria-hidden="true"
-            style={{
-              width: "44px",
-              height: "44px",
-              borderRadius: "50%",
-              backgroundColor: "var(--primary-100)",
-              color: "var(--primary-700)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "var(--fs-lg)",
-              fontWeight: 700,
-              flexShrink: 0,
-            }}
-          >
-            {fullName?.[0] ?? "?"}
-          </div>
+      <div style={{ display: "flex", alignItems: "center", gap: "16px", minWidth: 0, flexWrap: "wrap" }}>
+        {/* Avatar initial */}
+        <div
+          aria-hidden="true"
+          style={{
+            width: "52px",
+            height: "52px",
+            borderRadius: "50%",
+            backgroundColor: "#0b1e36",
+            border: "2.5px solid var(--krungsri-yellow)",
+            color: "var(--krungsri-yellow)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: "1.25rem",
+            fontWeight: 800,
+            flexShrink: 0,
+            boxShadow: "0 4px 14px rgba(11, 30, 54, 0.15)",
+          }}
+        >
+          {fullName?.[0] ?? "?"}
+        </div>
 
-          <div>
+        <div>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
             <h2
               style={{
                 margin: 0,
-                fontSize: "var(--fs-lg)",
-                fontWeight: 700,
-                color: "var(--slate-900)",
+                fontSize: "1.25rem",
+                fontWeight: 800,
+                color: "#0b1e36",
                 lineHeight: 1.2,
+                letterSpacing: "-0.01em",
               }}
             >
               {fullName}
             </h2>
-            <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)", marginTop: "2px", display: "flex", gap: "var(--space-2)", alignItems: "center", flexWrap: "wrap" }}>
-              {externalRef && <span>{externalRef}</span>}
-              {segment && (
-                <>
-                  <span aria-hidden="true" style={{ color: "var(--slate-300)" }}>·</span>
-                  <span>{segment}</span>
-                </>
-              )}
-            </div>
+
+            {segment && (
+              <span
+                style={{
+                  fontSize: "11px",
+                  fontWeight: 700,
+                  backgroundColor: "rgba(254, 203, 0, 0.18)",
+                  color: "#854d0e",
+                  border: "1px solid rgba(254, 203, 0, 0.45)",
+                  padding: "2px 8px",
+                  borderRadius: "var(--radius-full)",
+                }}
+              >
+                ★ {segment}
+              </span>
+            )}
           </div>
-        </div>
 
-        {/* Status badges row */}
-        <div style={{ display: "flex", gap: "var(--space-2)", flexWrap: "wrap", marginLeft: "56px" }}>
-          {priorityLabel && priorityVariant && (
-            <Badge variant={priorityVariant} size="sm">
-              ลำดับ: {priorityLabel}
-            </Badge>
-          )}
-          {kyc && (
-            <Badge variant={kyc.variant} size="sm">
-              {kyc.label}
-            </Badge>
-          )}
-        </div>
+          <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)", marginTop: "4px", display: "flex", gap: "12px", alignItems: "center", flexWrap: "wrap" }}>
+            {externalRef && (
+              <span style={{ fontWeight: 600, color: "var(--slate-600)" }}>
+                {externalRef}
+              </span>
+            )}
 
-        {/* Date metadata */}
-        {(lastContact || nextFollowUp) && (
-          <div
-            style={{
-              display: "flex",
-              gap: "var(--space-5)",
-              fontSize: "var(--fs-xs)",
-              color: "var(--slate-500)",
-              marginLeft: "56px",
-            }}
-          >
+            {priorityLabel && priorityVariant && (
+              <Badge variant={priorityVariant} size="sm">
+                ลำดับ: {priorityLabel}
+              </Badge>
+            )}
+
+            {kyc && (
+              <Badge variant={kyc.variant} size="sm">
+                {kyc.label}
+              </Badge>
+            )}
+
             {lastContact && (
-              <span>
-                ติดต่อล่าสุด:{" "}
-                <strong style={{ color: "var(--slate-700)" }}>{lastContact}</strong>
+              <span style={{ color: "var(--slate-500)" }}>
+                📞 ติดต่อล่าสุด: <strong style={{ color: "var(--slate-700)" }}>{lastContact}</strong>
               </span>
             )}
+
             {nextFollowUp && (
-              <span>
-                นัดหมายถัดไป:{" "}
-                <strong style={{ color: "var(--slate-700)" }}>{nextFollowUp}</strong>
+              <span style={{ color: "var(--slate-500)" }}>
+                📅 นัดหมาย: <strong style={{ color: "var(--slate-700)" }}>{nextFollowUp}</strong>
               </span>
             )}
           </div>
-        )}
+        </div>
       </div>
 
       {/* Primary action */}

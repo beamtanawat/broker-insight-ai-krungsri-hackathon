@@ -135,15 +135,17 @@ export function Tabs({ tabs, activeTab, onChange, variant = "underline" }: TabsP
               display: "inline-flex",
               alignItems: "center",
               gap: "var(--space-2)",
-              padding: "var(--space-3) 2px",
+              padding: "var(--space-3) 8px",
               fontSize: "var(--fs-base)",
-              fontWeight: isActive ? 600 : 500,
+              fontWeight: isActive ? 700 : 500,
               color: t.disabled
                 ? "var(--slate-300)"
                 : isActive
-                ? "var(--primary-700)"
-                : "var(--slate-500)",
-              borderBottom: `2px solid ${isActive ? "var(--primary-700)" : "transparent"}`,
+                ? "#0b1e36"
+                : "var(--slate-600)",
+              borderBottom: `3px solid ${isActive ? "var(--krungsri-yellow)" : "transparent"}`,
+              backgroundColor: isActive ? "rgba(254, 203, 0, 0.08)" : "transparent",
+              borderRadius: "var(--radius-sm) var(--radius-sm) 0 0",
               marginBottom: "-1px",
               whiteSpace: "nowrap",
               transition: "all var(--motion-fast)",

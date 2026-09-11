@@ -33,74 +33,95 @@ export function DecisionSummary({
 
   return (
     <div
+      className="glass-card"
       style={{
         padding: "var(--space-4) var(--space-5)",
-        backgroundColor: "var(--bg-surface)",
+        backgroundColor: "rgba(255, 255, 255, 0.95)",
         border: "1px solid var(--border-subtle)",
-        borderRadius: "var(--radius-lg)",
-        boxShadow: "var(--shadow-xs)",
+        borderLeft: "4px solid var(--krungsri-yellow)",
+        borderRadius: "var(--radius-xl)",
+        boxShadow: "var(--shadow-card)",
         marginBottom: "var(--space-6)",
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-        gap: "var(--space-4)",
+        gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+        gap: "var(--space-5)",
         alignItems: "center",
       }}
     >
       {/* 1. Priority */}
-      <div style={{ borderRight: "1px solid var(--border-subtle)", paddingRight: "var(--space-3)" }}>
-        <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)", fontWeight: 600, textTransform: "uppercase" }}>
-          ระดับความสำคัญ
+      <div style={{ borderRight: "1px solid var(--border-subtle)", paddingRight: "var(--space-4)" }}>
+        <div style={{ fontSize: "11px", color: "var(--slate-500)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+          ระดับความสำคัญ (Priority)
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "4px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "4px" }}>
           <Badge variant={priority as any} size="sm">
             {priority === "high" ? "สูง (High)" : priority === "medium" ? "ปานกลาง" : "ต่ำ"}
           </Badge>
-          <span style={{ fontSize: "var(--fs-md)", fontWeight: 800, color: "var(--slate-900)" }}>
-            {Math.round(score)}/100
+          <span style={{ fontSize: "1.25rem", fontWeight: 800, color: "var(--krungsri-navy)", letterSpacing: "-0.02em" }}>
+            {Math.round(score)}<span style={{ fontSize: "0.8rem", fontWeight: 500, color: "var(--slate-500)" }}>/100</span>
           </span>
         </div>
       </div>
 
       {/* 2. Key Driver */}
-      <div style={{ borderRight: "1px solid var(--border-subtle)", paddingRight: "var(--space-3)" }}>
-        <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)", fontWeight: 600, textTransform: "uppercase" }}>
-          ปัจจัยสำคัญหลัก
+      <div style={{ borderRight: "1px solid var(--border-subtle)", paddingRight: "var(--space-4)" }}>
+        <div style={{ fontSize: "11px", color: "var(--slate-500)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+          ปัจจัยสำคัญหลัก (Key Driver)
         </div>
         <div style={{ fontSize: "var(--fs-sm)", fontWeight: 700, color: "var(--slate-800)", marginTop: "4px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-          {topReason}
+          ⚡ {topReason}
         </div>
       </div>
 
       {/* 3. Top Recommendation */}
-      <div style={{ borderRight: "1px solid var(--border-subtle)", paddingRight: "var(--space-3)" }}>
-        <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)", fontWeight: 600, textTransform: "uppercase" }}>
+      <div style={{ borderRight: "1px solid var(--border-subtle)", paddingRight: "var(--space-4)" }}>
+        <div style={{ fontSize: "11px", color: "var(--slate-500)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
           ผลิตภัณฑ์แนะนำอันดับ 1
         </div>
-        <div style={{ fontSize: "var(--fs-sm)", fontWeight: 700, color: "var(--primary-700)", marginTop: "4px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-          {topRec ? topRec.product_name : "รอการประเมิน"}
+        <div style={{ fontSize: "var(--fs-sm)", fontWeight: 800, color: "var(--krungsri-navy)", marginTop: "4px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+          🛡️ {topRec ? topRec.product_name : "รอการประเมิน"}
         </div>
       </div>
 
       {/* 4. Suggested Next Action */}
       <div>
-        <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)", fontWeight: 600, textTransform: "uppercase" }}>
-          การดำเนินการถัดไป
+        <div style={{ fontSize: "11px", color: "var(--slate-500)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+          การดำเนินการถัดไป (Next Action)
         </div>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px", marginTop: "4px" }}>
           <span style={{ fontSize: "var(--fs-sm)", fontWeight: 700, color: "var(--slate-900)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
             {nextAction}
           </span>
           <button
-            onClick={() => onNavigateTab(topRec ? "recommend" : "priority")}
+            onClick={() => {
+              const targetTab = topRec ? "recommend" : "priority";
+              onNavigateTab(targetTab);
+              setTimeout(() => {
+                const targetId = targetTab === "recommend" ? "recommendation-workspace" : "priority-workspace";
+                const el = document.getElementById(targetId);
+                if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+              }, 120);
+            }}
             style={{
-              fontSize: "var(--fs-xs)",
-              color: "var(--primary-700)",
-              fontWeight: 700,
+              fontSize: "11px",
+              color: "var(--krungsri-navy)",
+              fontWeight: 800,
               cursor: "pointer",
               whiteSpace: "nowrap",
-              padding: "2px 6px",
-              borderRadius: "var(--radius-sm)",
-              backgroundColor: "var(--primary-50)",
+              padding: "5px 10px",
+              borderRadius: "var(--radius-full)",
+              background: "var(--krungsri-gold-gradient)",
+              border: "1px solid rgba(254, 203, 0, 0.4)",
+              boxShadow: "0 1px 3px rgba(254, 203, 0, 0.3)",
+              transition: "all var(--motion-fast) ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "translateY(-1px)";
+              e.currentTarget.style.boxShadow = "0 3px 8px rgba(254, 203, 0, 0.45)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "none";
+              e.currentTarget.style.boxShadow = "0 1px 3px rgba(254, 203, 0, 0.3)";
             }}
           >
             ดูทันที →

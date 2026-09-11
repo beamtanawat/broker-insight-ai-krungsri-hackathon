@@ -1,8 +1,8 @@
-"""Helper script to seed synthetic demonstration data."""
+"""Helper script to seed high-fidelity synthetic demonstration data."""
 import asyncio
 from app.core.seed import seed_database
 
 if __name__ == "__main__":
-    print("Seeding synthetic demo data...")
-    asyncio.run(seed_database())
+    print("Seeding high-fidelity synthetic demo data with force reseed...")
+    asyncio.run(seed_database(num_customers=250, force_reseed=True))
     print("✓ Seeding completed successfully.")

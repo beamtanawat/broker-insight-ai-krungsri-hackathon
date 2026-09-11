@@ -170,7 +170,7 @@ export default function PilotEvaluationPage() {
           { label: "Pilot & Evaluation" },
         ]}
         primaryAction={
-          <Button variant="primary" size="sm" leftIcon="🔄" onClick={loadData} isLoading={loading}>
+          <Button variant="gold" size="sm" leftIcon="🔄" onClick={loadData} isLoading={loading}>
             รีเฟรชข้อมูล
           </Button>
         }
@@ -193,8 +193,9 @@ export default function PilotEvaluationPage() {
       {activeSession && (
         <div
           style={{
-            padding: "16px 20px",
-            backgroundColor: "var(--primary-700)",
+            padding: "16px 22px",
+            backgroundColor: "var(--krungsri-navy)",
+            border: "1px solid var(--krungsri-yellow)",
             color: "var(--white)",
             borderRadius: "var(--radius-lg)",
             marginBottom: "var(--space-5)",
@@ -203,15 +204,16 @@ export default function PilotEvaluationPage() {
             alignItems: "center",
             flexWrap: "wrap",
             gap: "12px",
-            boxShadow: "var(--shadow-md)",
+            boxShadow: "0 10px 25px -5px rgba(11, 30, 54, 0.4)",
           }}
         >
           <div>
-            <div style={{ fontWeight: 800, fontSize: "var(--fs-base)" }}>
+            <div style={{ fontWeight: 800, fontSize: "var(--fs-base)", display: "flex", alignItems: "center", gap: "8px" }}>
+              <span style={{ display: "inline-block", width: "8px", height: "8px", borderRadius: "50%", backgroundColor: "var(--krungsri-yellow)", animation: "pulse 1.5s infinite" }} />
               ⏱️ กำลังบันทึกการทดสอบ: {SCENARIOS.find((s) => s.id === activeSession.scenarioId)?.name}
             </div>
-            <div style={{ fontSize: "var(--fs-xs)", opacity: 0.9, marginTop: "2px" }}>
-              รหัสลูกค้า: {activeSession.customerRef} · เวลาที่ใช้: <strong>{Math.floor(elapsedSeconds / 60)}:{(elapsedSeconds % 60).toString().padStart(2, "0")} นาที</strong>
+            <div style={{ fontSize: "var(--fs-xs)", opacity: 0.9, marginTop: "4px" }}>
+              รหัสลูกค้า: <strong style={{ color: "var(--krungsri-yellow)" }}>{activeSession.customerRef}</strong> · เวลาที่ใช้: <strong>{Math.floor(elapsedSeconds / 60)}:{(elapsedSeconds % 60).toString().padStart(2, "0")} นาที</strong>
             </div>
           </div>
 
@@ -222,7 +224,7 @@ export default function PilotEvaluationPage() {
               </Button>
             </Link>
             <Button
-              variant="approve"
+              variant="gold"
               size="sm"
               onClick={handleCompleteSession}
             >
@@ -244,33 +246,49 @@ export default function PilotEvaluationPage() {
       {/* ── Tab 1: Scenarios Grid ── */}
       {activeTab === "scenarios" && (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))", gap: "var(--space-5)" }}>
-          {SCENARIOS.map((sc) => (
-            <Card
-              key={sc.id}
-              title={sc.name}
-              headerAction={<Badge variant={sc.badge} size="sm">{sc.badge}</Badge>}
-            >
-              <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%", gap: "var(--space-4)" }}>
-                <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-600)", lineHeight: 1.6 }}>
-                  {sc.desc}
-                </div>
+          {SCENARIOS.map((sc, idx) => {
+            const topColors = [
+              "#ef4444", // A: High
+              "#f59e0b", // B: Med
+              "#94a3b8", // C: Low
+              "#8b5cf6", // D: Protection Gap
+              "#0284c7", // E: Coverage Review
+              "#64748b", // F: Missing Info
+              "#d97706", // G: LLM Fallback
+              "#dc2626", // H: Eligibility Gate
+            ];
+            const borderTopColor = topColors[idx % topColors.length];
 
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid var(--border-subtle)", paddingTop: "12px" }}>
-                  <span style={{ fontFamily: "monospace", fontSize: "var(--fs-xs)", color: "var(--slate-500)" }}>
-                    รหัส: {sc.ref}
-                  </span>
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    onClick={() => handleStartSession(sc)}
-                    disabled={Boolean(activeSession)}
-                  >
-                    เริ่มทดสอบสถานการณ์นี้
-                  </Button>
+            return (
+              <Card
+                key={sc.id}
+                className="hover-lift"
+                title={sc.name}
+                headerAction={<Badge variant={sc.badge} size="sm">{sc.badge}</Badge>}
+                style={{ borderTop: `3px solid ${borderTopColor}` }}
+              >
+                <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%", gap: "var(--space-4)" }}>
+                  <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-600)", lineHeight: 1.6 }}>
+                    {sc.desc}
+                  </div>
+
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid var(--border-subtle)", paddingTop: "12px" }}>
+                    <span style={{ fontFamily: "monospace", fontSize: "var(--fs-xs)", color: "var(--slate-500)", fontWeight: 600 }}>
+                      รหัส: {sc.ref}
+                    </span>
+                    <Button
+                      variant={activeSession ? "secondary" : "primary"}
+                      size="sm"
+                      onClick={() => handleStartSession(sc)}
+                      disabled={Boolean(activeSession)}
+                    >
+                      เริ่มทดสอบสถานการณ์นี้
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            </Card>
-          ))}
+              </Card>
+            );
+          })}
         </div>
       )}
 
@@ -279,7 +297,7 @@ export default function PilotEvaluationPage() {
         <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-6)" }}>
           {/* Summary KPIs */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "var(--space-4)" }}>
-            <Card noPadding>
+            <Card className="hover-lift" noPadding style={{ borderTop: "3px solid #3b82f6" }}>
               <div style={{ padding: "18px 20px" }}>
                 <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)" }}>
                   ผู้เข้าร่วมทดสอบนำร่อง
@@ -293,7 +311,7 @@ export default function PilotEvaluationPage() {
               </div>
             </Card>
 
-            <Card noPadding>
+            <Card className="hover-lift" noPadding style={{ borderTop: "3px solid #10b981" }}>
               <div style={{ padding: "18px 20px" }}>
                 <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)" }}>
                   รอบทดสอบที่เสร็จสมบูรณ์
@@ -307,12 +325,12 @@ export default function PilotEvaluationPage() {
               </div>
             </Card>
 
-            <Card noPadding>
+            <Card className="hover-lift" noPadding style={{ borderTop: "3px solid var(--krungsri-yellow)" }}>
               <div style={{ padding: "18px 20px" }}>
                 <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)" }}>
                   คะแนนความเชื่อมั่นรวม (Trust)
                 </div>
-                <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 800, color: "var(--slate-900)", marginTop: "4px" }}>
+                <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 800, color: "var(--krungsri-navy)", marginTop: "4px" }}>
                   {(dashboard?.human_feedback?.avg_trust_score ?? 4.75).toFixed(2)} / 5.0
                 </div>
                 <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)", marginTop: "2px" }}>
@@ -321,7 +339,7 @@ export default function PilotEvaluationPage() {
               </div>
             </Card>
 
-            <Card noPadding>
+            <Card className="hover-lift" noPadding style={{ borderTop: "3px solid #8b5cf6" }}>
               <div style={{ padding: "18px 20px" }}>
                 <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)" }}>
                   ความง่ายในการใช้งาน (Usability)

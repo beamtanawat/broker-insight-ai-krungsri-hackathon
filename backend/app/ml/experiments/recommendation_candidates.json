@@ -3,7 +3,7 @@
     "top_1_match_rate_pct": 100.0,
     "top_k_match_rate_pct": 100.0,
     "ineligible_recommendation_rate_pct": 11.11,
-    "avg_latency_ms": 0.87,
+    "avg_latency_ms": 0.86,
     "hard_gate": false,
     "weights": {
       "need_weight": 0.6,

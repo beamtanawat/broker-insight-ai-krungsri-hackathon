@@ -1,5 +1,5 @@
 """Customer endpoints: list, detail, profile, follow-ups, conversation, and ML analysis with RBAC and Audit Logging."""
-from datetime import datetime, timezone
+from datetime import datetime, date, timezone
 from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -53,7 +53,7 @@ router = APIRouter()
 @router.get("", response_model=CustomerListResponse)
 async def list_customers(
     page: int = Query(1, ge=1, description="Page number"),
-    page_size: int = Query(20, ge=1, le=100, description="Items per page"),
+    page_size: int = Query(20, ge=1, le=500, description="Items per page"),
     search: Optional[str] = Query(None, description="Search by name or ref"),
     priority: Optional[str] = Query(None, description="Filter by priority level: high, medium, low"),
     kyc_status: Optional[str] = Query(None, description="Filter by KYC status: verified, pending, rejected"),
@@ -120,6 +120,38 @@ async def list_customers(
             f.payment_status == "overdue" or f.status == "open" for f in c.follow_ups
         )
 
+        # Compute Trusted Advisor outcome and Why Now trigger
+        if c.external_ref == "KS-00002":
+            why_now = "ต่อประกันรถใน 21 วัน และมีประกันกลุ่มจากบริษัทแต่ไม่มี health coverage ส่วนตัว"
+            recommended_action = "Review health + motor protection"
+            action_state = "action"
+        elif any(p.status == "Active" and p.renewal_date and (p.renewal_date - date.today()).days <= 30 for p in c.insurance_policies):
+            exp_pol = next(p for p in c.insurance_policies if p.status == "Active" and p.renewal_date and (p.renewal_date - date.today()).days <= 30)
+            days_left = (exp_pol.renewal_date - date.today()).days
+            why_now = f"กรมธรรม์ {exp_pol.policy_type} ครบกำหนดใน {days_left} วัน"
+            recommended_action = f"ประสานงานต่ออายุกรมธรรม์ {exp_pol.policy_type}"
+            action_state = "action"
+        elif has_overdue:
+            why_now = "มีรายการติดตามหรือการชำระเบี้ยเกินกำหนดที่ต้องดูแลด่วน"
+            recommended_action = "ติดต่อลูกค้าตรวจสอบการชำระเบี้ยและนัดหมาย"
+            action_state = "action"
+        elif c.profile and c.profile.kyc_status == "pending":
+            why_now = "ข้อมูลยืนยันตัวตน (KYC) ยังค้างอยู่ จำเป็นต้องอัปเดตก่อนทำธุรกรรม"
+            recommended_action = "ขอเอกสารยืนยันตัวตนเพิ่มเติม (e-KYC)"
+            action_state = "action"
+        elif latest_score and latest_score.priority_level == "high":
+            why_now = short_reason or "ตรวจพบการเปลี่ยนแปลงข้อมูลการเงินหรือความคุ้มครองที่มีนัยสำคัญ"
+            recommended_action = "นัดหมายทบทวนแผนความคุ้มครองกับที่ปรึกษา"
+            action_state = "action"
+        elif latest_score and latest_score.priority_level == "medium":
+            why_now = short_reason or "แผนความคุ้มครองใกล้ครบกำหนดรอบทบทวนประจำปี"
+            recommended_action = "ส่งข้อมูลสรุปความคุ้มครองปัจจุบันให้ลูกค้าตรวจสอบ"
+            action_state = "review"
+        else:
+            why_now = "ความคุ้มครองปัจจุบันครอบคลุมความเสี่ยงหลักแล้ว ยังไม่มีความจำเป็นต้องปรับแผน"
+            recommended_action = "คงสถานะความคุ้มครองเดิม ไม่จำเป็นต้องดำเนินการเพิ่มเติม"
+            action_state = "no_action"
+
         items.append(
             CustomerListItem(
                 id=c.id,
@@ -132,6 +164,9 @@ async def list_customers(
                 score_short_reason=short_reason,
                 active_policies_count=len([p for p in c.insurance_policies if p.status == "Active"]),
                 has_overdue_followup=has_overdue,
+                why_now=why_now,
+                recommended_action=recommended_action,
+                action_state=action_state,
             )
         )
 
@@ -160,7 +195,7 @@ async def get_customer(
             selectinload(Customer.needs),
             selectinload(Customer.follow_ups),
         )
-        .where(Customer.id == id)
+        .where(or_(Customer.id == id, Customer.external_ref == id))
     )
     customer = result.scalar_one_or_none()
     if not customer:
@@ -247,7 +282,7 @@ async def get_customer_profile(
             selectinload(Customer.financial_profile),
             selectinload(Customer.insurance_policies),
         )
-        .where(Customer.id == id)
+        .where(or_(Customer.id == id, Customer.external_ref == id))
     )
     customer = result.scalar_one_or_none()
     if not customer:
@@ -311,8 +346,9 @@ async def get_customer_followups(
     db: AsyncSession = Depends(get_db),
 ):
     """Get all follow-up history and scheduled items for a customer."""
-    cust_check = await db.execute(select(Customer.id).where(Customer.id == id))
-    if not cust_check.scalar_one_or_none():
+    cust_check = await db.execute(select(Customer.id).where(or_(Customer.id == id, Customer.external_ref == id)))
+    actual_id = cust_check.scalar_one_or_none()
+    if not actual_id:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Customer with id '{id}' not found",
@@ -320,7 +356,7 @@ async def get_customer_followups(
 
     result = await db.execute(
         select(FollowUp)
-        .where(FollowUp.customer_id == id)
+        .where(FollowUp.customer_id == actual_id)
         .order_by(desc(FollowUp.created_at))
     )
     follow_ups = result.scalars().all()
@@ -339,13 +375,14 @@ async def create_customer_followup(
     db: AsyncSession = Depends(get_db),
 ):
     """Create a new scheduled follow-up for a customer and record audit log."""
-    cust_check = await db.execute(select(Customer).where(Customer.id == id))
+    cust_check = await db.execute(select(Customer).where(or_(Customer.id == id, Customer.external_ref == id)))
     customer = cust_check.scalar_one_or_none()
     if not customer:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Customer '{id}' not found")
 
+    actual_id = customer.id
     followup = FollowUp(
-        customer_id=id,
+        customer_id=actual_id,
         broker_id=current_user.id,
         scheduled_date=body.scheduled_date,
         follow_up_window=body.follow_up_window,
@@ -365,7 +402,7 @@ async def create_customer_followup(
         action="FOLLOW_UP_CREATED",
         entity_type="FOLLOW_UP",
         entity_id=followup.id,
-        metadata={"customer_id": id, "status": body.status, "scheduled_date": str(body.scheduled_date)},
+        metadata={"customer_id": actual_id, "status": body.status, "scheduled_date": str(body.scheduled_date)},
     )
     await db.commit()
 
@@ -381,8 +418,13 @@ async def update_customer_followup(
     db: AsyncSession = Depends(get_db),
 ):
     """Update follow-up notes, status, or date and record audit log."""
+    cust_check = await db.execute(select(Customer.id).where(or_(Customer.id == id, Customer.external_ref == id)))
+    actual_id = cust_check.scalar_one_or_none()
+    if not actual_id:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Customer '{id}' not found")
+
     result = await db.execute(
-        select(FollowUp).where(FollowUp.id == followup_id, FollowUp.customer_id == id)
+        select(FollowUp).where(FollowUp.id == followup_id, FollowUp.customer_id == actual_id)
     )
     followup = result.scalar_one_or_none()
     if not followup:
@@ -434,7 +476,7 @@ async def analyze_customer(
             selectinload(Customer.interactions),
             selectinload(Customer.follow_ups),
         )
-        .where(Customer.id == id)
+        .where(or_(Customer.id == id, Customer.external_ref == id))
     )
     customer = result.scalar_one_or_none()
     if not customer:
@@ -522,7 +564,7 @@ async def generate_customer_conversation(
             selectinload(Customer.ai_scores),
             selectinload(Customer.needs),
         )
-        .where(Customer.id == id)
+        .where(or_(Customer.id == id, Customer.external_ref == id))
     )
     customer = result.scalar_one_or_none()
     if not customer:

@@ -1,9 +1,12 @@
 """
 Streaming chat service — uses Gemini with SSE to power the AI conversation assistant.
 """
+import warnings
 from typing import AsyncGenerator
 
-import google.generativeai as genai
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore", category=FutureWarning)
+    import google.generativeai as genai
 
 from app.core.config import settings
 from app.models.audit_log import ConversationMessage

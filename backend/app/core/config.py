@@ -31,6 +31,11 @@ class Settings(BaseSettings):
     LLM_CACHE_ENABLED: bool = True
     LLM_CACHE_TTL_SECONDS: int = 3600
 
+    # Enterprise Caching & Observability (Phase 33)
+    REDIS_URL: str = ""
+    CACHE_BACKEND: str = "memory"  # "memory" | "redis"
+    PROMETHEUS_METRICS_ENABLED: bool = True
+
     # ML
     SYNTHETIC_CUSTOMER_COUNT: int = 500
     ML_MODEL_VERSION: str = "1.0.0"

@@ -8,6 +8,7 @@ interface AlertProps {
   children: React.ReactNode;
   action?: React.ReactNode;
   icon?: React.ReactNode;
+  onClose?: () => void;
   style?: React.CSSProperties;
 }
 
@@ -48,6 +49,7 @@ export function Alert({
   children,
   action,
   icon,
+  onClose,
   style,
 }: AlertProps) {
   const { bg, border, text, titleColor, defaultIcon } = ALERT_STYLES[variant] || ALERT_STYLES.info;
@@ -78,7 +80,30 @@ export function Alert({
         )}
         <div>{children}</div>
       </div>
-      {action && <div style={{ flexShrink: 0 }}>{action}</div>}
+      {(action || onClose) && (
+        <div style={{ flexShrink: 0, display: "flex", alignItems: "center", gap: "8px" }}>
+          {action}
+          {onClose && (
+            <button
+              onClick={onClose}
+              aria-label="Close"
+              style={{
+                background: "none",
+                border: "none",
+                color: text,
+                cursor: "pointer",
+                padding: "2px 6px",
+                borderRadius: "var(--radius-sm)",
+                fontSize: "0.875rem",
+                opacity: 0.75,
+                fontWeight: "bold",
+              }}
+            >
+              ✕
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }

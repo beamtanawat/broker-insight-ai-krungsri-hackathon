@@ -42,6 +42,9 @@ export interface CustomerListItem {
   score_display: number | null;
   priority_level: "high" | "medium" | "low" | null;
   score_short_reason: string | null;
+  why_now?: string | null;
+  recommended_action?: string | null;
+  action_state?: "action" | "review" | "no_action" | null;
   active_policies_count: number;
   has_overdue_followup: boolean;
 }
@@ -239,6 +242,7 @@ export interface ProductMatchOut {
   missing_information?: string[];
   structured_explanation?: StructuredExplanation;
   rank_rationale?: string;
+  estimated_premium_annual?: number;
 }
 
 export interface CustomerRecommendationsResponse {

@@ -14,11 +14,12 @@ import type {
   User,
 } from "@/types";
 import { AppShell } from "@/components/layout";
-import { Card, Badge, Button, Alert, Skeleton } from "@/components/ui";
+import { Card, Badge, Button, Alert, Skeleton, useToast } from "@/components/ui";
 import { PageHeader } from "@/components/domain";
 
 export default function AnalyticsDashboardPage() {
   const router = useRouter();
+  const toast = useToast();
   const [user, setUser] = useState<User | null>(null);
   const [overview, setOverview] = useState<AnalyticsOverviewResponse | null>(null);
   const [priority, setPriority] = useState<PriorityAnalyticsResponse | null>(null);
@@ -91,6 +92,43 @@ export default function AnalyticsDashboardPage() {
     (aiUsage?.total_llm_insight_requests ?? 0) +
     (aiUsage?.total_conversation_requests ?? 0);
 
+  const exportCSV = () => {
+    const timestamp = new Date().toISOString().slice(0, 10);
+    const rows = [
+      ["หมวดหมู่ (Category)", "ตัวชี้วัด (Metric)", "ค่าสถิติ (Value)"],
+      ["ลูกค้า (Customers)", "ความสำคัญสูง (High Priority)", highPriorityCount],
+      ["ลูกค้า (Customers)", "ความสำคัญปานกลาง (Medium Priority)", medPriorityCount],
+      ["ลูกค้า (Customers)", "ความสำคัญต่ำ (Low Priority)", lowPriorityCount],
+      ["ลูกค้า (Customers)", "รวมพอร์ตลูกค้าทั้งหมด (Total Customers)", totalCustomers],
+      ["การตัดสินใจผลิตภัณฑ์ (Product Decisions)", "อัตราเห็นชอบ (Approval Rate %)", `${approvalRate}%`],
+      ["การตัดสินใจผลิตภัณฑ์ (Product Decisions)", "จำนวนรายการเห็นชอบ (Approved Count)", recommendations?.approval_count ?? 0],
+      ["การตัดสินใจผลิตภัณฑ์ (Product Decisions)", "อัตราปรับเปลี่ยน (Modification Rate %)", `${modificationRate}%`],
+      ["การตัดสินใจผลิตภัณฑ์ (Product Decisions)", "จำนวนรายการปรับเปลี่ยน (Modified Count)", recommendations?.modification_count ?? 0],
+      ["การตัดสินใจผลิตภัณฑ์ (Product Decisions)", "อัตราปฏิเสธ (Rejection Rate %)", `${rejectionRate}%`],
+      ["การตัดสินใจผลิตภัณฑ์ (Product Decisions)", "จำนวนรายการปฏิเสธ (Rejected Count)", recommendations?.rejection_count ?? 0],
+      ["งานติดตามผล (Follow-ups)", "งานรอติดตาม (Due Tasks)", followups?.due_count ?? overview?.follow_ups_due ?? 0],
+      ["งานติดตามผล (Follow-ups)", "เกินกำหนด (Overdue Tasks)", overdueFollowups],
+      ["งานติดตามผล (Follow-ups)", "เสร็จสิ้นแล้ว (Completed Tasks)", completedFollowups],
+      ["งานติดตามผล (Follow-ups)", "อัตราการส่งมอบเสร็จสิ้น (Completion Rate %)", `${completionRate}%`],
+      ["การเรียกใช้งาน AI (AI Workflows)", "AI Priority Scoring (LightGBM)", aiUsage?.total_ai_scoring_requests ?? 0],
+      ["การเรียกใช้งาน AI (AI Workflows)", "LLM Customer Insight (Gemini/Claude)", aiUsage?.total_llm_insight_requests ?? 0],
+      ["การเรียกใช้งาน AI (AI Workflows)", "AI Copilot Prep Requests", aiUsage?.total_conversation_requests ?? 0],
+      ["การเรียกใช้งาน AI (AI Workflows)", "รวมการเรียกใช้ทั้งหมด (Total AI Requests)", totalAIRequests],
+    ];
+
+    const csvContent = "\uFEFF" + rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\r\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `krungsri_broker_analytics_${timestamp}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    toast.success("ดาวน์โหลดรายงานสรุปผล CSV สำเร็จแล้ว", "ส่งออกรายงาน");
+  };
+
   return (
     <AppShell user={user}>
       {/* ── 1. Page Header ── */}
@@ -102,16 +140,21 @@ export default function AnalyticsDashboardPage() {
           { label: "ภาพรวมธุรกิจ (Business View)" },
         ]}
         primaryAction={
-          <Button variant="primary" size="sm" leftIcon="🔄" onClick={loadData} isLoading={loading}>
+          <Button variant="gold" size="sm" leftIcon="🔄" onClick={loadData} isLoading={loading}>
             รีเฟรชข้อมูล
           </Button>
         }
         secondaryAction={
-          <Link href="/dashboard">
-            <Button variant="outline" size="sm" leftIcon="🏠">
-              แดชบอร์ดนายหน้า
+          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+            <Button variant="outline" size="sm" leftIcon="📥" onClick={exportCSV}>
+              ส่งออกรายงาน CSV
             </Button>
-          </Link>
+            <Link href="/dashboard">
+              <Button variant="outline" size="sm" leftIcon="🏠">
+                แดชบอร์ดนายหน้า
+              </Button>
+            </Link>
+          </div>
         }
       />
 
@@ -131,12 +174,13 @@ export default function AnalyticsDashboardPage() {
         }}
       >
         {/* KPI 1: High Priority Proportion */}
-        <Card variant="metric" noPadding>
+        <Card className="hover-lift" noPadding style={{ borderTop: "3px solid #ef4444" }}>
           <div style={{ padding: "18px 20px" }}>
-            <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)" }}>
-              ลูกค้าความสำคัญสูง (High Priority)
+            <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span>ลูกค้าความสำคัญสูง</span>
+              <span style={{ fontSize: "16px" }}>🔥</span>
             </div>
-            <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 800, color: "var(--priority-high-text)", marginTop: "4px" }}>
+            <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 800, color: "#dc2626", marginTop: "4px" }}>
               {loading ? <Skeleton width="48px" height="36px" /> : highPriorityCount}
             </div>
             <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)", marginTop: "2px" }}>
@@ -146,12 +190,13 @@ export default function AnalyticsDashboardPage() {
         </Card>
 
         {/* KPI 2: Follow-up Completion Rate */}
-        <Card noPadding>
+        <Card className="hover-lift" noPadding style={{ borderTop: "3px solid var(--krungsri-yellow)" }}>
           <div style={{ padding: "18px 20px" }}>
-            <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)" }}>
-              อัตราส่งมอบงานติดตาม (Completion)
+            <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span>อัตราส่งมอบงานติดตาม</span>
+              <span style={{ fontSize: "16px" }}>📋</span>
             </div>
-            <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 800, color: "var(--primary-700)", marginTop: "4px" }}>
+            <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 800, color: "var(--krungsri-navy)", marginTop: "4px" }}>
               {loading ? <Skeleton width="48px" height="36px" /> : `${completionRate}%`}
             </div>
             <div style={{ fontSize: "var(--fs-xs)", color: overdueFollowups > 0 ? "var(--danger-solid)" : "var(--slate-500)", marginTop: "2px", fontWeight: overdueFollowups > 0 ? 700 : 400 }}>
@@ -161,12 +206,13 @@ export default function AnalyticsDashboardPage() {
         </Card>
 
         {/* KPI 3: Recommendation Acceptance Rate */}
-        <Card noPadding>
+        <Card className="hover-lift" noPadding style={{ borderTop: "3px solid #10b981" }}>
           <div style={{ padding: "18px 20px" }}>
-            <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)" }}>
-              อัตราเห็นชอบคำแนะนำ (Approval)
+            <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span>อัตราเห็นชอบคำแนะนำ</span>
+              <span style={{ fontSize: "16px" }}>🛡️</span>
             </div>
-            <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 800, color: "var(--success-solid)", marginTop: "4px" }}>
+            <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 800, color: "#059669", marginTop: "4px" }}>
               {loading ? <Skeleton width="48px" height="36px" /> : `${approvalRate}%`}
             </div>
             <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)", marginTop: "2px" }}>
@@ -176,12 +222,13 @@ export default function AnalyticsDashboardPage() {
         </Card>
 
         {/* KPI 4: Total AI Workflows */}
-        <Card noPadding>
+        <Card className="hover-lift" noPadding style={{ borderTop: "3px solid #3b82f6" }}>
           <div style={{ padding: "18px 20px" }}>
-            <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)" }}>
-              การใช้งาน AI สนับสนุน (AI Workflows)
+            <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span>การใช้งาน AI สนับสนุน</span>
+              <span style={{ fontSize: "16px" }}>⚡</span>
             </div>
-            <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 800, color: "var(--slate-800)", marginTop: "4px" }}>
+            <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 800, color: "var(--krungsri-navy)", marginTop: "4px" }}>
               {loading ? <Skeleton width="48px" height="36px" /> : totalAIRequests.toLocaleString()}
             </div>
             <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)", marginTop: "2px" }}>
@@ -201,7 +248,7 @@ export default function AnalyticsDashboardPage() {
         >
           <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
             {/* Priority Progress Bars */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
               <div>
                 <div style={{ display: "flex", justifyContent: "space-between", fontSize: "var(--fs-xs)", fontWeight: 700, marginBottom: "4px" }}>
                   <span style={{ color: "var(--priority-high-text)" }}>🔥 ความสำคัญสูง (High)</span>
@@ -269,20 +316,38 @@ export default function AnalyticsDashboardPage() {
           subtitle="สถิติการยอมรับ ปรับเปลี่ยน หรือปฏิเสธคำแนะนำจากโมเดล Product Matcher"
         >
           <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
+            {/* Visual Stacked Progress Bar */}
+            <div>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "var(--fs-xs)", color: "var(--slate-500)", marginBottom: "6px" }}>
+                <span>สัดส่วนการตัดสินใจของนายหน้า (Decision Split)</span>
+                <span>รวม {totalDecisions} รายการ</span>
+              </div>
+              <div style={{ height: "10px", borderRadius: "999px", overflow: "hidden", display: "flex", backgroundColor: "var(--slate-100)" }}>
+                <div style={{ width: `${approvalRate}%`, backgroundColor: "#10b981", transition: "width 0.4s ease" }} title={`เห็นชอบ ${approvalRate}%`} />
+                <div style={{ width: `${modificationRate}%`, backgroundColor: "#f59e0b", transition: "width 0.4s ease" }} title={`ปรับเปลี่ยน ${modificationRate}%`} />
+                <div style={{ width: `${rejectionRate}%`, backgroundColor: "#ef4444", transition: "width 0.4s ease" }} title={`ปฏิเสธ ${rejectionRate}%`} />
+              </div>
+              <div style={{ display: "flex", gap: "12px", marginTop: "6px", fontSize: "11px", color: "var(--slate-500)" }}>
+                <span style={{ display: "flex", alignItems: "center", gap: "4px" }}><span style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: "#10b981" }} /> เห็นชอบ ({approvalRate}%)</span>
+                <span style={{ display: "flex", alignItems: "center", gap: "4px" }}><span style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: "#f59e0b" }} /> ปรับเปลี่ยน ({modificationRate}%)</span>
+                <span style={{ display: "flex", alignItems: "center", gap: "4px" }}><span style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: "#ef4444" }} /> ปฏิเสธ ({rejectionRate}%)</span>
+              </div>
+            </div>
+
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "10px", textAlign: "center" }}>
-              <div style={{ padding: "12px", backgroundColor: "var(--success-bg)", border: "1px solid var(--success-border)", borderRadius: "var(--radius-md)" }}>
+              <div className="hover-lift" style={{ padding: "14px 12px", backgroundColor: "var(--success-bg)", border: "1px solid var(--success-border)", borderRadius: "var(--radius-md)" }}>
                 <div style={{ fontSize: "var(--fs-2xl)", fontWeight: 800, color: "var(--success-solid)" }}>{approvalRate}%</div>
                 <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, color: "var(--success-text)", marginTop: "2px" }}>เห็นชอบ (Approve)</div>
                 <div style={{ fontSize: "11px", color: "var(--slate-500)", marginTop: "2px" }}>{recommendations?.approval_count ?? 0} รายการ</div>
               </div>
 
-              <div style={{ padding: "12px", backgroundColor: "var(--warning-bg)", border: "1px solid var(--warning-border)", borderRadius: "var(--radius-md)" }}>
+              <div className="hover-lift" style={{ padding: "14px 12px", backgroundColor: "var(--warning-bg)", border: "1px solid var(--warning-border)", borderRadius: "var(--radius-md)" }}>
                 <div style={{ fontSize: "var(--fs-2xl)", fontWeight: 800, color: "var(--warning-solid)" }}>{modificationRate}%</div>
                 <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, color: "var(--warning-text)", marginTop: "2px" }}>ปรับเปลี่ยน (Modify)</div>
                 <div style={{ fontSize: "11px", color: "var(--slate-500)", marginTop: "2px" }}>{recommendations?.modification_count ?? 0} รายการ</div>
               </div>
 
-              <div style={{ padding: "12px", backgroundColor: "var(--danger-bg)", border: "1px solid var(--danger-border)", borderRadius: "var(--radius-md)" }}>
+              <div className="hover-lift" style={{ padding: "14px 12px", backgroundColor: "var(--danger-bg)", border: "1px solid var(--danger-border)", borderRadius: "var(--radius-md)" }}>
                 <div style={{ fontSize: "var(--fs-2xl)", fontWeight: 800, color: "var(--danger-solid)" }}>{rejectionRate}%</div>
                 <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, color: "var(--danger-text)", marginTop: "2px" }}>ปฏิเสธ (Reject)</div>
                 <div style={{ fontSize: "11px", color: "var(--slate-500)", marginTop: "2px" }}>{recommendations?.rejection_count ?? 0} รายการ</div>
@@ -313,7 +378,7 @@ export default function AnalyticsDashboardPage() {
           subtitle="สถานะความคืบหน้าของนัดหมายและการติดต่อลูกค้า"
         >
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "10px" }}>
-            <div style={{ padding: "14px", backgroundColor: "var(--primary-50)", borderRadius: "var(--radius-md)", border: "1px solid var(--primary-100)", textAlign: "center" }}>
+            <div className="hover-lift" style={{ padding: "14px", backgroundColor: "var(--primary-50)", borderRadius: "var(--radius-md)", border: "1px solid var(--primary-100)", textAlign: "center" }}>
               <div style={{ fontSize: "var(--fs-2xl)", fontWeight: 800, color: "var(--primary-700)" }}>
                 {followups?.due_count ?? overview?.follow_ups_due ?? 0}
               </div>
@@ -322,7 +387,7 @@ export default function AnalyticsDashboardPage() {
               </div>
             </div>
 
-            <div style={{ padding: "14px", backgroundColor: overdueFollowups > 0 ? "#fef2f2" : "var(--slate-50)", borderRadius: "var(--radius-md)", border: `1px solid ${overdueFollowups > 0 ? "#fecaca" : "var(--border-subtle)"}`, textAlign: "center" }}>
+            <div className="hover-lift" style={{ padding: "14px", backgroundColor: overdueFollowups > 0 ? "#fef2f2" : "var(--slate-50)", borderRadius: "var(--radius-md)", border: `1px solid ${overdueFollowups > 0 ? "#fecaca" : "var(--border-subtle)"}`, textAlign: "center" }}>
               <div style={{ fontSize: "var(--fs-2xl)", fontWeight: 800, color: overdueFollowups > 0 ? "var(--danger-solid)" : "var(--slate-400)" }}>
                 {overdueFollowups}
               </div>
@@ -331,7 +396,7 @@ export default function AnalyticsDashboardPage() {
               </div>
             </div>
 
-            <div style={{ padding: "14px", backgroundColor: "var(--success-bg)", borderRadius: "var(--radius-md)", border: "1px solid var(--success-border)", textAlign: "center" }}>
+            <div className="hover-lift" style={{ padding: "14px", backgroundColor: "var(--success-bg)", borderRadius: "var(--radius-md)", border: "1px solid var(--success-border)", textAlign: "center" }}>
               <div style={{ fontSize: "var(--fs-2xl)", fontWeight: 800, color: "var(--success-solid)" }}>
                 {completedFollowups}
               </div>

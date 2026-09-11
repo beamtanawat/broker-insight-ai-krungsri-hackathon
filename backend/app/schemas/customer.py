@@ -100,6 +100,9 @@ class CustomerListItem(BaseModel):
     score_display: Optional[int] = None
     priority_level: Optional[str] = None
     score_short_reason: Optional[str] = None
+    why_now: Optional[str] = None
+    recommended_action: Optional[str] = None
+    action_state: Optional[str] = "action"  # action | review | no_action
     active_policies_count: int = 0
     has_overdue_followup: bool = False
 

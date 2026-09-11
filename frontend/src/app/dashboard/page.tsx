@@ -23,7 +23,7 @@ import {
   Status,
   Tooltip,
 } from "@/components/ui";
-import { PageHeader, PriorityScore } from "@/components/domain";
+import { PageHeader, PriorityScore, DemoPersonaStrip, TrustedAdvisorBadge } from "@/components/domain";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -43,7 +43,7 @@ export default function DashboardPage() {
       const [me, sumData, custList, fuList] = await Promise.all([
         api.auth.me(),
         api.dashboard.summary(),
-        api.customers.list(1, 100),
+        api.customers.list(1, 300),
         api.followups.list().catch(() => []),
       ]);
       setUser(me as User);
@@ -97,6 +97,7 @@ export default function DashboardPage() {
 
   // Suggested next action helper based on actual customer state
   const getNextActionLabel = (customer: CustomerListItem) => {
+    if (customer.recommended_action) return customer.recommended_action;
     if (customer.has_overdue_followup) return "ติดต่อติดตามผล";
     if (customer.kyc_status === "pending") return "ตรวจสอบข้อมูล KYC";
     if (customer.priority_level === "high") return "ทบทวนความคุ้มครอง";
@@ -111,7 +112,7 @@ export default function DashboardPage() {
         title="แดชบอร์ดการทำงานนายหน้า (Broker Workspace)"
         description={`ยินดีต้อนรับ ${user?.full_name || "นายหน้า"} · ดูแลลูกค้าที่สำคัญและติดตามงานของคุณในวันนี้`}
         primaryAction={
-          <Button variant="primary" size="sm" leftIcon="🔄" onClick={loadData} isLoading={loading}>
+          <Button variant="gold" size="sm" leftIcon="🔄" onClick={loadData} isLoading={loading}>
             รีเฟรชข้อมูล
           </Button>
         }
@@ -123,6 +124,62 @@ export default function DashboardPage() {
           </Link>
         }
       />
+
+      {/* ── Executive Morning Briefing Banner ── */}
+      <div
+        className="glass-card"
+        style={{
+          padding: "var(--space-4) var(--space-6)",
+          background: "var(--krungsri-navy-gradient)",
+          color: "#ffffff",
+          borderRadius: "var(--radius-xl)",
+          marginBottom: "var(--space-5)",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
+          gap: "var(--space-4)",
+          boxShadow: "var(--shadow-card)",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
+            <span
+              style={{
+                fontSize: "10px",
+                background: "var(--krungsri-gold-gradient)",
+                color: "var(--krungsri-navy)",
+                fontWeight: 800,
+                padding: "2px 8px",
+                borderRadius: "var(--radius-full)",
+                textTransform: "uppercase",
+                letterSpacing: "0.04em",
+              }}
+            >
+              Morning Briefing
+            </span>
+            <span style={{ fontSize: "12px", color: "var(--slate-300)" }}>
+              ระบบวิเคราะห์ข้อมูลพอร์ตโฟลิโอล่าสุดพร้อมใช้งาน
+            </span>
+          </div>
+          <h2 style={{ fontSize: "1.15rem", fontWeight: 800, margin: 0, letterSpacing: "-0.01em" }}>
+            ⚡ วันนี้มีลูกค้าเร่งด่วนที่ควรติดต่อ <span style={{ color: "var(--krungsri-yellow)" }}>{highCount} ราย</span> และงานติดตามผลค้าง <span style={{ color: "var(--krungsri-yellow)" }}>{openFollowups} รายการ</span>
+          </h2>
+        </div>
+
+        <div style={{ display: "flex", gap: "10px", alignItems: "center", position: "relative", zIndex: 1 }}>
+          <Link href="/customers?priority=high">
+            <Button variant="gold" size="sm" leftIcon="⚡">
+              เปิดดูเคสเร่งด่วน ({highCount})
+            </Button>
+          </Link>
+        </div>
+      </div>
+
+      {/* ── Demo Persona Switcher Strip (Hackathon Mode) ── */}
+      <DemoPersonaStrip />
 
       {error && (
         <Alert variant="danger" style={{ marginBottom: "var(--space-5)" }} action={<Button size="sm" onClick={loadData}>ลองใหม่</Button>}>
@@ -141,179 +198,179 @@ export default function DashboardPage() {
       >
         {/* KPI 1: High Priority (Clickable) */}
         <Link href="/customers?priority=high" style={{ textDecoration: "none", color: "inherit" }}>
-          <Card
-            variant="metric"
-            noPadding
+          <div
+            className="hover-lift"
             style={{
+              backgroundColor: "var(--bg-surface)",
+              borderRadius: "var(--radius-xl)",
+              border: "1px solid var(--border-subtle)",
+              boxShadow: "var(--shadow-card)",
+              overflow: "hidden",
               cursor: "pointer",
-              transition: "transform var(--motion-fast), box-shadow var(--motion-fast)",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
-              (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-md)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.transform = "none";
-              (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-xs)";
             }}
           >
+            <div style={{ height: "4px", backgroundColor: "#dc2626" }} />
             <div style={{ padding: "18px 20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div>
-                <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", letterSpacing: "0.05em" }}>
+                <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", letterSpacing: "0.05em" }}>
                   ลูกค้าความสำคัญสูง
                 </div>
-                <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 800, color: "var(--priority-high-text)", marginTop: "4px" }}>
+                <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 900, color: "#dc2626", marginTop: "4px", lineHeight: 1.1 }}>
                   {loading ? <Skeleton width="48px" height="36px" /> : highCount}
                 </div>
-                <div style={{ fontSize: "var(--fs-xs)", color: "var(--primary-700)", marginTop: "2px", fontWeight: 600 }}>
+                <div style={{ fontSize: "var(--fs-xs)", color: "var(--krungsri-navy)", marginTop: "4px", fontWeight: 700 }}>
                   คลิกเพื่อดูรายชื่อคัดกรอง →
                 </div>
               </div>
               <div
                 style={{
-                  width: "44px",
-                  height: "44px",
-                  borderRadius: "10px",
-                  backgroundColor: "var(--priority-high-bg)",
+                  width: "48px",
+                  height: "48px",
+                  borderRadius: "var(--radius-lg)",
+                  backgroundColor: "#fef2f2",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: "20px",
-                  color: "var(--priority-high-solid)",
+                  fontSize: "22px",
+                  boxShadow: "0 2px 6px rgba(220, 38, 38, 0.15)",
                 }}
               >
                 ⚡
               </div>
             </div>
-          </Card>
+          </div>
         </Link>
 
         {/* KPI 2: Follow-ups Due */}
-        <Card noPadding>
+        <div
+          className="hover-lift"
+          style={{
+            backgroundColor: "var(--bg-surface)",
+            borderRadius: "var(--radius-xl)",
+            border: "1px solid var(--border-subtle)",
+            boxShadow: "var(--shadow-card)",
+            overflow: "hidden",
+          }}
+        >
+          <div style={{ height: "4px", background: "var(--krungsri-gold-gradient)" }} />
           <div style={{ padding: "18px 20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div>
-              <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", letterSpacing: "0.05em" }}>
+              <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", letterSpacing: "0.05em" }}>
                 นัดหมายที่ต้องติดตาม (Follow-ups)
               </div>
-              <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 800, color: "var(--primary-700)", marginTop: "4px" }}>
+              <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 900, color: "var(--krungsri-navy)", marginTop: "4px", lineHeight: 1.1 }}>
                 {loading ? <Skeleton width="48px" height="36px" /> : openFollowups}
               </div>
-              <div style={{ fontSize: "var(--fs-xs)", color: overdueFollowups > 0 ? "var(--danger-solid)" : "var(--slate-500)", marginTop: "2px", fontWeight: overdueFollowups > 0 ? 700 : 400 }}>
+              <div style={{ fontSize: "var(--fs-xs)", color: overdueFollowups > 0 ? "var(--danger-solid)" : "var(--slate-500)", marginTop: "4px", fontWeight: overdueFollowups > 0 ? 700 : 400 }}>
                 {overdueFollowups > 0 ? `⚠️ เกินกำหนด ${overdueFollowups} รายการ` : "เปิดค้างในระบบ"}
               </div>
             </div>
             <div
               style={{
-                width: "44px",
-                height: "44px",
-                borderRadius: "10px",
-                backgroundColor: "var(--primary-50)",
+                width: "48px",
+                height: "48px",
+                borderRadius: "var(--radius-lg)",
+                backgroundColor: "var(--krungsri-yellow-light)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: "20px",
-                color: "var(--primary-600)",
+                fontSize: "22px",
+                boxShadow: "0 2px 6px rgba(254, 203, 0, 0.25)",
               }}
             >
               📅
             </div>
           </div>
-        </Card>
+        </div>
 
         {/* KPI 3: Pending KYC / Reviews (Clickable) */}
         <Link href="/customers?kyc=pending" style={{ textDecoration: "none", color: "inherit" }}>
-          <Card
-            noPadding
+          <div
+            className="hover-lift"
             style={{
+              backgroundColor: "var(--bg-surface)",
+              borderRadius: "var(--radius-xl)",
+              border: "1px solid var(--border-subtle)",
+              boxShadow: "var(--shadow-card)",
+              overflow: "hidden",
               cursor: "pointer",
-              transition: "transform var(--motion-fast), box-shadow var(--motion-fast)",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
-              (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-md)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.transform = "none";
-              (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-xs)";
             }}
           >
+            <div style={{ height: "4px", backgroundColor: "#f59e0b" }} />
             <div style={{ padding: "18px 20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div>
-                <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", letterSpacing: "0.05em" }}>
+                <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", letterSpacing: "0.05em" }}>
                   รอตรวจสอบข้อมูล (Pending KYC)
                 </div>
-                <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 800, color: "var(--warning-solid)", marginTop: "4px" }}>
+                <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 900, color: "#d97706", marginTop: "4px", lineHeight: 1.1 }}>
                   {loading ? <Skeleton width="48px" height="36px" /> : pendingKycCount}
                 </div>
-                <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)", marginTop: "2px" }}>
+                <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)", marginTop: "4px" }}>
                   ต้องอัปเดตสถานะยืนยันตัวตน
                 </div>
               </div>
               <div
                 style={{
-                  width: "44px",
-                  height: "44px",
-                  borderRadius: "10px",
-                  backgroundColor: "var(--warning-bg)",
+                  width: "48px",
+                  height: "48px",
+                  borderRadius: "var(--radius-lg)",
+                  backgroundColor: "#fffbeb",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: "20px",
-                  color: "var(--warning-solid)",
+                  fontSize: "22px",
+                  boxShadow: "0 2px 6px rgba(245, 158, 11, 0.15)",
                 }}
               >
                 📋
               </div>
             </div>
-          </Card>
+          </div>
         </Link>
 
         {/* KPI 4: Total Portfolio Customers (Clickable) */}
         <Link href="/customers" style={{ textDecoration: "none", color: "inherit" }}>
-          <Card
-            noPadding
+          <div
+            className="hover-lift"
             style={{
+              backgroundColor: "var(--bg-surface)",
+              borderRadius: "var(--radius-xl)",
+              border: "1px solid var(--border-subtle)",
+              boxShadow: "var(--shadow-card)",
+              overflow: "hidden",
               cursor: "pointer",
-              transition: "transform var(--motion-fast), box-shadow var(--motion-fast)",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
-              (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-md)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.transform = "none";
-              (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-xs)";
             }}
           >
+            <div style={{ height: "4px", backgroundColor: "var(--krungsri-navy)" }} />
             <div style={{ padding: "18px 20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div>
-                <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", letterSpacing: "0.05em" }}>
+                <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", letterSpacing: "0.05em" }}>
                   ลูกค้ารวมในพอร์ต
                 </div>
-                <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 800, color: "var(--slate-800)", marginTop: "4px" }}>
+                <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 900, color: "var(--krungsri-navy)", marginTop: "4px", lineHeight: 1.1 }}>
                   {loading ? <Skeleton width="48px" height="36px" /> : summary?.total_customers ?? customers.length}
                 </div>
-                <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)", marginTop: "2px" }}>
+                <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)", marginTop: "4px" }}>
                   กรมธรรม์ Active รวม {summary?.total_active_policies ?? 0} ฉบับ
                 </div>
               </div>
               <div
                 style={{
-                  width: "44px",
-                  height: "44px",
-                  borderRadius: "10px",
-                  backgroundColor: "var(--slate-100)",
+                  width: "48px",
+                  height: "48px",
+                  borderRadius: "var(--radius-lg)",
+                  backgroundColor: "var(--krungsri-navy-subtle)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: "20px",
-                  color: "var(--slate-600)",
+                  fontSize: "22px",
+                  boxShadow: "0 2px 6px rgba(11, 30, 54, 0.1)",
                 }}
               >
                 👥
               </div>
             </div>
-          </Card>
+          </div>
         </Link>
       </div>
 
@@ -402,8 +459,8 @@ export default function DashboardPage() {
                   <TableRow hover={false}>
                     <TableHeadCell>ลูกค้า</TableHeadCell>
                     <TableHeadCell>ลำดับความสำคัญ</TableHeadCell>
-                    <TableHeadCell>เหตุผลที่ระบบจัดลำดับ</TableHeadCell>
-                    <TableHeadCell>การดำเนินการถัดไป</TableHeadCell>
+                    <TableHeadCell>🔔 ทำไมต้องตอนนี้ (Why now?)</TableHeadCell>
+                    <TableHeadCell>Advisor Action</TableHeadCell>
                     <TableHeadCell>สถานะ</TableHeadCell>
                     <TableHeadCell align="right">การดำเนินการ</TableHeadCell>
                   </TableRow>
@@ -449,35 +506,65 @@ export default function DashboardPage() {
                         </div>
                       </TableCell>
 
-                      {/* Top Human-Readable Reason */}
+                      {/* Why Now Trigger & Reason */}
                       <TableCell>
-                        <div
-                          style={{
-                            fontSize: "var(--fs-xs)",
-                            color: "var(--slate-700)",
-                            maxWidth: "220px",
-                            lineHeight: 1.4,
-                          }}
-                        >
-                          {c.score_short_reason || "พร้อมวิเคราะห์ความต้องการ"}
+                        <div style={{ maxWidth: "280px", lineHeight: 1.4 }}>
+                          {c.why_now ? (
+                            <div style={{ fontSize: "var(--fs-xs)", color: "#0b1e36" }}>
+                              <span style={{ color: "#2563eb", fontWeight: 700, marginRight: "4px" }}>🔔 Why now:</span>
+                              <span>{c.why_now}</span>
+                            </div>
+                          ) : (
+                            <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-700)" }}>
+                              {c.score_short_reason || "พร้อมวิเคราะห์ความต้องการ"}
+                            </div>
+                          )}
+                          {c.external_ref === "KS-00002" && (
+                            <div style={{ marginTop: "4px" }}>
+                              <Link
+                                href="/my-protection"
+                                style={{
+                                  fontSize: "11px",
+                                  fontWeight: 700,
+                                  color: "#1d4ed8",
+                                  backgroundColor: "#eff6ff",
+                                  border: "1px solid #bfdbfe",
+                                  borderRadius: "4px",
+                                  padding: "2px 6px",
+                                  textDecoration: "none",
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  gap: "3px",
+                                }}
+                              >
+                                📱 เปิดดูหน้า My Protection (มุมมองลูกค้า) →
+                              </Link>
+                            </div>
+                          )}
                         </div>
                       </TableCell>
 
-                      {/* Suggested Next Action */}
+                      {/* Trusted Advisor Action State & Label */}
                       <TableCell>
-                        <span
-                          style={{
-                            fontSize: "var(--fs-xs)",
-                            fontWeight: 600,
-                            color: "var(--slate-800)",
-                            backgroundColor: "var(--slate-100)",
-                            padding: "3px 8px",
-                            borderRadius: "var(--radius-sm)",
-                            whiteSpace: "nowrap",
-                          }}
-                        >
-                          {getNextActionLabel(c)}
-                        </span>
+                        <div style={{ display: "flex", flexDirection: "column", gap: "4px", alignItems: "flex-start" }}>
+                          {c.action_state && (
+                            <TrustedAdvisorBadge
+                              outcome={c.action_state}
+                              size="sm"
+                              pulse={c.action_state === "action"}
+                            />
+                          )}
+                          <span
+                            style={{
+                              fontSize: "11px",
+                              color: "var(--slate-700)",
+                              fontWeight: 600,
+                              lineHeight: 1.3,
+                            }}
+                          >
+                            {getNextActionLabel(c)}
+                          </span>
+                        </div>
                       </TableCell>
 
                       {/* Status */}
@@ -652,9 +739,9 @@ export default function DashboardPage() {
                   เปิดรายชื่อลูกค้าทั้งหมด (Directory)
                 </Button>
               </Link>
-              <Link href="/chat" style={{ width: "100%" }}>
-                <Button variant="outline" size="md" style={{ width: "100%", justifyContent: "flex-start" }} leftIcon="💬">
-                  เปิด AI Copilot ผู้ช่วยเตรียมบทสนทนา
+              <Link href="/model" style={{ width: "100%" }}>
+                <Button variant="outline" size="md" style={{ width: "100%", justifyContent: "flex-start" }} leftIcon="🤖">
+                  ตรวจสอบสุขภาพระบบ AI (AI Health & Explainability)
                 </Button>
               </Link>
             </div>

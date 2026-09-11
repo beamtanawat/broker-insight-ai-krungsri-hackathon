@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from typing import Optional, Dict
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func, desc
+from sqlalchemy import select, func, desc, or_
 from sqlalchemy.orm import selectinload
 
 from app.core.database import get_db
@@ -60,7 +60,7 @@ async def get_customer_insights(
             selectinload(Customer.needs),
             selectinload(Customer.follow_ups),
         )
-        .where(Customer.id == id)
+        .where(or_(Customer.id == id, Customer.external_ref == id))
     )
     customer = result.scalar_one_or_none()
     if not customer:
@@ -73,7 +73,7 @@ async def get_customer_insights(
     # Check cached insight in DB
     existing_res = await db.execute(
         select(AIInsight)
-        .where(AIInsight.customer_id == id)
+        .where(AIInsight.customer_id == customer.id)
         .order_by(desc(AIInsight.generated_at))
         .limit(1)
     )
@@ -81,7 +81,7 @@ async def get_customer_insights(
 
     if existing_insight:
         return LLMInsightResponse(
-            customer_id=id,
+            customer_id=customer.id,
             customer_summary=existing_insight.insight_summary or "",
             key_observations=existing_insight.key_observations or [],
             potential_needs=["ทบทวนความคุ้มครองและสิทธิประโยชน์ตามกรมธรรม์"],
@@ -168,7 +168,7 @@ async def get_customer_needs(
             selectinload(Customer.needs),
             selectinload(Customer.follow_ups),
         )
-        .where(Customer.id == id)
+        .where(or_(Customer.id == id, Customer.external_ref == id))
     )
     customer = result.scalar_one_or_none()
     if not customer:
@@ -195,7 +195,7 @@ async def get_customer_recommendations(
             selectinload(Customer.recommendations),
             selectinload(Customer.follow_ups),
         )
-        .where(Customer.id == id)
+        .where(or_(Customer.id == id, Customer.external_ref == id))
     )
     customer = result.scalar_one_or_none()
     if not customer:
@@ -213,31 +213,55 @@ async def record_broker_decision_nested(
     db: AsyncSession = Depends(get_db),
 ):
     """Nested route recording broker decision on a recommendation for a specific customer."""
-    cust_res = await db.execute(select(Customer.id).where(Customer.id == id))
-    if not cust_res.scalar_one_or_none():
+    cust_res = await db.execute(select(Customer.id).where(or_(Customer.id == id, Customer.external_ref == id)))
+    actual_id = cust_res.scalar_one_or_none()
+    if not actual_id:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Customer '{id}' not found")
 
     rec_res = await db.execute(
         select(Recommendation)
         .options(selectinload(Recommendation.product))
-        .where(Recommendation.id == recommendation_id)
+        .where(
+            (Recommendation.id == recommendation_id) |
+            ((Recommendation.customer_id == actual_id) & (Recommendation.product_id == recommendation_id))
+        )
     )
     rec = rec_res.scalar_one_or_none()
     if not rec:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Recommendation '{recommendation_id}' not found")
+        # Check if recommendation_id is a product_id or product_code
+        prod_res = await db.execute(
+            select(Product).where((Product.id == recommendation_id) | (Product.product_code == recommendation_id))
+        )
+        prod = prod_res.scalar_one_or_none()
+        if prod:
+            rec = Recommendation(
+                customer_id=actual_id,
+                product_id=prod.id,
+                rationale=f"แนะนำผลิตภัณฑ์ {prod.product_name}",
+                priority_rank=1,
+                status="proposed",
+                generated_at=datetime.now(timezone.utc),
+            )
+            db.add(rec)
+            await db.flush()
+            rec.product = prod
+        else:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Recommendation '{recommendation_id}' not found")
 
     status_map = {
         "approve": "accepted",
         "modify": "modified",
         "reject": "declined",
+        "reset": "proposed",
+        "pending": "proposed",
     }
     action_clean = body.action.lower()
     rec.status = status_map.get(action_clean, action_clean)
 
     decision = BrokerDecision(
-        customer_id=id,
+        customer_id=actual_id,
         broker_id=current_user.id,
-        recommendation_id=recommendation_id,
+        recommendation_id=rec.id,
         product_id=rec.product_id,
         action_taken=action_clean,
         reason=body.reason or ("suitable_coverage" if action_clean == "approve" else "customer_context_changed" if action_clean == "modify" else "not_relevant"),
@@ -253,9 +277,9 @@ async def record_broker_decision_nested(
         user_id=current_user.id,
         action="RECOMMENDATION_DECISION",
         entity_type="RECOMMENDATION",
-        entity_id=recommendation_id,
+        entity_id=rec.id,
         metadata={
-            "customer_id": id,
+            "customer_id": actual_id,
             "product_id": rec.product_id,
             "action": action_clean,
             "reason": decision.reason,

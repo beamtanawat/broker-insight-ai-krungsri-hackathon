@@ -1,6 +1,6 @@
 import React from "react";
 
-export type CardVariant = "default" | "metric" | "insight" | "action";
+export type CardVariant = "default" | "metric" | "insight" | "action" | "krungsri";
 
 interface CardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
   title?: React.ReactNode;
@@ -19,6 +19,7 @@ const VARIANT_LEFT_BORDER: Record<CardVariant, string> = {
   metric:  "4px solid var(--primary-500)",
   insight: "4px solid var(--ai-accent)",
   action:  "4px solid var(--verified-accent)",
+  krungsri: "4px solid var(--krungsri-yellow)",
 };
 
 export function Card({
@@ -44,7 +45,8 @@ export function Card({
         borderRadius: "var(--radius-lg)",
         border: bordered ? "1px solid var(--border-subtle)" : "none",
         borderLeft: borderLeft !== "none" ? borderLeft : (bordered ? "1px solid var(--border-subtle)" : "none"),
-        boxShadow: elevated ? "var(--shadow-md)" : "var(--shadow-xs)",
+        boxShadow: elevated ? "var(--shadow-card-hover)" : "var(--shadow-card)",
+        transition: "all var(--motion-base)",
         display: "flex",
         flexDirection: "column",
         overflow: "hidden",

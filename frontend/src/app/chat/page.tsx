@@ -21,11 +21,7 @@ function ChatContent() {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!isAuthenticated()) {
-      router.push("/login");
-      return;
-    }
-    api.auth.me().then(setUser).catch(() => null);
+    router.replace("/dashboard");
   }, [router]);
 
   useEffect(() => {

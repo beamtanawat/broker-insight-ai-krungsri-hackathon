@@ -1,7 +1,7 @@
 {
   "engine_version": "recommendation_engine_v1.1",
   "status": "promoted_champion",
-  "evaluation_timestamp": "2026-08-30T15:24:00.414968+00:00",
+  "evaluation_timestamp": "2026-09-11T10:54:16.668134+00:00",
   "baseline_vs_candidate_comparison": {
     "top_1_match_rate": {
       "baseline_v1": 100.0,
@@ -19,7 +19,7 @@
       "reduction_pct": 100.0
     },
     "latency_ms": {
-      "baseline_v1": 1.2069094821810722,
+      "baseline_v1": 1.2059651987006268,
       "candidate_v1_1": 0.86,
       "speedup_factor": 1.4
     },

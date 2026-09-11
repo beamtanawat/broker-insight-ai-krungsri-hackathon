@@ -8,6 +8,8 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import Response
 
+from app.core.metrics import metrics_collector
+
 
 class RequestTracingMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next) -> Response:
@@ -17,7 +19,16 @@ class RequestTracingMiddleware(BaseHTTPMiddleware):
 
         start_time = time.perf_counter()
         response = await call_next(request)
-        process_time_ms = (time.perf_counter() - start_time) * 1000.0
+        duration_sec = time.perf_counter() - start_time
+        process_time_ms = duration_sec * 1000.0
+
+        # Record into Prometheus metrics collector
+        metrics_collector.record_http_request(
+            method=request.method,
+            path=request.url.path,
+            status_code=response.status_code,
+            duration_sec=duration_sec,
+        )
 
         # Attach tracing headers to response
         response.headers["X-Request-ID"] = request_id

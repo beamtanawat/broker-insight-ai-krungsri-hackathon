@@ -92,11 +92,33 @@
   --shadow-sm: 0 1px 3px 0 rgba(15, 23, 42, 0.07), 0 1px 2px -1px rgba(15, 23, 42, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
   --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+  --shadow-card: 0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+  --shadow-card-hover: 0 14px 28px -6px rgba(11, 30, 54, 0.12), 0 6px 12px -4px rgba(11, 30, 54, 0.08);
+  --shadow-glow-yellow: 0 0 18px rgba(254, 203, 0, 0.45);
+  --shadow-glow-blue: 0 0 18px rgba(37, 99, 235, 0.35);
+
+  /* Krungsri Brand Signature Palette */
+  --krungsri-yellow: #fecb00;
+  --krungsri-yellow-hover: #e6b800;
+  --krungsri-yellow-subtle: #fffbeb;
+  --krungsri-yellow-border: #fef08a;
+  --krungsri-yellow-text: #854d0e;
+  --krungsri-gold-gradient: linear-gradient(135deg, #fecb00 0%, #f59e0b 100%);
+  --krungsri-navy: #0b1e36;
+  --krungsri-navy-gradient: linear-gradient(135deg, #0b1e36 0%, #163860 100%);
+  --krungsri-card-gradient: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+
+  /* Glassmorphism Tokens */
+  --glass-bg: rgba(255, 255, 255, 0.82);
+  --glass-bg-dark: rgba(11, 30, 54, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --glass-shadow: 0 8px 32px 0 rgba(11, 30, 54, 0.08);
 
   /* Radius */
   --radius-sm: 6px;
   --radius-md: 8px;
   --radius-lg: 12px;
+  --radius-xl: 16px;
   --radius-full: 9999px;
 
   /* Transitions */
@@ -260,6 +282,47 @@ button {
   border-radius: var(--radius-sm);
 }
 
+/* ── Modern FinTech Utilities ────────────────────────────────── */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-card);
+}
+
+.hover-lift {
+  transition: transform var(--motion-base), box-shadow var(--motion-base), border-color var(--motion-base);
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.krungsri-glow {
+  box-shadow: var(--shadow-glow-yellow);
+}
+
+.krungsri-gradient-text {
+  background: var(--krungsri-gold-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(254, 203, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(254, 203, 0, 0);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2.5s infinite;
+}
+
 /* ── Reduced Motion ──────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -268,3 +331,4 @@ button {
     transition-duration: 0.01ms !important;
   }
 }
+

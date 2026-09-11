@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import type { CustomerDetail, ConversationAssistantResponse } from "@/types";
-import { Card, Button, Panel } from "@/components/ui";
+import { Card, Button, Panel, useToast } from "@/components/ui";
 import { AILabel } from "@/components/domain";
 
 interface CustomerPrepProps {
@@ -16,11 +16,13 @@ export function CustomerPrep({
   loading,
   onGenerateConversation,
 }: CustomerPrepProps) {
+  const toast = useToast();
   const [copiedSection, setCopiedSection] = useState<string | null>(null);
 
   const handleCopy = (text: string, sectionKey: string) => {
     navigator.clipboard.writeText(text);
     setCopiedSection(sectionKey);
+    toast.success("คัดลอกข้อความบทสนทนาลงคลิปบอร์ดแล้ว", "คัดลอกสำเร็จ");
     setTimeout(() => setCopiedSection(null), 2000);
   };
 
@@ -42,7 +44,7 @@ export function CustomerPrep({
       {/* Header bar */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "var(--space-3)" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <AILabel type="ai" label="AI Conversation Copilot (ผู้ช่วยเตรียมบทสนทนา)" />
+          <AILabel type="ai" label="แนวทางเตรียมบทสนทนาเฉพาะบุคคล (Conversation Guide)" />
           <span style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)" }}>
             แนวทางสนทนาเฉพาะบุคคลเพื่อช่วยเปิดใจและสำรวจความต้องการ
           </span>

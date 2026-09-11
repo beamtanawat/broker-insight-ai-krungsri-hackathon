@@ -1,11 +1,11 @@
 {
   "benchmark_name": "E2E Optimized v1.1",
   "status": "promoted_champion",
-  "timestamp": "2026-08-30T15:24:06.686365+00:00",
+  "timestamp": "2026-09-11T10:54:22.756876+00:00",
   "environment": "Local/Demo Benchmark (Darwin macOS / Python 3.14.7 / FastAPI / SQLite / Next.js 16)",
   "workflow_summary": {
-    "total_cold_latency_ms": 57.11,
-    "total_warm_latency_ms": 34.07,
+    "total_cold_latency_ms": 57.1,
+    "total_warm_latency_ms": 34.1,
     "p50_ms": 37.1,
     "p95_ms": 64.8,
     "p99_ms": 77.76,
@@ -18,43 +18,43 @@
       "avg": 1.23,
       "p50": 1.23,
       "p95": 1.23,
-      "p99": 1.26
+      "p99": 1.28
     },
     "ml_pipeline_ms": {
-      "avg": 2.03,
-      "p50": 1.96,
-      "p95": 2.35,
-      "p99": 2.72
+      "avg": 2.04,
+      "p50": 1.98,
+      "p95": 2.31,
+      "p99": 2.64
     },
     "shap_explainability_ms": {
-      "avg": 1.09,
+      "avg": 1.1,
       "p50": 1.06,
-      "p95": 1.26,
-      "p99": 1.46
+      "p95": 1.25,
+      "p99": 1.42
     },
     "llm_cold_ms": {
-      "avg": 9.81,
-      "p50": 10.04,
-      "p95": 10.08,
-      "p99": 10.1
+      "avg": 9.79,
+      "p50": 10.05,
+      "p95": 10.07,
+      "p99": 10.08
     },
     "llm_warm_cached_ms": {
       "avg": 0.19,
-      "p50": 0.18,
+      "p50": 0.19,
       "p95": 0.23,
-      "p99": 0.28
+      "p99": 0.24
     },
     "recommendation_ms": {
-      "avg": 0.12,
+      "avg": 0.13,
       "p50": 0.06,
-      "p95": 0.19,
-      "p99": 0.9
+      "p95": 0.2,
+      "p99": 0.59
     },
     "serialization_ms": {
       "avg": 0.01,
       "p50": 0.01,
       "p95": 0.01,
-      "p99": 0.01
+      "p99": 0.02
     }
   },
   "steps_cold": [
@@ -89,14 +89,14 @@
     {
       "step": 5,
       "name": "POST /customers/{id}/analyze",
-      "avg_ms": 3.12,
+      "avg_ms": 3.14,
       "p50_ms": 6.8,
       "p95_ms": 12.5
     },
     {
       "step": 6,
       "name": "GET /customers/{id}/insights (Cold)",
-      "avg_ms": 12.31,
+      "avg_ms": 12.29,
       "p50_ms": 10.5,
       "p95_ms": 16.8
     },
@@ -110,14 +110,14 @@
     {
       "step": 8,
       "name": "GET /customers/{id}/recommendations",
-      "avg_ms": 1.3199999999999998,
+      "avg_ms": 1.33,
       "p50_ms": 2.6,
       "p95_ms": 4.5
     },
     {
       "step": 9,
       "name": "POST /customers/{id}/conversation (Cold)",
-      "avg_ms": 13.61,
+      "avg_ms": 13.59,
       "p50_ms": 12.1,
       "p95_ms": 18.9
     },
@@ -161,7 +161,7 @@
     {
       "step": 5,
       "name": "POST /customers/{id}/analyze",
-      "avg_ms": 3.12,
+      "avg_ms": 3.14,
       "p50_ms": 6.8,
       "p95_ms": 12.5
     },
@@ -182,7 +182,7 @@
     {
       "step": 8,
       "name": "GET /customers/{id}/recommendations",
-      "avg_ms": 1.3199999999999998,
+      "avg_ms": 1.33,
       "p50_ms": 2.6,
       "p95_ms": 4.5
     },
@@ -242,8 +242,8 @@
     {
       "rank": 1,
       "component": "LLM Generation & Inference (Cold)",
-      "latency_contribution_ms": 19.62,
-      "percentage_share": 34.4,
+      "latency_contribution_ms": 19.58,
+      "percentage_share": 34.3,
       "optimization_strategy": "Safe Caching (TTL 3600s) + Token Minimization (v2.0-optimized)"
     },
     {
@@ -256,21 +256,21 @@
     {
       "rank": 3,
       "component": "Explainability (TreeSHAP Value Computation)",
-      "latency_contribution_ms": 1.09,
+      "latency_contribution_ms": 1.1,
       "percentage_share": 1.9,
       "optimization_strategy": "Cached Explainer Object & Single-instance scoring"
     },
     {
       "rank": 4,
       "component": "ML Priority Scoring (LightGBM + Calibration)",
-      "latency_contribution_ms": 2.03,
+      "latency_contribution_ms": 2.04,
       "percentage_share": 3.6,
       "optimization_strategy": "Vectorized numpy feature transform"
     },
     {
       "rank": 5,
       "component": "Recommendation Matching & Hard Gating",
-      "latency_contribution_ms": 0.12,
+      "latency_contribution_ms": 0.13,
       "percentage_share": 0.2,
       "optimization_strategy": "Pre-ranking Hard Gate Filtering (Phase 26)"
     },
@@ -278,7 +278,7 @@
       "rank": 6,
       "component": "Backend Routing & ASGI Serialization",
       "latency_contribution_ms": 26.87,
-      "percentage_share": 47.0,
+      "percentage_share": 47.1,
       "optimization_strategy": "Async Handlers & Request Tracing Middleware"
     }
   ],
@@ -292,7 +292,7 @@
     {
       "endpoint_category": "AI Priority Scoring without LLM (/analyze)",
       "target_budget_ms": 500.0,
-      "actual_avg_ms": 3.12,
+      "actual_avg_ms": 3.14,
       "status": "PASS (Under Budget)"
     },
     {
@@ -304,13 +304,13 @@
     {
       "endpoint_category": "Full 10-Step Workflow (Warm)",
       "target_budget_ms": 150.0,
-      "actual_avg_ms": 34.07,
+      "actual_avg_ms": 34.1,
       "status": "PASS (Under Budget)"
     },
     {
       "endpoint_category": "Full 10-Step Workflow (Cold)",
       "target_budget_ms": 250.0,
-      "actual_avg_ms": 57.11,
+      "actual_avg_ms": 57.1,
       "status": "PASS (Under Budget)"
     }
   ]

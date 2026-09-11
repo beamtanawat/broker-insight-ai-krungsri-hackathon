@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Providers } from "@/components/layout/Providers";
 
 export const metadata: Metadata = {
   title: "Broker Insight AI — ผู้ช่วย AI สำหรับนายหน้าประกัน",
@@ -31,7 +32,7 @@ export default function RootLayout({
         >
           <span>🧪 <strong>PILOT SANDBOX:</strong> สภาพแวดล้อมจำลองเพื่อการทดสอบนำร่อง (Synthetic Demo Dataset — Not Connected to Live Production)</span>
         </div>
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

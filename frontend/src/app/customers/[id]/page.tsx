@@ -17,7 +17,7 @@ import type {
 } from "@/types";
 import { AppShell } from "@/components/layout";
 import { Button, Tabs, Alert, Skeleton } from "@/components/ui";
-import { CustomerHeader } from "@/components/domain";
+import { CustomerHeader, DemoPersonaStrip } from "@/components/domain";
 import {
   CustomerAlerts,
   DecisionSummary,
@@ -26,6 +26,7 @@ import {
   CustomerRecommendations,
   CustomerPrep,
   CustomerTasks,
+  ProposalOnePagerModal,
 } from "@/components/customer";
 
 export default function CustomerDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -48,8 +49,11 @@ export default function CustomerDetailPage({ params }: { params: Promise<{ id: s
   const [generatingConvo, setGeneratingConvo] = useState(false);
   const [decisionLoading, setDecisionLoading] = useState<string | null>(null);
   const [creatingFu, setCreatingFu] = useState(false);
+  const [refreshingRecs, setRefreshingRecs] = useState(false);
+  const [recommendationNotice, setRecommendationNotice] = useState<{ message: string; variant: "success" | "warning" | "info" } | null>(null);
 
   const [activeTab, setActiveTab] = useState<string>("overview");
+  const [showOnePager, setShowOnePager] = useState(false);
 
   const loadCustomerData = useCallback(async () => {
     setLoading(true);
@@ -150,10 +154,28 @@ export default function CustomerDetailPage({ params }: { params: Promise<{ id: s
     }
   };
 
+  // Handler: Refresh Recommendations
+  const handleRefreshRecommendations = async () => {
+    setRefreshingRecs(true);
+    try {
+      const updatedRecs = await api.customers.getRecommendations(id);
+      setRecommendations(updatedRecs);
+      setRecommendationNotice({
+        message: "คำนวณและอัปเดตผลการจับคู่ผลิตภัณฑ์แนะนำ (AI Product Matching) ล่าสุดเรียบร้อยแล้ว",
+        variant: "success",
+      });
+      setTimeout(() => setRecommendationNotice(null), 5000);
+    } catch (err: any) {
+      setError(err?.message || "ไม่สามารถคำนวณคำแนะนำใหม่ได้");
+    } finally {
+      setRefreshingRecs(false);
+    }
+  };
+
   // Handler: Record Broker Decision
   const handleRecordDecision = async (
     recId: string,
-    action: "approve" | "modify" | "reject",
+    action: "approve" | "modify" | "reject" | "reset",
     reason?: string,
     feedback?: string
   ) => {
@@ -167,6 +189,18 @@ export default function CustomerDetailPage({ params }: { params: Promise<{ id: s
       // Refresh recommendations to update decision status
       const updatedRecs = await api.customers.getRecommendations(id);
       setRecommendations(updatedRecs);
+
+      const actionLabels: Record<string, string> = {
+        approve: "เห็นชอบ (Approve)",
+        modify: "ปรับเปลี่ยนข้อเสนอ (Modify)",
+        reject: "ปฏิเสธข้อเสนอ (Reject)",
+        reset: "รีเซ็ตสถานะ (Reset)",
+      };
+      setRecommendationNotice({
+        message: `บันทึกการตัดสินใจ '${actionLabels[action] || action}' สำเร็จ ข้อมูลถูกบันทึกลงระบบและ MLOps Feedback Loop แล้ว`,
+        variant: action === "approve" ? "success" : action === "modify" ? "warning" : "info",
+      });
+      setTimeout(() => setRecommendationNotice(null), 5000);
     } catch (err: any) {
       setError(err?.message || "บันทึกการตัดสินใจไม่สำเร็จ");
     } finally {
@@ -194,6 +228,20 @@ export default function CustomerDetailPage({ params }: { params: Promise<{ id: s
       setError(err?.message || "สร้างนัดหมายไม่สำเร็จ");
     } finally {
       setCreatingFu(false);
+    }
+  };
+
+  // Handler: Update Follow-up Status
+  const handleUpdateFollowup = async (
+    followupId: string,
+    updateData: { status?: string; notes?: string }
+  ) => {
+    try {
+      await api.customers.updateFollowup(id, followupId, updateData as any);
+      const updatedFu = await api.customers.getFollowups(id);
+      setFollowUps(updatedFu.items);
+    } catch (err: any) {
+      setError(err?.message || "ปรับปรุงสถานะงานติดตามไม่สำเร็จ");
     }
   };
 
@@ -233,6 +281,9 @@ export default function CustomerDetailPage({ params }: { params: Promise<{ id: s
 
   return (
     <AppShell user={user}>
+      {/* ── Demo Persona Switcher Strip (Hackathon Mode) ── */}
+      <DemoPersonaStrip />
+
       {/* ── 1. Persistent Customer Header Strip ── */}
       <div style={{ marginBottom: "var(--space-4)" }}>
         <CustomerHeader
@@ -252,7 +303,15 @@ export default function CustomerDetailPage({ params }: { params: Promise<{ id: s
                 </Button>
               </Link>
               <Button
-                variant="primary"
+                variant="outline"
+                size="sm"
+                leftIcon="📄"
+                onClick={() => setShowOnePager(true)}
+              >
+                สรุปข้อเสนอ (One-Pager)
+              </Button>
+              <Button
+                variant="gold"
                 size="sm"
                 leftIcon="⚡"
                 onClick={handleAnalyze}
@@ -314,10 +373,13 @@ export default function CustomerDetailPage({ params }: { params: Promise<{ id: s
         <CustomerRecommendations
           customer={customer}
           recommendations={recommendations}
-          loading={loading}
-          onRefreshRecommendations={() => api.customers.getRecommendations(id).then(setRecommendations)}
+          loading={refreshingRecs}
+          onRefreshRecommendations={handleRefreshRecommendations}
           onRecordDecision={handleRecordDecision}
           decisionLoading={decisionLoading}
+          notification={recommendationNotice}
+          onClearNotification={() => setRecommendationNotice(null)}
+          onNavigateTab={(t) => setActiveTab(t)}
         />
       )}
 
@@ -336,7 +398,21 @@ export default function CustomerDetailPage({ params }: { params: Promise<{ id: s
           followUps={followUps}
           loading={loading}
           onCreateFollowup={handleCreateFollowup}
+          onUpdateFollowup={handleUpdateFollowup}
           creating={creatingFu}
+        />
+      )}
+
+      {/* ── Proposal One-Pager Modal ── */}
+      {showOnePager && customer && (
+        <ProposalOnePagerModal
+          isOpen={showOnePager}
+          onClose={() => setShowOnePager(false)}
+          customer={customer}
+          fullProfile={fullProfile}
+          aiAnalysis={aiAnalysis}
+          recommendations={recommendations}
+          user={user}
         />
       )}
     </AppShell>

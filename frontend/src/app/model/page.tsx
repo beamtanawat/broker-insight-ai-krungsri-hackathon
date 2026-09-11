@@ -198,7 +198,7 @@ export default function AIHealthAndMonitoringPage() {
           { label: "สุขภาพระบบ AI (AI Health)" },
         ]}
         primaryAction={
-          <Button variant="primary" size="sm" leftIcon="🔄" onClick={loadData} isLoading={loading}>
+          <Button variant="gold" size="sm" leftIcon="🔄" onClick={loadData} isLoading={loading}>
             รีเฟรชข้อมูล
           </Button>
         }
@@ -229,17 +229,20 @@ export default function AIHealthAndMonitoringPage() {
 
       {/* ── 2. Top System Health Pill Strip ── */}
       <div
+        className="glass-card"
         style={{
-          padding: "var(--space-4) var(--space-5)",
-          backgroundColor: isHealthy ? "var(--verified-bg)" : "#fffbeb",
-          border: `1px solid ${isHealthy ? "var(--verified-border)" : "#fcd34d"}`,
-          borderRadius: "var(--radius-lg)",
+          padding: "var(--space-4) var(--space-6)",
+          backgroundColor: isHealthy ? "rgba(240, 253, 244, 0.9)" : "rgba(255, 251, 235, 0.9)",
+          border: `1px solid ${isHealthy ? "#86efac" : "#fcd34d"}`,
+          borderLeft: "4px solid var(--krungsri-yellow)",
+          borderRadius: "var(--radius-xl)",
           marginBottom: "var(--space-5)",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
           flexWrap: "wrap",
           gap: "var(--space-3)",
+          boxShadow: "var(--shadow-card)",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
@@ -248,7 +251,7 @@ export default function AIHealthAndMonitoringPage() {
             label={isHealthy ? "ระบบ AI ทำงานปกติ (Healthy)" : "ต้องตรวจสอบ (Needs Review)"}
             size="md"
           />
-          <span style={{ fontSize: "var(--fs-sm)", color: isHealthy ? "var(--verified-text)" : "var(--broker-text)" }}>
+          <span style={{ fontSize: "var(--fs-sm)", color: isHealthy ? "#14532d" : "#78350f" }}>
             • Champion Model: <strong>{registry?.active_version || evidence?.model_version || metrics?.model_version || "v2.1.0"}</strong> · F1: <strong>{(evidence?.metrics?.f1_score ?? metrics?.metrics?.f1_score ?? 0.84).toFixed(3)}</strong> · E2E P95: <strong>{e2ePerf?.workflow_summary?.p95_ms ?? 480} ms</strong>
           </span>
         </div>
@@ -275,61 +278,101 @@ export default function AIHealthAndMonitoringPage() {
         <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-6)" }}>
           {/* 4 Metric Cards */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "var(--space-4)" }}>
-            <Card variant="metric" noPadding>
+            <div
+              className="hover-lift"
+              style={{
+                backgroundColor: "var(--bg-surface)",
+                borderRadius: "var(--radius-xl)",
+                border: "1px solid var(--border-subtle)",
+                boxShadow: "var(--shadow-card)",
+                overflow: "hidden",
+              }}
+            >
+              <div style={{ height: "4px", background: "var(--krungsri-gold-gradient)" }} />
               <div style={{ padding: "18px 20px" }}>
-                <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)" }}>
+                <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", letterSpacing: "0.05em" }}>
                   F1-Score (ความแม่นยำรวม)
                 </div>
-                <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 800, color: "var(--primary-700)", marginTop: "4px" }}>
+                <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 900, color: "var(--krungsri-navy)", marginTop: "4px", lineHeight: 1.1 }}>
                   {(evidence?.metrics?.f1_score ?? metrics?.metrics?.f1_score ?? 0.84).toFixed(3)}
                 </div>
-                <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)", marginTop: "2px" }}>
+                <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)", marginTop: "4px" }}>
                   Precision: {(evidence?.metrics?.precision ?? metrics?.metrics?.precision ?? 0.82).toFixed(2)} · Recall: {(evidence?.metrics?.recall ?? metrics?.metrics?.recall ?? 0.86).toFixed(2)}
                 </div>
               </div>
-            </Card>
+            </div>
 
-            <Card noPadding>
+            <div
+              className="hover-lift"
+              style={{
+                backgroundColor: "var(--bg-surface)",
+                borderRadius: "var(--radius-xl)",
+                border: "1px solid var(--border-subtle)",
+                boxShadow: "var(--shadow-card)",
+                overflow: "hidden",
+              }}
+            >
+              <div style={{ height: "4px", backgroundColor: "#16a34a" }} />
               <div style={{ padding: "18px 20px" }}>
-                <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)" }}>
+                <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", letterSpacing: "0.05em" }}>
                   ROC-AUC (การจำแนกกลุ่ม)
                 </div>
-                <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 800, color: "var(--success-solid)", marginTop: "4px" }}>
+                <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 900, color: "#16a34a", marginTop: "4px", lineHeight: 1.1 }}>
                   {(evidence?.metrics?.roc_auc ?? metrics?.metrics?.roc_auc ?? 0.91).toFixed(3)}
                 </div>
-                <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)", marginTop: "2px" }}>
-                  ผ่านเกณฑ์มาตรฐานธนาคาร (&ge; 0.80)
+                <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)", marginTop: "4px" }}>
+                  ผ่านเกณฑ์มาตรฐานธนาคาร (&ge; 0.80) ✓
                 </div>
               </div>
-            </Card>
+            </div>
 
-            <Card noPadding>
+            <div
+              className="hover-lift"
+              style={{
+                backgroundColor: "var(--bg-surface)",
+                borderRadius: "var(--radius-xl)",
+                border: "1px solid var(--border-subtle)",
+                boxShadow: "var(--shadow-card)",
+                overflow: "hidden",
+              }}
+            >
+              <div style={{ height: "4px", backgroundColor: "#2563eb" }} />
               <div style={{ padding: "18px 20px" }}>
-                <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)" }}>
+                <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", letterSpacing: "0.05em" }}>
                   Brier Score / ECE (Calibration)
                 </div>
-                <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 800, color: "var(--slate-900)", marginTop: "4px" }}>
+                <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 900, color: "var(--slate-900)", marginTop: "4px", lineHeight: 1.1 }}>
                   {(evidence?.calibration?.brier_score ?? 0.12).toFixed(3)}
                 </div>
-                <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)", marginTop: "2px" }}>
+                <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)", marginTop: "4px" }}>
                   ECE: {(evidence?.calibration?.expected_calibration_error ?? 0.04).toFixed(3)} (Calibrated)
                 </div>
               </div>
-            </Card>
+            </div>
 
-            <Card noPadding>
+            <div
+              className="hover-lift"
+              style={{
+                backgroundColor: "var(--bg-surface)",
+                borderRadius: "var(--radius-xl)",
+                border: "1px solid var(--border-subtle)",
+                boxShadow: "var(--shadow-card)",
+                overflow: "hidden",
+              }}
+            >
+              <div style={{ height: "4px", backgroundColor: "var(--krungsri-navy)" }} />
               <div style={{ padding: "18px 20px" }}>
-                <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)" }}>
+                <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", letterSpacing: "0.05em" }}>
                   เวลาแฝง E2E Latency (P95)
                 </div>
-                <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 800, color: "var(--slate-800)", marginTop: "4px" }}>
+                <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 900, color: "var(--krungsri-navy)", marginTop: "4px", lineHeight: 1.1 }}>
                   {e2ePerf?.workflow_summary?.p95_ms ?? 480} ms
                 </div>
-                <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)", marginTop: "2px" }}>
+                <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)", marginTop: "4px" }}>
                   Median P50: {e2ePerf?.workflow_summary?.p50_ms ?? 420} ms (งบ &le; 2000ms)
                 </div>
               </div>
-            </Card>
+            </div>
           </div>
 
           {/* Latency & Reliability Breakdown */}

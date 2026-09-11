@@ -92,6 +92,11 @@ class LLMSafeCache:
         if entry:
             if now - entry["created_at"] < self.ttl_seconds:
                 self.hits += 1
+                try:
+                    from app.core.metrics import metrics_collector
+                    metrics_collector.record_cache_hit()
+                except Exception:
+                    pass
                 # clone and attach cache metadata
                 cached_res = dict(entry["data"])
                 cached_res["cache_hit"] = True
@@ -104,6 +109,11 @@ class LLMSafeCache:
                     self._customer_keys[customer_id].discard(key)
 
         self.misses += 1
+        try:
+            from app.core.metrics import metrics_collector
+            metrics_collector.record_cache_miss()
+        except Exception:
+            pass
         return None
 
     def set(

@@ -59,8 +59,10 @@ from fastapi.encoders import jsonable_encoder
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    # Use 422 directly or HTTP_422_UNPROCESSABLE_CONTENT to satisfy Starlette future versions
+    status_code = getattr(status, "HTTP_422_UNPROCESSABLE_CONTENT", 422)
     return JSONResponse(
-        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        status_code=status_code,
         content={"detail": "Invalid request payload", "errors": jsonable_encoder(exc.errors())},
     )
 
@@ -193,3 +195,15 @@ async def health():
         "version": "1.0.0",
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
+
+
+from fastapi.responses import Response
+from app.core.metrics import metrics_collector
+
+
+@app.get("/metrics", tags=["observability"])
+@app.get("/api/v1/metrics", tags=["observability"])
+async def get_prometheus_metrics():
+    """Prometheus exposition format (/metrics) endpoint for container observability and APM."""
+    content = metrics_collector.generate_prometheus_text()
+    return Response(content=content, media_type="text/plain; version=0.0.4")

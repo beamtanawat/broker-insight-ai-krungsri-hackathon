@@ -22,7 +22,7 @@ import {
   Status,
   Tooltip,
 } from "@/components/ui";
-import { PageHeader, PriorityScore } from "@/components/domain";
+import { PageHeader, PriorityScore, DemoPersonaStrip } from "@/components/domain";
 
 function CustomersContent() {
   const router = useRouter();
@@ -41,6 +41,7 @@ function CustomersContent() {
   const [priorityFilter, setPriorityFilter] = useState<string>(initialPriority);
   const [kycFilter, setKycFilter] = useState<string>(initialKyc);
   const [searchQuery, setSearchQuery] = useState<string>(initialSearch);
+  const [quickFilter, setQuickFilter] = useState<"all" | "high" | "expiring" | "gap" | "kyc">("all");
   const [sortBy, setSortBy] = useState<"priority" | "name" | "policies">("priority");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
@@ -50,7 +51,7 @@ function CustomersContent() {
     try {
       const [me, custList] = await Promise.all([
         api.auth.me(),
-        api.customers.list(1, 100),
+        api.customers.list(1, 300),
       ]);
       setUser(me as User);
       setCustomers(custList.items);
@@ -77,15 +78,27 @@ function CustomersContent() {
   // Sync with searchParams if changed from outside
   useEffect(() => {
     const p = searchParams.get("priority");
-    if (p) setPriorityFilter(p);
-    const k = searchParams.get("kyc");
-    if (k) setKycFilter(k);
+    if (p) {
+      setPriorityFilter(p);
+      if (p === "high") setQuickFilter("high");
+    }
+    const k = searchParams.get("kyc") || searchParams.get("kyc_status");
+    if (k) {
+      setKycFilter(k);
+      if (k === "pending") setQuickFilter("kyc");
+    }
   }, [searchParams]);
 
   // Filter and Sort Customers
   const filteredAndSortedCustomers = useMemo(() => {
     return customers
       .filter((c) => {
+        // Quick filter checks
+        if (quickFilter === "high" && c.priority_level !== "high") return false;
+        if (quickFilter === "expiring" && !(c.score_short_reason && (c.score_short_reason.includes("ต่ออายุ") || c.score_short_reason.includes("14 วัน") || c.score_short_reason.includes("ครบกำหนด")))) return false;
+        if (quickFilter === "gap" && !(c.score_short_reason && (c.score_short_reason.includes("หนี้") || c.score_short_reason.includes("MRTA") || c.score_short_reason.includes("ช่องว่าง")))) return false;
+        if (quickFilter === "kyc" && c.kyc_status !== "pending") return false;
+
         const matchesPriority = priorityFilter === "all" || c.priority_level === priorityFilter;
         const matchesKyc = kycFilter === "all" || c.kyc_status === kycFilter;
         const matchesSearch =
@@ -113,7 +126,7 @@ function CustomersContent() {
         }
         return 0;
       });
-  }, [customers, priorityFilter, kycFilter, searchQuery, sortBy, sortOrder]);
+  }, [customers, quickFilter, priorityFilter, kycFilter, searchQuery, sortBy, sortOrder]);
 
   const handleSort = (field: "priority" | "name" | "policies") => {
     if (sortBy === field) {
@@ -125,6 +138,7 @@ function CustomersContent() {
   };
 
   const handleResetFilters = () => {
+    setQuickFilter("all");
     setPriorityFilter("all");
     setKycFilter("all");
     setSearchQuery("");
@@ -136,6 +150,8 @@ function CustomersContent() {
   const medCount = customers.filter((c) => c.priority_level === "medium").length;
   const lowCount = customers.filter((c) => c.priority_level === "low").length;
   const pendingKycCount = customers.filter((c) => c.kyc_status === "pending").length;
+  const expiringCount = customers.filter((c) => c.score_short_reason && (c.score_short_reason.includes("ต่ออายุ") || c.score_short_reason.includes("14 วัน") || c.score_short_reason.includes("ครบกำหนด"))).length;
+  const gapCount = customers.filter((c) => c.score_short_reason && (c.score_short_reason.includes("หนี้") || c.score_short_reason.includes("MRTA") || c.score_short_reason.includes("ช่องว่าง"))).length;
 
   return (
     <AppShell user={user}>
@@ -147,7 +163,7 @@ function CustomersContent() {
           { label: "รายชื่อลูกค้า (Customers)" },
         ]}
         primaryAction={
-          <Button variant="primary" size="sm" leftIcon="🔄" onClick={loadData} isLoading={loading}>
+          <Button variant="gold" size="sm" leftIcon="🔄" onClick={loadData} isLoading={loading}>
             รีเฟรชข้อมูล
           </Button>
         }
@@ -160,6 +176,9 @@ function CustomersContent() {
         }
       />
 
+      {/* ── Demo Persona Switcher Strip (Hackathon Mode) ── */}
+      <DemoPersonaStrip />
+
       {error && (
         <Alert variant="danger" style={{ marginBottom: "var(--space-5)" }} action={<Button size="sm" onClick={loadData}>ลองใหม่</Button>}>
           {error}
@@ -167,7 +186,18 @@ function CustomersContent() {
       )}
 
       {/* ── Search & Filters Bar ── */}
-      <Card noPadding style={{ marginBottom: "var(--space-6)" }}>
+      <div
+        className="glass-card"
+        style={{
+          marginBottom: "var(--space-6)",
+          backgroundColor: "var(--bg-surface)",
+          borderRadius: "var(--radius-xl)",
+          border: "1px solid var(--border-subtle)",
+          boxShadow: "var(--shadow-card)",
+          overflow: "hidden",
+        }}
+      >
+        <div style={{ height: "3px", background: "var(--krungsri-gold-gradient)" }} />
         <div
           style={{
             padding: "var(--space-4) var(--space-5)",
@@ -176,6 +206,68 @@ function CustomersContent() {
             gap: "var(--space-4)",
           }}
         >
+          {/* Quick Filter Chips Bar */}
+          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
+            <span style={{ fontSize: "var(--fs-xs)", fontWeight: 700, color: "var(--slate-600)", marginRight: "4px" }}>
+              ตัวกรองด่วน:
+            </span>
+            {[
+              { id: "all" as const, icon: "👥", label: "ลูกค้าทั้งหมด", count: customers.length },
+              { id: "high" as const, icon: "🔥", label: "เร่งด่วนสูง", count: highCount },
+              { id: "expiring" as const, icon: "⏳", label: "ต่ออายุด่วน", count: expiringCount },
+              { id: "gap" as const, icon: "🛡️", label: "ช่องว่างหนี้บ้าน (Gap)", count: gapCount },
+              { id: "kyc" as const, icon: "👤", label: "รอยืนยันตัวตน", count: pendingKycCount },
+            ].map((chip) => {
+              const isSelected = quickFilter === chip.id;
+              return (
+                <button
+                  key={chip.id}
+                  type="button"
+                  onClick={() => {
+                    setQuickFilter(chip.id);
+                    if (chip.id === "high") setPriorityFilter("high");
+                    if (chip.id === "kyc") setKycFilter("pending");
+                    if (chip.id === "all") {
+                      setPriorityFilter("all");
+                      setKycFilter("all");
+                    }
+                  }}
+                  className="hover-lift"
+                  style={{
+                    padding: "5px 12px",
+                    borderRadius: "var(--radius-full)",
+                    border: isSelected ? "1.5px solid var(--krungsri-yellow)" : "1px solid var(--border-subtle)",
+                    backgroundColor: isSelected ? "var(--krungsri-navy)" : "var(--bg-surface)",
+                    color: isSelected ? "#ffffff" : "var(--slate-700)",
+                    fontSize: "var(--fs-xs)",
+                    fontWeight: isSelected ? 700 : 500,
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    boxShadow: isSelected ? "0 2px 8px rgba(11, 30, 54, 0.18)" : "none",
+                    transition: "all 0.15s ease",
+                  }}
+                >
+                  <span>{chip.icon}</span>
+                  <span>{chip.label}</span>
+                  <span
+                    style={{
+                      padding: "1px 6px",
+                      borderRadius: "10px",
+                      fontSize: "10px",
+                      backgroundColor: isSelected ? "rgba(254, 203, 0, 0.25)" : "var(--slate-100)",
+                      color: isSelected ? "var(--krungsri-yellow)" : "var(--slate-600)",
+                      fontWeight: 700,
+                    }}
+                  >
+                    {chip.count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
           {/* Top Row: Search input + Results summary */}
           <div
             style={{
@@ -343,7 +435,7 @@ function CustomersContent() {
             </div>
           </div>
         </div>
-      </Card>
+      </div>
 
       {/* ── Customer List Table (Desktop View) & Cards (Mobile View) ── */}
       <Card noPadding>

@@ -3,9 +3,12 @@ Gemini LLM service — generates customer insights and discussion topics in Thai
 Uses google-generativeai SDK with structured output parsing.
 """
 import json
+import warnings
 from datetime import datetime, timezone
 
-import google.generativeai as genai
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore", category=FutureWarning)
+    import google.generativeai as genai
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings

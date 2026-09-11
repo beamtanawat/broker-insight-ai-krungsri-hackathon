@@ -136,7 +136,10 @@ class ConversationAssistantService:
 
         if self.api_key:
             try:
-                import google.generativeai as genai
+                import warnings
+                with warnings.catch_warnings():
+                    warnings.filterwarnings("ignore", category=FutureWarning)
+                    import google.generativeai as genai
                 genai.configure(api_key=self.api_key)
                 model = genai.GenerativeModel(self.model_name)
                 
