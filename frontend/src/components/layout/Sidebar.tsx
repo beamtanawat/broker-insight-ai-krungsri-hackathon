@@ -24,6 +24,7 @@ const NAV_SECTIONS: NavSection[] = [
       { label: "แดชบอร์ด", href: "/dashboard", icon: "🏠" },
       { label: "รายชื่อลูกค้า", href: "/customers", icon: "👥" },
       { label: "แผนที่ลูกค้าใกล้เคียง", href: "/visit-planner", icon: "📍" },
+      { label: "โมบายล์แอป", href: "/my-protection", icon: "📱", badge: "Live" },
       { label: "รายงาน", href: "/analytics", icon: "📊" },
       { label: "ตั้งค่า", href: "/admin/audit", icon: "⚙️" },
     ],

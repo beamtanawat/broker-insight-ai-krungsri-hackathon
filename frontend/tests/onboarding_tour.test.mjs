@@ -9,20 +9,21 @@ import {
 
 describe("First-Time User Onboarding & Guided Feature Tour", () => {
   // ── 1. Role-specific Steps Verification ──
-  test("Broker receives exact 9-step customer-focused tour flow", () => {
+  test("Broker receives comprehensive 10-step feature tour flow", () => {
     const steps = getTourStepsForRole("broker");
-    assert.equal(steps.length, 9, "Broker tour must contain exactly 9 steps");
+    assert.equal(steps.length, 10, "Broker tour must contain exactly 10 steps");
 
     const expectedTitles = [
-      "แดชบอร์ดของคุณ",
-      "จัดการและค้นหาลูกค้า",
-      "รู้จักลูกค้าในมุมมอง 360°",
-      "AI ช่วยวิเคราะห์ลูกค้า",
-      "คำแนะนำที่เหมาะกับลูกค้า",
-      "ค้นหาลูกค้าที่อยู่ใกล้คุณ",
-      "คุณเป็นคนเลือก",
-      "นำทางเมื่อพร้อม",
-      "ดูผลการดำเนินงาน",
+      "แดชบอร์ดภาพรวมและงานประจำวัน",
+      "จัดการและค้นหาลูกค้าในพอร์ต",
+      "ข้อมูลลูกค้าแบบ 360° ครบวงจร",
+      'AI ชี้เป้า "Why Now" และความโปร่งใส',
+      "คำแนะนำผลิตภัณฑ์ & ตรวจเกณฑ์ 100%",
+      "ค้นหาลูกค้าใกล้เคียงรอบตัวคุณ",
+      "คุณเป็นคนเลือกเองเสมอ",
+      "นำทางจริงด้วย Google Maps",
+      "โมบายล์เวิร์กสเปซ My Protection",
+      "ดูผลการดำเนินงานและสถิติ",
     ];
 
     steps.forEach((step, idx) => {
@@ -73,9 +74,9 @@ describe("First-Time User Onboarding & Guided Feature Tour", () => {
   test("Default role fallback safely yields Broker tour", () => {
     const stepsUndefined = getTourStepsForRole(undefined);
     const stepsUnknown = getTourStepsForRole("unknown_role");
-    assert.equal(stepsUndefined.length, 9);
-    assert.equal(stepsUnknown.length, 9);
-    assert.equal(stepsUndefined[0].title, "แดชบอร์ดของคุณ");
+    assert.equal(stepsUndefined.length, 10);
+    assert.equal(stepsUnknown.length, 10);
+    assert.equal(stepsUndefined[0].title, "แดชบอร์ดภาพรวมและงานประจำวัน");
   });
 
   // ── 2. RBAC Route Protection ──
@@ -124,13 +125,13 @@ describe("First-Time User Onboarding & Guided Feature Tour", () => {
     // Verify Step 7 explicitly guarantees broker autonomy
     const selectionStep = BROKER_TOUR_STEPS.find((s) => s.id === "broker-manual-selection");
     assert.ok(selectionStep, "Step 7 must exist");
-    assert.equal(selectionStep.title, "คุณเป็นคนเลือก");
+    assert.equal(selectionStep.title, "คุณเป็นคนเลือกเองเสมอ");
     assert.ok(selectionStep.description.includes("คุณเป็นผู้เลือกเอง"));
 
     // Verify Step 8 highlights on-demand navigation
     const navStep = BROKER_TOUR_STEPS.find((s) => s.id === "broker-navigation");
     assert.ok(navStep, "Step 8 must exist");
-    assert.equal(navStep.title, "นำทางเมื่อพร้อม");
+    assert.equal(navStep.title, "นำทางจริงด้วย Google Maps");
   });
 
   // ── 4. First-Time State Persistence Emulation ──

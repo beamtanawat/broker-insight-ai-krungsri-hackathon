@@ -638,12 +638,13 @@ export default function MyProtectionPage() {
         </div>
       }
     >
-      <SmartphoneMockup
-        header={mobileHeader}
-        bottomBar={mobileBottomBar}
-        bgScreen="#F8FAFC"
-        contentPadding="12px 10px 20px"
-      >
+      <div data-tour="my-protection-mobile" style={{ width: "100%", display: "flex", justifyContent: "center" }}>
+        <SmartphoneMockup
+          header={mobileHeader}
+          bottomBar={mobileBottomBar}
+          bgScreen="#F8FAFC"
+          contentPadding="12px 10px 20px"
+        >
         {/* ─── Hero Banner with Bangkok Skyline Background ─── */}
         <div
           style={{
@@ -1446,6 +1447,7 @@ export default function MyProtectionPage() {
           <span style={{ fontSize: "0.875rem", color: "#B45309", fontWeight: 700 }}>›</span>
         </div>
       </SmartphoneMockup>
+      </div>
     </AppShell>
   );
 }

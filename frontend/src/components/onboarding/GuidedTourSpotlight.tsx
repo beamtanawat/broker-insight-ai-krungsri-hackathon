@@ -7,15 +7,21 @@ export function GuidedTourSpotlight() {
     isTourActive,
     currentStep,
     currentStepIndex,
+    steps,
     totalSteps,
     targetRect,
+    isNavigating,
     nextStep,
     prevStep,
+    jumpToStep,
     skipTour,
+    openFeatureCatalog,
   } = useOnboardingTour();
 
   const [windowSize, setWindowSize] = useState({ width: 1200, height: 800 });
+  const [showStepDropdown, setShowStepDropdown] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function handleResize() {
@@ -25,6 +31,19 @@ export function GuidedTourSpotlight() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setShowStepDropdown(false);
+      }
+    }
+    if (showStepDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => document.removeEventListener("mousedown", handleClickOutside);
+    }
+  }, [showStepDropdown]);
 
   // Keyboard navigation
   useEffect(() => {
@@ -47,7 +66,7 @@ export function GuidedTourSpotlight() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isTourActive, nextStep, prevStep, skipTour]);
 
-  // Compute Popover coordinates
+  // Compute Popover coordinates with smart auto-flip
   const popoverPosition = useMemo(() => {
     const isMobile = windowSize.width < 768;
     if (isMobile) {
@@ -56,14 +75,18 @@ export function GuidedTourSpotlight() {
         style: {
           position: "fixed" as const,
           bottom: "16px",
-          left: "16px",
-          right: "16px",
+          left: "12px",
+          right: "12px",
           zIndex: 10002,
         },
       };
     }
 
-    // Default centered position if no target found
+    const cardWidth = 440;
+    const cardHeight = 310;
+    const offset = 16;
+
+    // Default centered position if no target found or currently navigating
     if (!targetRect) {
       return {
         isMobile: false,
@@ -73,16 +96,24 @@ export function GuidedTourSpotlight() {
           left: "50%",
           transform: "translate(-50%, -50%)",
           zIndex: 10002,
-          maxWidth: "420px",
+          maxWidth: `${cardWidth}px`,
           width: "100%",
         },
       };
     }
 
-    const cardWidth = 400;
-    const cardHeight = 240;
-    const offset = 14;
-    const placement = currentStep?.placement || "bottom";
+    let placement = currentStep?.placement || "bottom";
+
+    // Smart auto-flip if clipping viewport
+    if (placement === "bottom" && targetRect.bottom + cardHeight + offset > windowSize.height - 20) {
+      placement = "top";
+    } else if (placement === "top" && targetRect.top - cardHeight - offset < 20) {
+      placement = "bottom";
+    } else if (placement === "right" && targetRect.right + cardWidth + offset > windowSize.width - 20) {
+      placement = "left";
+    } else if (placement === "left" && targetRect.left - cardWidth - offset < 20) {
+      placement = "right";
+    }
 
     let top = 0;
     let left = 0;
@@ -101,9 +132,9 @@ export function GuidedTourSpotlight() {
       left = targetRect.right + offset;
     }
 
-    // Clamp within viewport
-    top = Math.max(16, Math.min(windowSize.height - cardHeight - 16, top));
-    left = Math.max(16, Math.min(windowSize.width - cardWidth - 16, left));
+    // Clamp within viewport margins
+    top = Math.max(20, Math.min(windowSize.height - cardHeight - 20, top));
+    left = Math.max(20, Math.min(windowSize.width - cardWidth - 20, left));
 
     return {
       isMobile: false,
@@ -137,34 +168,35 @@ export function GuidedTourSpotlight() {
       {/* ── Dimmed Backdrop with Spotlight Cutout ── */}
       {targetRect ? (
         <>
-          {/* Spotlight Highlight Box around target */}
+          {/* Spotlight Highlight Box around target with warm gold glow */}
           <div
             style={{
               position: "fixed",
-              top: `${targetRect.top - 6}px`,
-              left: `${targetRect.left - 6}px`,
-              width: `${targetRect.width + 12}px`,
-              height: `${targetRect.height + 12}px`,
-              borderRadius: "10px",
-              boxShadow: "0 0 0 9999px rgba(15, 23, 42, 0.68), 0 0 20px rgba(254, 203, 0, 0.5)",
+              top: `${targetRect.top - 8}px`,
+              left: `${targetRect.left - 8}px`,
+              width: `${targetRect.width + 16}px`,
+              height: `${targetRect.height + 16}px`,
+              borderRadius: "12px",
+              boxShadow: "0 0 0 9999px rgba(11, 30, 54, 0.75), 0 0 24px rgba(254, 203, 0, 0.6)",
               border: "2px solid #FECB00",
               pointerEvents: "none",
               zIndex: 10001,
-              transition: "all 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
+              transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
             }}
           />
         </>
       ) : (
-        /* Full Backdrop when element is centered / fallback */
+        /* Full Backdrop when element is transitioning or centered */
         <div
           style={{
             position: "fixed",
             inset: 0,
-            backgroundColor: "rgba(15, 23, 42, 0.68)",
+            backgroundColor: "rgba(11, 30, 54, 0.75)",
             backdropFilter: "blur(4px)",
             WebkitBackdropFilter: "blur(4px)",
             zIndex: 10001,
             pointerEvents: "none",
+            transition: "opacity 0.25s ease",
           }}
         />
       )}
@@ -175,44 +207,130 @@ export function GuidedTourSpotlight() {
         style={{
           ...popoverPosition.style,
           backgroundColor: "#ffffff",
-          borderRadius: "14px",
-          border: "1px solid rgba(226, 232, 240, 0.9)",
-          boxShadow: "0 20px 35px -8px rgba(11, 30, 54, 0.3), 0 4px 10px -2px rgba(11, 30, 54, 0.1)",
-          overflow: "hidden",
-          animation: "scaleUp 0.2s ease-out",
+          borderRadius: "16px",
+          border: "1px solid rgba(226, 232, 240, 0.95)",
+          boxShadow: "0 24px 48px -12px rgba(11, 30, 54, 0.45), 0 4px 12px -2px rgba(11, 30, 54, 0.15)",
+          overflow: "visible",
+          animation: "scaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
-        {/* Yellow Top Strip */}
+        {/* Krungsri Brand Accent Strip */}
         <div
           style={{
-            height: "4px",
-            backgroundColor: "#FECB00",
+            height: "5px",
+            background: "linear-gradient(90deg, #FECB00 0%, #F59E0B 40%, #2563EB 100%)",
+            borderTopLeftRadius: "16px",
+            borderTopRightRadius: "16px",
           }}
         />
 
-        <div style={{ padding: "18px 20px" }}>
-          {/* Header Row: Step counter & Skip */}
+        <div style={{ padding: "20px 22px" }}>
+          {/* Header Row: Step counter & Step selector dropdown & Skip button */}
           <div
             style={{
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
-              marginBottom: "8px",
+              marginBottom: "12px",
+              position: "relative",
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <span
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }} ref={dropdownRef}>
+              {/* Interactive Step Dropdown Toggle */}
+              <button
+                type="button"
+                onClick={() => setShowStepDropdown((prev) => !prev)}
+                title="คลิกเพื่อเลือกข้ามไปยังขั้นตอนใดก็ได้"
                 style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
                   fontSize: "12px",
                   fontWeight: 700,
-                  color: "#2563EB",
+                  color: "#1D4ED8",
                   backgroundColor: "#EFF6FF",
-                  padding: "2px 8px",
+                  border: "1px solid #BFDBFE",
+                  padding: "3px 10px",
                   borderRadius: "999px",
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
                 }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#DBEAFE")}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#EFF6FF")}
               >
-                ขั้นตอนที่ {currentStepIndex + 1} จาก {totalSteps}
-              </span>
+                <span>ขั้นตอนที่ {currentStepIndex + 1} จาก {totalSteps}</span>
+                <span style={{ fontSize: "12px", color: "#3B82F6" }}>▾</span>
+              </button>
+
+              {/* Step Dropdown Menu */}
+              {showStepDropdown && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "32px",
+                    left: 0,
+                    backgroundColor: "#ffffff",
+                    borderRadius: "12px",
+                    border: "1px solid #CBD5E1",
+                    boxShadow: "0 12px 28px rgba(15, 23, 42, 0.2)",
+                    padding: "6px",
+                    width: "280px",
+                    maxHeight: "300px",
+                    overflowY: "auto",
+                    zIndex: 10005,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "2px",
+                  }}
+                  className="custom-scrollbar"
+                >
+                  <div style={{ padding: "6px 8px", fontSize: "12px", fontWeight: 800, color: "#64748B", borderBottom: "1px solid #F1F5F9" }}>
+                    เลือกขั้นตอนที่ต้องการดู:
+                  </div>
+                  {steps.map((s, idx) => {
+                    const isCurrent = idx === currentStepIndex;
+                    return (
+                      <button
+                        key={s.id}
+                        type="button"
+                        onClick={() => {
+                          setShowStepDropdown(false);
+                          jumpToStep(idx);
+                        }}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "8px",
+                          padding: "6px 8px",
+                          borderRadius: "6px",
+                          backgroundColor: isCurrent ? "#FEF3C7" : "transparent",
+                          border: "none",
+                          textAlign: "left",
+                          cursor: "pointer",
+                          transition: "background-color 0.15s ease",
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!isCurrent) e.currentTarget.style.backgroundColor = "#F8FAFC";
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!isCurrent) e.currentTarget.style.backgroundColor = "transparent";
+                        }}
+                      >
+                        <span style={{ fontSize: "14px" }}>{s.icon || "📌"}</span>
+                        <div style={{ minWidth: 0, flex: 1 }}>
+                          <div style={{ fontSize: "12px", fontWeight: isCurrent ? 800 : 600, color: isCurrent ? "#92400E" : "#1E293B", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                            {idx + 1}. {s.title}
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Tag Pill */}
               {currentStep.tag && (
                 <span
                   style={{
@@ -220,8 +338,8 @@ export function GuidedTourSpotlight() {
                     fontWeight: 600,
                     color: "#475569",
                     backgroundColor: "#F1F5F9",
-                    padding: "2px 6px",
-                    borderRadius: "4px",
+                    padding: "3px 8px",
+                    borderRadius: "6px",
                   }}
                 >
                   {currentStep.tag}
@@ -229,53 +347,125 @@ export function GuidedTourSpotlight() {
               )}
             </div>
 
-            <button
-              onClick={skipTour}
-              aria-label="ข้ามการแนะนำ"
-              style={{
-                background: "none",
-                border: "none",
-                fontSize: "12px",
-                color: "#94A3B8",
-                fontWeight: 600,
-                cursor: "pointer",
-                padding: "2px 6px",
-                borderRadius: "4px",
-                transition: "color 0.15s ease",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "#0F172A")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "#94A3B8")}
-            >
-              ข้ามการแนะนำ
-            </button>
+            {/* Top Right Controls */}
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <button
+                type="button"
+                onClick={openFeatureCatalog}
+                title="เปิดสารบัญดูฟีเจอร์ทั้งหมด"
+                style={{
+                  background: "none",
+                  border: "none",
+                  fontSize: "12px",
+                  color: "#2563EB",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  padding: "2px 6px",
+                  borderRadius: "4px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
+                }}
+              >
+                <span>📑</span>
+                <span>สารบัญฟีเจอร์</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={skipTour}
+                aria-label="ข้ามการแนะนำ"
+                style={{
+                  background: "none",
+                  border: "none",
+                  fontSize: "12px",
+                  color: "#94A3B8",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  padding: "2px 6px",
+                  borderRadius: "4px",
+                  transition: "color 0.15s ease",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = "#0F172A")}
+                onMouseLeave={(e) => (e.currentTarget.style.color = "#94A3B8")}
+              >
+                ✕ ปิดทัวร์
+              </button>
+            </div>
           </div>
 
-          {/* Step Title */}
-          <h3
-            style={{
-              fontSize: "17px",
-              fontWeight: 800,
-              color: "#0F172A",
-              margin: "0 0 8px 0",
-              lineHeight: 1.3,
-            }}
-          >
-            {currentStep.title}
-          </h3>
+          {/* Navigation Loading Notification */}
+          {isNavigating && (
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                backgroundColor: "#FEF3C7",
+                color: "#92400E",
+                fontSize: "12px",
+                fontWeight: 700,
+                padding: "2px 8px",
+                borderRadius: "4px",
+                marginBottom: "8px",
+              }}
+            >
+              <span className="spin" style={{ display: "inline-block" }}>⚡</span>
+              <span>กำลังเปิดหน้านี้และจัดตำแหน่ง...</span>
+            </div>
+          )}
 
-          {/* Step Description — Thai Reading Font */}
+          {/* Step Title with Icon */}
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
+            <span style={{ fontSize: "22px", flexShrink: 0 }}>{currentStep.icon || "💡"}</span>
+            <h3
+              style={{
+                fontSize: "18px",
+                fontWeight: 800,
+                color: "#0F172A",
+                margin: 0,
+                lineHeight: 1.3,
+              }}
+            >
+              {currentStep.title}
+            </h3>
+          </div>
+
+          {/* Step Description in Thai Reading Font */}
           <p
             className="font-reading"
             style={{
               fontFamily: "var(--font-reading-thai)",
               fontSize: "14px",
-              color: "#475569",
+              color: "#334155",
               lineHeight: "var(--lh-reading)",
-              margin: "0 0 16px 0",
+              margin: "0 0 12px 0",
             }}
           >
             {currentStep.description}
           </p>
+
+          {/* Key Highlight Pill */}
+          {currentStep.keyHighlight && (
+            <div
+              style={{
+                backgroundColor: "#FFFBEB",
+                border: "1px solid #FDE68A",
+                borderRadius: "8px",
+                padding: "8px 12px",
+                fontSize: "12.5px",
+                color: "#92400E",
+                fontWeight: 600,
+                lineHeight: 1.45,
+                marginBottom: "16px",
+                display: "flex",
+                alignItems: "flex-start",
+                gap: "6px",
+              }}
+            >
+              <span>{currentStep.keyHighlight}</span>
+            </div>
+          )}
 
           {/* Dots Progress Track */}
           <div
@@ -287,14 +477,20 @@ export function GuidedTourSpotlight() {
             }}
           >
             {Array.from({ length: totalSteps }).map((_, i) => (
-              <span
+              <button
                 key={i}
+                type="button"
+                onClick={() => jumpToStep(i)}
+                title={`ข้ามไปยังขั้นตอนที่ ${i + 1}`}
                 style={{
-                  width: i === currentStepIndex ? "16px" : "6px",
-                  height: "6px",
+                  width: i === currentStepIndex ? "22px" : "7px",
+                  height: "7px",
                   borderRadius: "999px",
                   backgroundColor: i === currentStepIndex ? "#FECB00" : "#CBD5E1",
-                  transition: "all 0.2s ease",
+                  border: "none",
+                  padding: 0,
+                  cursor: "pointer",
+                  transition: "all 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
                 }}
               />
             ))}
@@ -306,22 +502,23 @@ export function GuidedTourSpotlight() {
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
-              paddingTop: "10px",
+              paddingTop: "12px",
               borderTop: "1px solid #F1F5F9",
             }}
           >
             <div>
               {!isFirstStep && (
                 <button
+                  type="button"
                   onClick={prevStep}
                   style={{
-                    padding: "6px 14px",
-                    borderRadius: "6px",
+                    padding: "7px 16px",
+                    borderRadius: "8px",
                     border: "1px solid #CBD5E1",
                     backgroundColor: "#ffffff",
                     color: "#334155",
                     fontSize: "13px",
-                    fontWeight: 600,
+                    fontWeight: 700,
                     cursor: "pointer",
                     transition: "all 0.15s ease",
                   }}
@@ -335,26 +532,27 @@ export function GuidedTourSpotlight() {
 
             <div style={{ display: "flex", gap: "8px" }}>
               <button
+                type="button"
                 onClick={nextStep}
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
                   gap: "6px",
-                  padding: "6px 18px",
-                  borderRadius: "6px",
+                  padding: "8px 22px",
+                  borderRadius: "8px",
                   border: "none",
                   backgroundColor: isLastStep ? "#16A34A" : "#2563EB",
                   color: "#ffffff",
-                  fontSize: "13px",
-                  fontWeight: 700,
+                  fontSize: "13.5px",
+                  fontWeight: 800,
                   cursor: "pointer",
                   boxShadow: isLastStep
-                    ? "0 2px 6px rgba(22, 163, 74, 0.3)"
-                    : "0 2px 6px rgba(37, 99, 235, 0.3)",
+                    ? "0 3px 10px rgba(22, 163, 74, 0.35)"
+                    : "0 3px 10px rgba(37, 99, 235, 0.35)",
                   transition: "all 0.15s ease",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.filter = "brightness(1.08)";
+                  e.currentTarget.style.filter = "brightness(1.1)";
                   e.currentTarget.style.transform = "translateY(-1px)";
                 }}
                 onMouseLeave={(e) => {
@@ -362,7 +560,7 @@ export function GuidedTourSpotlight() {
                   e.currentTarget.style.transform = "none";
                 }}
               >
-                <span>{isLastStep ? "เริ่มใช้งาน" : "ถัดไป"}</span>
+                <span>{isLastStep ? "เข้าใจแล้ว เริ่มใช้งาน" : "ถัดไป"}</span>
                 <span aria-hidden="true">{isLastStep ? "✓" : "→"}</span>
               </button>
             </div>

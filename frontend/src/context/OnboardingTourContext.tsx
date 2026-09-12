@@ -1,5 +1,5 @@
 "use client";
-import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import type { User } from "@/types";
 import { TourStep, getTourStepsForRole } from "@/lib/onboardingSteps";
@@ -14,12 +14,17 @@ interface OnboardingTourContextType {
   steps: TourStep[];
   totalSteps: number;
   targetRect: DOMRect | null;
-  startTour: (roleOverride?: string) => void;
+  isNavigating: boolean;
+  startTour: (roleOverride?: string, startIndex?: number) => void;
+  jumpToStep: (index: number) => void;
   nextStep: () => void;
   prevStep: () => void;
   skipTour: () => void;
   replayTour: (roleOverride?: string) => void;
   closeWelcome: () => void;
+  showFeatureCatalog: boolean;
+  openFeatureCatalog: () => void;
+  closeFeatureCatalog: () => void;
 }
 
 const OnboardingTourContext = createContext<OnboardingTourContextType | null>(null);
@@ -39,8 +44,12 @@ export function OnboardingTourProvider({ user, children }: OnboardingTourProvide
 
   const [isTourActive, setIsTourActive] = useState(false);
   const [showWelcome, setShowWelcome] = useState(false);
+  const [showFeatureCatalog, setShowFeatureCatalog] = useState(false);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [targetRect, setTargetRect] = useState<DOMRect | null>(null);
+  const [isNavigating, setIsNavigating] = useState(false);
+
+  const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Check if first-time user on mount
   useEffect(() => {
@@ -51,7 +60,7 @@ export function OnboardingTourProvider({ user, children }: OnboardingTourProvide
         // First time user: show welcome modal after brief delay for smooth mount
         const timer = setTimeout(() => {
           setShowWelcome(true);
-        }, 600);
+        }, 500);
         return () => clearTimeout(timer);
       }
     } catch {
@@ -66,64 +75,118 @@ export function OnboardingTourProvider({ user, children }: OnboardingTourProvide
     return steps[currentStepIndex];
   }, [isTourActive, currentStepIndex, steps]);
 
-  // Update target element coordinates whenever step, pathname, or scroll/resize happens
-  const updateTargetRect = useCallback(() => {
+  // Update target element coordinates with smooth auto-scroll
+  const locateAndMeasureTarget = useCallback((shouldScroll = false): boolean => {
     if (!currentStep || !currentStep.targetSelector) {
       setTargetRect(null);
-      return;
+      return false;
     }
 
     const el = document.querySelector(currentStep.targetSelector);
     if (el) {
       const rect = el.getBoundingClientRect();
-      // Ensure element has dimension
+      // Ensure element is actually rendered with dimensions
       if (rect.width > 0 && rect.height > 0) {
+        if (shouldScroll) {
+          // Check if partially out of viewport
+          const isVisible =
+            rect.top >= 80 &&
+            rect.bottom <= window.innerHeight - 80 &&
+            rect.left >= 40 &&
+            rect.right <= window.innerWidth - 40;
+
+          if (!isVisible) {
+            el.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+            // Re-measure after smooth scrolling starts settling
+            setTimeout(() => {
+              const updatedRect = el.getBoundingClientRect();
+              setTargetRect(updatedRect);
+            }, 300);
+          }
+        }
         setTargetRect(rect);
-        return;
+        setIsNavigating(false);
+        return true;
       }
     }
-    setTargetRect(null);
+    return false;
   }, [currentStep]);
 
+  // Manage target detection & polling on step or route change
   useEffect(() => {
     if (!isTourActive || !currentStep) {
+      setTargetRect(null);
       return;
     }
 
-    const initialTimer = setTimeout(updateTargetRect, 0);
+    // Clear any previous polling loop
+    if (pollIntervalRef.current) {
+      clearInterval(pollIntervalRef.current);
+      pollIntervalRef.current = null;
+    }
 
-    // Retry a few times in case route transitions or animations are completing
-    const retryTimers = [
-      setTimeout(updateTargetRect, 100),
-      setTimeout(updateTargetRect, 300),
-      setTimeout(updateTargetRect, 600),
-    ];
+    // Immediate attempt with auto-scroll
+    const found = locateAndMeasureTarget(true);
 
-    window.addEventListener("resize", updateTargetRect);
-    window.addEventListener("scroll", updateTargetRect, true);
+    if (!found) {
+      // If not immediately found (e.g. page transition), poll for up to 2.5 seconds
+      const startTime = Date.now();
+      pollIntervalRef.current = setInterval(() => {
+        const success = locateAndMeasureTarget(true);
+        if (success || Date.now() - startTime > 2500) {
+          if (pollIntervalRef.current) {
+            clearInterval(pollIntervalRef.current);
+            pollIntervalRef.current = null;
+          }
+          setIsNavigating(false);
+        }
+      }, 80);
+    }
+
+    function handleScrollOrResize() {
+      locateAndMeasureTarget(false);
+    }
+
+    window.addEventListener("resize", handleScrollOrResize);
+    window.addEventListener("scroll", handleScrollOrResize, true);
 
     return () => {
-      clearTimeout(initialTimer);
-      retryTimers.forEach(clearTimeout);
-      window.removeEventListener("resize", updateTargetRect);
-      window.removeEventListener("scroll", updateTargetRect, true);
+      if (pollIntervalRef.current) {
+        clearInterval(pollIntervalRef.current);
+        pollIntervalRef.current = null;
+      }
+      window.removeEventListener("resize", handleScrollOrResize);
+      window.removeEventListener("scroll", handleScrollOrResize, true);
     };
-  }, [isTourActive, currentStep, pathname, updateTargetRect]);
+  }, [isTourActive, currentStep, pathname, locateAndMeasureTarget]);
 
-  const startTour = useCallback((override?: string) => {
+  const startTour = useCallback((override?: string, startIndex = 0) => {
     if (override) {
       setRoleOverride(override);
     }
     const tourSteps = getTourStepsForRole(override || userRole);
     setShowWelcome(false);
-    setCurrentStepIndex(0);
+    setShowFeatureCatalog(false);
+    const validIndex = Math.max(0, Math.min(startIndex, tourSteps.length - 1));
+    setCurrentStepIndex(validIndex);
     setIsTourActive(true);
 
-    const firstStep = tourSteps[0];
-    if (firstStep?.route && pathname !== firstStep.route) {
-      router.push(firstStep.route);
+    const targetStep = tourSteps[validIndex];
+    if (targetStep?.route && pathname !== targetStep.route) {
+      setIsNavigating(true);
+      router.push(targetStep.route);
     }
   }, [userRole, pathname, router]);
+
+  const jumpToStep = useCallback((index: number) => {
+    if (index < 0 || index >= steps.length) return;
+    const targetStep = steps[index];
+    setCurrentStepIndex(index);
+    if (targetStep?.route && pathname !== targetStep.route) {
+      setIsNavigating(true);
+      router.push(targetStep.route);
+    }
+  }, [steps, pathname, router]);
 
   const nextStep = useCallback(() => {
     if (currentStepIndex + 1 < steps.length) {
@@ -132,6 +195,7 @@ export function OnboardingTourProvider({ user, children }: OnboardingTourProvide
       setCurrentStepIndex(nextIndex);
 
       if (nextStepObj?.route && pathname !== nextStepObj.route) {
+        setIsNavigating(true);
         router.push(nextStepObj.route);
       }
     } else {
@@ -150,6 +214,7 @@ export function OnboardingTourProvider({ user, children }: OnboardingTourProvide
       setCurrentStepIndex(prevIndex);
 
       if (prevStepObj?.route && pathname !== prevStepObj.route) {
+        setIsNavigating(true);
         router.push(prevStepObj.route);
       }
     }
@@ -158,6 +223,7 @@ export function OnboardingTourProvider({ user, children }: OnboardingTourProvide
   const skipTour = useCallback(() => {
     setIsTourActive(false);
     setShowWelcome(false);
+    setShowFeatureCatalog(false);
     try {
       localStorage.setItem(ONBOARDING_STORAGE_KEY, "dismissed");
     } catch {}
@@ -171,8 +237,18 @@ export function OnboardingTourProvider({ user, children }: OnboardingTourProvide
   }, []);
 
   const replayTour = useCallback((roleOverride?: string) => {
-    startTour(roleOverride);
+    startTour(roleOverride, 0);
   }, [startTour]);
+
+  const openFeatureCatalog = useCallback(() => {
+    setShowWelcome(false);
+    setIsTourActive(false);
+    setShowFeatureCatalog(true);
+  }, []);
+
+  const closeFeatureCatalog = useCallback(() => {
+    setShowFeatureCatalog(false);
+  }, []);
 
   return (
     <OnboardingTourContext.Provider
@@ -184,12 +260,17 @@ export function OnboardingTourProvider({ user, children }: OnboardingTourProvide
         steps,
         totalSteps: steps.length,
         targetRect: (!isTourActive || !currentStep) ? null : targetRect,
+        isNavigating,
         startTour,
+        jumpToStep,
         nextStep,
         prevStep,
         skipTour,
         replayTour,
         closeWelcome,
+        showFeatureCatalog,
+        openFeatureCatalog,
+        closeFeatureCatalog,
       }}
     >
       {children}
