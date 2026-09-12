@@ -2,7 +2,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { clearTokens } from "@/lib/auth";
+import { clearTokens, setTokens } from "@/lib/auth";
+import { api } from "@/lib/api";
 import type { User } from "@/types";
 import { Badge } from "../ui/Badge";
 import { CommandPalette } from "./CommandPalette";
@@ -31,6 +32,21 @@ export function Topbar({ title, subtitle, user, actions, onMobileMenuToggle }: T
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
+
+  const [switchingRole, setSwitchingRole] = useState(false);
+
+  async function handleSwitchRole(targetEmail: string) {
+    setSwitchingRole(true);
+    try {
+      const tokens = await api.auth.login(targetEmail, "demo1234");
+      setTokens(tokens.access_token, tokens.refresh_token);
+      setUserMenuOpen(false);
+      window.location.reload();
+    } catch (err) {
+      console.error("Failed to switch role:", err);
+      setSwitchingRole(false);
+    }
+  }
 
   function handleLogout() {
     clearTokens();
@@ -572,6 +588,68 @@ export function Topbar({ title, subtitle, user, actions, onMobileMenuToggle }: T
                     <span aria-hidden="true">💡</span>
                     <span>แนะนำการใช้งานระบบ (Feature Tour)</span>
                   </button>
+
+                  {/* Switch Persona Section */}
+                  <div
+                    style={{
+                      padding: "8px 12px",
+                      margin: "4px 0",
+                      borderTop: "1px solid var(--border-subtle)",
+                      borderBottom: "1px solid var(--border-subtle)",
+                      backgroundColor: "var(--slate-50)",
+                      borderRadius: "6px",
+                    }}
+                  >
+                    <div style={{ fontSize: "12px", fontWeight: 700, color: "var(--slate-500)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "6px" }}>
+                      สลับบทบาท (Quick Persona):
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
+                      {[
+                        { email: "broker@demo.local", role: "broker", label: "สมชาย (Broker)", icon: "👤" },
+                        { email: "manager@demo.local", role: "manager", label: "สมศักดิ์ (Manager)", icon: "👔" },
+                        { email: "admin@demo.local", role: "admin", label: "วิภา (Admin)", icon: "🛡️" },
+                      ].map((item) => (
+                        <button
+                          key={item.email}
+                          type="button"
+                          disabled={switchingRole || user.email === item.email}
+                          onClick={() => handleSwitchRole(item.email)}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            padding: "6px 8px",
+                            borderRadius: "4px",
+                            border: "none",
+                            backgroundColor: user.email === item.email ? "var(--primary-100)" : "transparent",
+                            color: user.email === item.email ? "var(--primary-800)" : "var(--slate-700)",
+                            fontSize: "12px",
+                            fontWeight: user.email === item.email ? 700 : 500,
+                            cursor: user.email === item.email ? "default" : "pointer",
+                            textAlign: "left",
+                          }}
+                          onMouseEnter={(e) => {
+                            if (user.email !== item.email) {
+                              (e.currentTarget as HTMLElement).style.backgroundColor = "#E2E8F0";
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (user.email !== item.email) {
+                              (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
+                            }
+                          }}
+                        >
+                          <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                            <span>{item.icon}</span>
+                            <span>{item.label}</span>
+                          </span>
+                          {user.email === item.email && (
+                            <span style={{ fontSize: "12px", color: "var(--primary-700)", fontWeight: 700 }}>Active</span>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
 
                   <button
                     role="menuitem"

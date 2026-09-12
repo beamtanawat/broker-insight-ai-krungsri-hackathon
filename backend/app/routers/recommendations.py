@@ -32,6 +32,7 @@ from app.schemas.recommendation import (
 from app.services.llm_service import llm_service
 from app.services.need_service import need_service
 from app.services.matching_service import matching_service, PRODUCT_RULES
+from app.routers.customers import customer_id_filter
 
 # 1. Customer-scoped Router (/customers/{id}/...)
 customer_router = APIRouter()
@@ -60,7 +61,7 @@ async def get_customer_insights(
             selectinload(Customer.needs),
             selectinload(Customer.follow_ups),
         )
-        .where(or_(Customer.id == id, Customer.external_ref == id))
+        .where(customer_id_filter(id))
     )
     customer = result.scalar_one_or_none()
     if not customer:
@@ -168,7 +169,7 @@ async def get_customer_needs(
             selectinload(Customer.needs),
             selectinload(Customer.follow_ups),
         )
-        .where(or_(Customer.id == id, Customer.external_ref == id))
+        .where(customer_id_filter(id))
     )
     customer = result.scalar_one_or_none()
     if not customer:
@@ -195,7 +196,7 @@ async def get_customer_recommendations(
             selectinload(Customer.recommendations),
             selectinload(Customer.follow_ups),
         )
-        .where(or_(Customer.id == id, Customer.external_ref == id))
+        .where(customer_id_filter(id))
     )
     customer = result.scalar_one_or_none()
     if not customer:
@@ -213,7 +214,7 @@ async def record_broker_decision_nested(
     db: AsyncSession = Depends(get_db),
 ):
     """Nested route recording broker decision on a recommendation for a specific customer."""
-    cust_res = await db.execute(select(Customer.id).where(or_(Customer.id == id, Customer.external_ref == id)))
+    cust_res = await db.execute(select(Customer.id).where(customer_id_filter(id)))
     actual_id = cust_res.scalar_one_or_none()
     if not actual_id:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Customer '{id}' not found")

@@ -38,3 +38,5 @@ export type { StatusVariant } from "./Status";
 // Toast System
 export { ToastProvider, useToast } from "./Toast";
 export type { ToastVariant, ToastItem } from "./Toast";
+
+export { ErrorBoundary } from "./ErrorBoundary";

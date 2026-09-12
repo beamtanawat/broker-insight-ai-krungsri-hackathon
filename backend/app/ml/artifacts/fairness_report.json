@@ -1,6 +1,6 @@
 {
-  "audit_id": "fairness_audit_20260911_105402",
-  "evaluated_at": "2026-09-11T10:54:02.373876+00:00",
+  "audit_id": "fairness_audit_20260912_162903",
+  "evaluated_at": "2026-09-12T16:29:03.292493+00:00",
   "model_name": "LightGBM Priority Classifier",
   "model_version": "1.0.0",
   "dataset_metadata": {
@@ -84,10 +84,10 @@
           "sample_count": 25,
           "positive_count": 6,
           "positive_rate": 24.0,
-          "precision": 100.0,
+          "precision": 85.7,
           "recall": 100.0,
-          "f1_score": 100.0,
-          "false_positive_rate": 0.0,
+          "f1_score": 92.3,
+          "false_positive_rate": 5.3,
           "false_negative_rate": 0.0,
           "is_small_sample": true,
           "sample_warning": "Small sample size (N=25 < 30). Metrics may exhibit high statistical variance.",
@@ -98,11 +98,11 @@
           "sample_count": 23,
           "positive_count": 8,
           "positive_rate": 34.8,
-          "precision": 75.0,
-          "recall": 75.0,
-          "f1_score": 75.0,
-          "false_positive_rate": 13.3,
-          "false_negative_rate": 25.0,
+          "precision": 87.5,
+          "recall": 87.5,
+          "f1_score": 87.5,
+          "false_positive_rate": 6.7,
+          "false_negative_rate": 12.5,
           "is_small_sample": true,
           "sample_warning": "Small sample size (N=23 < 30). Metrics may exhibit high statistical variance.",
           "sample_percentage": 38.3
@@ -136,7 +136,7 @@
           "sample_percentage": 10.0
         }
       ],
-      "max_recall_disparity": 25.0
+      "max_recall_disparity": 12.5
     },
     "relationship_tiers": {
       "attribute": "relationship_tier",
@@ -162,11 +162,11 @@
           "sample_count": 9,
           "positive_count": 7,
           "positive_rate": 77.8,
-          "precision": 100.0,
-          "recall": 85.7,
-          "f1_score": 92.3,
-          "false_positive_rate": 0.0,
-          "false_negative_rate": 14.3,
+          "precision": 87.5,
+          "recall": 100.0,
+          "f1_score": 93.3,
+          "false_positive_rate": 50.0,
+          "false_negative_rate": 0.0,
           "is_small_sample": true,
           "sample_warning": "Small sample size (N=9 < 30). Metrics may exhibit high statistical variance.",
           "sample_percentage": 15.0
@@ -176,10 +176,10 @@
           "sample_count": 36,
           "positive_count": 6,
           "positive_rate": 16.7,
-          "precision": 71.4,
+          "precision": 83.3,
           "recall": 83.3,
-          "f1_score": 76.9,
-          "false_positive_rate": 6.7,
+          "f1_score": 83.3,
+          "false_positive_rate": 3.3,
           "false_negative_rate": 16.7,
           "is_small_sample": false,
           "sample_warning": null,
@@ -212,17 +212,17 @@
           "sample_count": 30,
           "positive_count": 12,
           "positive_rate": 40.0,
-          "precision": 90.9,
-          "recall": 83.3,
-          "f1_score": 87.0,
+          "precision": 91.7,
+          "recall": 91.7,
+          "f1_score": 91.7,
           "false_positive_rate": 5.6,
-          "false_negative_rate": 16.7,
+          "false_negative_rate": 8.3,
           "is_small_sample": false,
           "sample_warning": null,
           "sample_percentage": 50.0
         }
       ],
-      "max_recall_disparity": 16.7
+      "max_recall_disparity": 8.3
     }
   },
   "key_observations": [

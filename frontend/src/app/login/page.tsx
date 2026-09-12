@@ -1,8 +1,8 @@
 "use client";
-import React, { useState, FormEvent } from "react";
+import React, { useState, useEffect, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
-import { setTokens } from "@/lib/auth";
+import { isAuthenticated, setTokens } from "@/lib/auth";
 import { Card, Badge, Button, Alert } from "@/components/ui";
 
 export default function LoginPage() {
@@ -11,6 +11,14 @@ export default function LoginPage() {
   const [password, setPassword] = useState("demo1234");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [activeQuickRole, setActiveQuickRole] = useState<string | null>(null);
+
+  // If already authenticated, redirect straight to dashboard
+  useEffect(() => {
+    if (isAuthenticated()) {
+      router.replace("/dashboard");
+    }
+  }, [router]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -27,9 +35,21 @@ export default function LoginPage() {
     }
   }
 
-  function handleQuickFill(demoEmail: string) {
+  async function handleInstantLogin(demoEmail: string, role: string) {
     setEmail(demoEmail);
     setPassword("demo1234");
+    setError("");
+    setLoading(true);
+    setActiveQuickRole(role);
+    try {
+      const tokens = await api.auth.login(demoEmail, "demo1234");
+      setTokens(tokens.access_token, tokens.refresh_token);
+      router.push("/dashboard");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+      setLoading(false);
+      setActiveQuickRole(null);
+    }
   }
 
   return (
@@ -192,35 +212,51 @@ export default function LoginPage() {
                 <button
                   key={item.email}
                   type="button"
-                  onClick={() => handleQuickFill(item.email)}
+                  onClick={() => handleInstantLogin(item.email, item.role)}
+                  disabled={loading}
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    padding: "8px 12px",
+                    padding: "10px 14px",
                     borderRadius: "var(--radius-md)",
                     border: "1px solid var(--border-subtle)",
                     backgroundColor: "var(--slate-50)",
                     fontSize: "var(--fs-xs)",
                     textAlign: "left",
                     transition: "all var(--transition-fast)",
+                    cursor: loading ? "not-allowed" : "pointer",
+                    opacity: loading && activeQuickRole !== item.role ? 0.6 : 1,
                   }}
                   onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.backgroundColor = "var(--primary-50)";
-                    (e.currentTarget as HTMLElement).style.borderColor = "var(--primary-500)";
+                    if (!loading) {
+                      (e.currentTarget as HTMLElement).style.backgroundColor = "var(--primary-50)";
+                      (e.currentTarget as HTMLElement).style.borderColor = "var(--primary-500)";
+                    }
                   }}
                   onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.backgroundColor = "var(--slate-50)";
-                    (e.currentTarget as HTMLElement).style.borderColor = "var(--border-subtle)";
+                    if (!loading) {
+                      (e.currentTarget as HTMLElement).style.backgroundColor = "var(--slate-50)";
+                      (e.currentTarget as HTMLElement).style.borderColor = "var(--border-subtle)";
+                    }
                   }}
                 >
                   <div>
-                    <div style={{ fontWeight: 600, color: "var(--slate-800)" }}>{item.label}</div>
-                    <div style={{ color: "var(--slate-500)" }}>{item.email}</div>
+                    <div style={{ fontWeight: 700, color: "var(--slate-900)", display: "flex", alignItems: "center", gap: "6px" }}>
+                      <span>{item.label}</span>
+                      <span style={{ fontSize: "12px", color: "var(--primary-600)", fontWeight: 600 }}>⚡ 1-Click Login</span>
+                    </div>
+                    <div style={{ color: "var(--slate-500)", marginTop: "2px" }}>{item.email}</div>
                   </div>
-                  <Badge variant={item.variant} size="sm">
-                    {item.role}
-                  </Badge>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    {loading && activeQuickRole === item.role ? (
+                      <span style={{ fontSize: "12px", color: "var(--primary-700)", fontWeight: 600 }}>กำลังเข้าสู่ระบบ...</span>
+                    ) : (
+                      <Badge variant={item.variant} size="sm">
+                        {item.role}
+                      </Badge>
+                    )}
+                  </div>
                 </button>
               ))}
             </div>

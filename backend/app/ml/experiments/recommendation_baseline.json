@@ -8,7 +8,7 @@
   },
   "hard_eligibility_gate_active": false,
   "evaluation_dataset_version": "1.0.0 (20 Synthetic Benchmark Profiles)",
-  "timestamp": "2026-09-11T10:54:16.667703+00:00",
+  "timestamp": "2026-09-12T16:29:17.750583+00:00",
   "metrics": {
     "top_1_match_rate_pct": 100.0,
     "top_k_match_rate_pct": 100.0,

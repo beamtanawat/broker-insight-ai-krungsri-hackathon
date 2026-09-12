@@ -1,6 +1,6 @@
 {
-  "evaluation_id": "llm_eval_20260911_105403",
-  "evaluated_at": "2026-09-11T10:54:03.530175+00:00",
+  "evaluation_id": "llm_eval_20260912_162904",
+  "evaluated_at": "2026-09-12T16:29:04.436042+00:00",
   "prompt_version": "2.0.0",
   "dataset_version": "1.0.0",
   "llm_provider": "deterministic_rule_engine",

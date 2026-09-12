@@ -178,6 +178,20 @@ async def list_customers(
     )
 
 
+def customer_id_filter(id_val: str):
+    """Smart customer identifier filter supporting UUID, external_ref (e.g. KS-00001), case-insensitivity, and numeric IDs (1 -> KS-00001)."""
+    conditions = [
+        Customer.id == id_val,
+        Customer.external_ref == id_val,
+        Customer.external_ref == id_val.upper(),
+    ]
+    if id_val.isdigit():
+        conditions.append(Customer.external_ref == f"KS-{int(id_val):05d}")
+    elif id_val.lower().startswith("ks-") and id_val[3:].isdigit():
+        conditions.append(Customer.external_ref == f"KS-{int(id_val[3:]):05d}")
+    return or_(*conditions)
+
+
 @router.get("/{id}", response_model=CustomerDetailOut)
 async def get_customer(
     id: str,
@@ -195,7 +209,7 @@ async def get_customer(
             selectinload(Customer.needs),
             selectinload(Customer.follow_ups),
         )
-        .where(or_(Customer.id == id, Customer.external_ref == id))
+        .where(customer_id_filter(id))
     )
     customer = result.scalar_one_or_none()
     if not customer:
@@ -282,7 +296,7 @@ async def get_customer_profile(
             selectinload(Customer.financial_profile),
             selectinload(Customer.insurance_policies),
         )
-        .where(or_(Customer.id == id, Customer.external_ref == id))
+        .where(customer_id_filter(id))
     )
     customer = result.scalar_one_or_none()
     if not customer:
@@ -346,7 +360,7 @@ async def get_customer_followups(
     db: AsyncSession = Depends(get_db),
 ):
     """Get all follow-up history and scheduled items for a customer."""
-    cust_check = await db.execute(select(Customer.id).where(or_(Customer.id == id, Customer.external_ref == id)))
+    cust_check = await db.execute(select(Customer.id).where(customer_id_filter(id)))
     actual_id = cust_check.scalar_one_or_none()
     if not actual_id:
         raise HTTPException(
@@ -375,7 +389,7 @@ async def create_customer_followup(
     db: AsyncSession = Depends(get_db),
 ):
     """Create a new scheduled follow-up for a customer and record audit log."""
-    cust_check = await db.execute(select(Customer).where(or_(Customer.id == id, Customer.external_ref == id)))
+    cust_check = await db.execute(select(Customer).where(customer_id_filter(id)))
     customer = cust_check.scalar_one_or_none()
     if not customer:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Customer '{id}' not found")
@@ -418,7 +432,7 @@ async def update_customer_followup(
     db: AsyncSession = Depends(get_db),
 ):
     """Update follow-up notes, status, or date and record audit log."""
-    cust_check = await db.execute(select(Customer.id).where(or_(Customer.id == id, Customer.external_ref == id)))
+    cust_check = await db.execute(select(Customer.id).where(customer_id_filter(id)))
     actual_id = cust_check.scalar_one_or_none()
     if not actual_id:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Customer '{id}' not found")
@@ -476,7 +490,7 @@ async def analyze_customer(
             selectinload(Customer.interactions),
             selectinload(Customer.follow_ups),
         )
-        .where(or_(Customer.id == id, Customer.external_ref == id))
+        .where(customer_id_filter(id))
     )
     customer = result.scalar_one_or_none()
     if not customer:
@@ -564,7 +578,7 @@ async def generate_customer_conversation(
             selectinload(Customer.ai_scores),
             selectinload(Customer.needs),
         )
-        .where(or_(Customer.id == id, Customer.external_ref == id))
+        .where(customer_id_filter(id))
     )
     customer = result.scalar_one_or_none()
     if not customer:
@@ -620,7 +634,7 @@ async def get_customer_audit_logs(
     db: AsyncSession = Depends(get_db),
 ):
     """Retrieve complete audit and activity timeline for a customer."""
-    cust_check = await db.execute(select(Customer.id).where(Customer.id == id))
+    cust_check = await db.execute(select(Customer.id).where(customer_id_filter(id)))
     if not cust_check.scalar_one_or_none():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Customer with id '{id}' not found")
 
