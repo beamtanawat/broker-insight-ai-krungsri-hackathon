@@ -6,39 +6,42 @@
 [![LightGBM](https://img.shields.io/badge/LightGBM-4.6+-green.svg?style=flat)](https://lightgbm.readthedocs.io)
 [![SHAP](https://img.shields.io/badge/SHAP-0.46+-orange.svg?style=flat)](https://shap.readthedocs.io)
 [![Python](https://img.shields.io/badge/Python-3.11+-3776AB.svg?style=flat&logo=python&logoColor=white)](https://www.python.org)
-[![Tests](https://img.shields.io/badge/Pytest-182%2F182%20Passed-success.svg?style=flat)](https://docs.pytest.org)
+[![Backend Tests](https://img.shields.io/badge/Pytest-235%2F235%20Passed-success.svg?style=flat)](https://docs.pytest.org)
+[![Frontend Tests](https://img.shields.io/badge/Node%20Test-31%2F31%20Passed-success.svg?style=flat)](https://nodejs.org/api/test.html)
 
 > **Positioning Statement:**  
-> *Broker Insight AI* is an end-to-end AI decision-support prototype designed for commercial and retail insurance brokers. It enables brokers to prioritize high-value customer opportunities, understand explainable ML drivers via TreeSHAP, evaluate product recommendations through hard eligibility gates, prepare structured client conversations, and track follow-up tasks with human-in-the-loop governance.
+> *Broker Insight AI* is an end-to-end AI decision-support workspace tailored for commercial and retail insurance brokers. It empowers brokers to prioritize high-value customer opportunities, understand explainable ML drivers via TreeSHAP, evaluate insurance products through hard eligibility gating, plan intelligent multi-stop client visits, navigate on-demand, and prepare consultative conversations — all while strictly maintaining human-in-the-loop governance.
 
 ---
 
 > ⚠️ **COMPLIANCE & DEMO DISCLAIMER:**
 > - **Synthetic / Demo Data Only:** All customer profiles, financial balances, phone numbers, and policy records in this repository are synthetically generated for demonstration.
 > - **Mock Downstream Integrations:** Core Banking, CRM, KYC, Policy Administration (PAS), and Payment transactions are implemented via safe in-process mock adapters.
-> - **Human-in-the-Loop Advisory:** AI scoring, LLM insights, need matching, and conversation guides are consultative advisory tools. **The licensed broker retains full legal discretion and final authority over all customer recommendations.**
-> - **Status:** Enterprise Prototype — Pilot/Sandbox Ready (Human pilot evaluation instrumentation is ready; human pilot evidence is pending live operational deployment).
+> - **Human-in-the-Loop Advisory:** AI scoring, LLM insights, need matching, and route suggestions are consultative advisory tools. **The licensed broker retains full legal discretion and final authority over all customer recommendations and visits.**
+> - **Status:** Enterprise Prototype — Pilot/Sandbox Ready (Comprehensive instrumentation ready; pending live operational deployment).
 
 ---
 
-## 1. Executive Summary & Problem Statement
+## 1. Executive Summary & Core Value Proposition
 
-### The Problem
-Insurance brokers manage hundreds of client accounts across disconnected banking systems. Key operational bottlenecks include:
-1. **Siloed Signals:** Financial liabilities, deposit trends, life events, and policy terms reside in isolated legacy databases.
-2. **Arbitrary Prioritization:** Manual spreadsheet sorting causes brokers to miss urgent protection gaps (e.g. maturing life policies, home loans without MRTA, uninsured dependents).
-3. **Black-Box AI Skepticism:** Brokers reject opaque predictive scores unless they can inspect the exact drivers (*"Why is this customer high priority today?"*).
-4. **Advisory Compliance:** Client communications must adhere to strict regulatory standards without high-pressure sales tactics or unsupported guarantees.
+### 🚩 The Operational Challenges
+Insurance brokers manage hundreds of client relationships across disconnected banking and legacy insurance systems:
+1. **Siloed Customer Signals:** Financial liabilities, deposit trends, life events, and policy expiration dates reside in separate databases.
+2. **Arbitrary Prioritization:** Spreadsheets and manual sorting cause brokers to miss critical protection gaps (e.g. maturing life policies, home loans without MRTA, new dependents without health coverage).
+3. **Black-Box Skepticism:** Brokers reject opaque predictive scores unless they can inspect the exact underlying drivers (*"Why is this customer high priority today?"*).
+4. **Inefficient Field Travel:** Brokers spend hours manually planning daily client visit routes without consideration of priority, traffic, or schedule feasibility.
+5. **Regulatory & Advisory Compliance:** Communications must adhere to strict regulatory standards without high-pressure sales tactics or unsupported product suitability.
 
-### The Solution: Broker Insight AI
+### 💡 The Solution: Broker Insight AI
 An integrated, full-stack decision-support workspace that:
-- **Consolidates Customer 360° Data:** Unifies assets, debts, existing coverage, transaction velocity, and KYC status into a single progressive disclosure interface.
-- **Calculates Calibrated Priority Scores:** Uses a **LightGBM Binary Classifier** ($F1=0.842$, $\text{ROC-AUC}=0.926$) calibrated via **Platt Sigmoid Scaling** ($\text{ECE}=0.045$, $\text{Brier}=0.076$).
-- **Provides Local Explainability:** Computes **TreeSHAP** feature attribution values to show positive and negative priority drivers in plain Thai explanations.
-- **Enforces Safety Gating:** Pre-filters insurance catalog items using hard eligibility rules (age, income, existing coverage) to guarantee 0% ineligible recommendations.
-- **Optimizes LLM Generation:** Produces consultative summaries and conversation guides via Gemini 1.5 Flash with prompt caching (84% cache hit rate, ~84% cost savings) and deterministic fallback.
+- **Unifies Customer 360° Data:** Centralizes assets, debts, existing coverage, transaction velocity, and KYC status into a single progressive-disclosure interface.
+- **Calculates Calibrated Priority Scores:** Uses a **LightGBM Binary Classifier** ($F1=0.878$, $\text{ROC-AUC}=0.956$) calibrated via **Platt Sigmoid Scaling** ($\text{ECE}=0.045$, $\text{Brier}=0.076$).
+- **Provides Local Explainability:** Computes **TreeSHAP** feature attributions to display positive and negative priority drivers in clear Thai explanations.
+- **Enforces Hard Eligibility Gating:** Pre-filters insurance catalog items with hard business constraints (age, income, existing coverage) to guarantee 0% ineligible recommendations.
+- **Optimizes Field Visits (AI Visit Planner):** Recommends feasible multi-stop itineraries based on priority scores, proximity radius (5/10/20 km), working hours, and traffic time.
+- **Guides First-Time Users:** Delivers an interactive, role-aware guided onboarding tour (9 steps for Broker, 5 for Manager, 5 for Admin).
+- **Standardizes Thai Typography:** Features an enterprise two-tier typography system with a strict 12px minimum font size and collision-free Thai diacritic line heights.
 - **Preserves Human Primacy:** Brokers review, approve, modify, or reject AI recommendations with structured reasons, feeding continuous feedback into the MLOps registry.
-- **Ensures Enterprise Traceability:** Logs every prediction, LLM prompt, broker decision, and configuration change into an immutable audit trail.
 
 ---
 
@@ -47,34 +50,36 @@ An integrated, full-stack decision-support workspace that:
 ```mermaid
 flowchart TD
     subgraph Frontend["Frontend Layer (Next.js 16 + React 19 + TypeScript)"]
-        UI["Design System & Workspace\n- Broker Dashboard & Customer Directory\n- Customer 360 (5-Tab Decision Workspace)\n- AI Copilot Conversation Assistant\n- Operations Console (Business View & AI Health)\n- Pilot Evaluation & Admin Audit Trail"]
+        UI["Design System & Workspace\n- Broker Dashboard & Customer Directory\n- Customer 360 (5-Tab Decision Workspace)\n- AI Customer Visit Planner & Proximity Engine\n- Guided Feature Tour (Role-Aware Onboarding)\n- Mobile Companion Mockup (My Protection)\n- Operations Console & Pilot Evaluation"]
     end
 
     subgraph API["Backend API Layer (FastAPI + Python 3.11+)"]
         Auth["JWT Auth & RBAC\n(Broker / Manager / Admin)"]
         RateLimit["Rate Limiting\n(15 req/min login, 30 req/min AI)"]
-        Router["FastAPI REST Endpoints\n(/customers, /model, /analytics, /pilot, /audit)"]
+        Router["FastAPI REST Endpoints\n(/customers, /visit-planner, /model, /analytics, /pilot, /audit)"]
     end
 
-    subgraph AI["AI & MLOps Engine Layer"]
-        LGBM["LightGBM Classifier\n(v1.0.0 Champion, F1=0.842)"]
+    subgraph AI["AI, Planning & MLOps Engine Layer"]
+        LGBM["LightGBM Classifier\n(v1.0.0 Champion, F1=0.878)"]
         Calib["Platt Sigmoid Calibrator\n(ECE=0.045, Brier=0.076)"]
         SHAP["SHAP TreeExplainer\n(Local Feature Attributions)"]
-        LLM["Google Gemini 1.5 Flash\n+ TTLCache & Offline Fallback"]
         RecEngine["Product Matcher & 5-Need Engine\n+ Hard Eligibility Gate"]
+        RouteEngine["Route Optimization Service\n(Distance Matrix & Constraint Solver)"]
+        LLM["Google Gemini 1.5 Flash\n+ In-Memory TTLCache & Offline Fallback"]
         Registry["MLOps Model Registry\n& PSI Drift Monitoring"]
     end
 
     subgraph Data["Data & Governance Layer"]
         DB[(Async SQLite / PostgreSQL\n15 Relational Tables)]
         AuditLog[(Enterprise Immutable Audit Trail)]
-        Artifacts[(Versioned ML & Evidence Artifacts\nJSON benchmarks & models)]
+        Artifacts[(Versioned ML Artifacts & Evaluation Benchmarks)]
     end
 
     UI <-->|REST API + JWT Bearer| Auth
     Auth --> RateLimit --> Router
     Router <--> DB
     Router <--> LGBM & Calib & SHAP
+    Router <--> RouteEngine
     Router <--> LLM & RecEngine
     Router <--> Registry <--> Artifacts
     Router --> AuditLog
@@ -84,99 +89,67 @@ flowchart TD
 
 ## 3. Comprehensive Feature Modules (ภาพรวมฟีเจอร์ทั้งหมดของระบบ)
 
-Broker Insight AI ได้รับการออกแบบเป็นระบบช่วยตัดสินใจ (Decision-Support System) แบบครบวงจรสำหรับนายหน้าประกันภัยและที่ปรึกษาทางการเงิน ประกอบด้วย 6 โมดูลหลัก:
+Broker Insight AI ได้รับการออกแบบเป็นระบบช่วยตัดสินใจ (Decision-Support System) แบบครบวงจรสำหรับนายหน้าประกันภัยและที่ปรึกษาทางการเงิน ประกอบด้วย 8 โมดูลหลัก:
 
-### 📍 1. แผนที่ลูกค้าใกล้เคียงและการนำทางตามความต้องการ (Nearby Customers & Proximity Navigation)
-- **การระบุตำแหน่งสดจากอุปกรณ์ (Live Device GPS):** เชื่อมต่อ Geolocation API เพื่อดึงพิกัดจริงของนายหน้า หรือเลือกจุดอ้างอิง (Location Presets) พร้อมคำนวณความสดของข้อมูล (Freshness Timestamp)
-- **การค้นหาแบบปรับรัศมีได้ (Dynamic Proximity Radius):** ค้นหาและกรองลูกค้าในรัศมี 5 กม., 10 กม. หรือ 20 กม. พร้อมแสดงจำนวนลูกค้าที่ถูกคัดออกเนื่องจากขาดพิกัดที่อยู่ (Partial-data transparency)
-- **แผนที่ Proximity Map เวกเตอร์แบบอินเตอร์แอคทีฟ:** แสดงหมุดสีตามระดับความสำคัญ AI (แดง-สูง, เหลือง-กลาง, เขียว-ต่ำ), เส้นรัศมีวงซ้อน, และจุด Beacon พิกัดนายหน้า
-- **เครื่องมือนำทาง 3 ระดับ (3-State Navigation Engine):**
-  - `idle`: ดูข้อมูลลูกค้าเบื้องต้น คะแนน AI และเหตุผลที่ควรเข้าพบ (Why Now)
-  - `route_preview`: ดึงระยะทางจริงและเวลาเดินทางโดยประมาณ (ความเร็วเฉลี่ยในเมือง) จาก Backend `/navigate` API
-  - `navigating`: เริ่มนำทางด้วย Google Maps Deep-link พร้อมโหมดกำลังนำทางในแอปที่วาดเส้นทางบนแผนที่และหรี่หมุดอื่น
-- **การบันทึกสถานะการเข้าพบ (Visit Lifecycle Handoff):** เมื่อกด "เสร็จสิ้นการเข้าพบ" ระบบจะย้ายพิกัดนายหน้าไปยังตำแหน่งลูกค้าล่าสุด และรีเฟรชรายชื่อลูกค้าใกล้เคียงจุดใหม่อัตโนมัติ
+### 🗺️ 1. ระบบวางแผนการเข้าพบลูกค้าอัจฉริยะ (AI Customer Visit Planner & Route Optimization)
+- **การคัดเลือกลูกค้าตามความคุ้มค่า (Intelligent Candidate Selection):** ดึงรายชื่อลูกค้าที่ควรเข้าพบโดยคำนวณจากคะแนนความสำคัญ AI, สถานะ KYC, และช่องว่างความคุ้มครอง
+- **การค้นหาและกรองตามรัศมี (Proximity Radius Filter):** กรองลูกค้าในรัศมี 5 กม., 10 กม. หรือ 20 กม. จากพิกัดปัจจุบัน พร้อมระบบแจ้งเตือนความโปร่งใสกรณีลูกค้ายังไม่มีพิกัด GPS (Partial-Data Transparency)
+- **การจำลองเส้นทางและคำนวณข้อจำกัด (Constraint-Aware Optimization):**
+  - กำหนดเวลาเริ่ม-สิ้นสุดการทำงาน และเวลาพักรับประทานอาหารกลางวัน
+  - ตรวจสอบความเป็นไปได้ของเส้นทาง (เวลาเดินทางรวม, ระยะทางรวม, ระยะเวลาเข้าพบ 45 นาที/ราย)
+  - ให้คะแนนความเป็นไปได้ของตารางงาน (Schedule Feasibility Score 0–100%)
+- **การนำทางแบบ On-Demand (Point-to-Point Navigation):** สร้าง Google Maps Deep-link สำหรับนำทางทีละจุด โดยนายหน้าเป็นผู้กดเริ่มนำทางเองเสมอ (ไม่มีการสั่งการอัตโนมัติ)
+- **วงจรการอัปเดตสถานะ (Visit Lifecycle):** เมื่อเข้าพบเสร็จสิ้น ระบบจะย้ายหมุดตำแหน่งนายหน้ามายังจุดล่าสุด และคำนวณหารายชื่อลูกค้าใกล้เคียงรอบจุดใหม่ทันที
 
-### 📱 2. โมบายล์เวิร์กสเปซจำลองบนสมาร์ตโฟน (Mobile Companion Workspace)
-- **จำลองบน iPhone 17 Pro Max Chassis:** พร้อม Dynamic Island, แถบสถานะ 5G และแบตเตอรี่เสมือนจริง
-- **โหมดแดชบอร์ดมือถือ (Mobile Dashboard View):**
-  - แบนเนอร์ทักทายคุณสมชาย สรุปลูกค้าความสำคัญสูง 42 ราย และงานติดตาม 14 รายการ
-  - การ์ดสถิติประจำวัน 4 ช่อง (ลูกค้าด่วน, งานนัดหมาย, รอ KYC, พอร์ตรวม)
-  - รายการ "ลูกค้าที่ควรให้ความสนใจวันนี้" 3 การ์ดแนวนอน พร้อม Trigger กรมธรรม์ใกล้หมดอายุ และปุ่มดูรายละเอียด
-  - งานที่ต้องทำวันนี้ 4 รายการ พร้อม Checkbox ที่กดติ๊กถูกเพื่ออัปเดตสถานะได้ทันที
-  - กล่องคำแนะนำจาก AI (AI Recommendation Banner)
-- **โหมดรายงานและพอร์ตโฟลิโอ (Mobile Reports View):**
-  - การ์ดติดตามผลงาน 4 ช่อง (งานทั้งหมด, งานเกินกำหนด, ติดต่อสำเร็จ, Renewal 30 วัน)
-  - กราฟโดนัท **สัดส่วนลูกค้า Priority** (Donut Chart: Priority 94, 76, 65, อื่นๆ)
-  - เกจวงกลม **ความคืบหน้า KYC** (Ring Gauge: ตรวจสอบแล้ว 78%, รอดำเนินการ, เอกสารไม่ครบ)
-  - กราฟแท่ง **Renewal Pipeline ภายใน 30 วัน** (4-Column Bar Chart)
-  - สรุปภาพรวมจาก AI (AI Insight Banner)
-- **แถบนำทางล่าง 5 แท็บ:** สลับระหว่าง แดชบอร์ด, รายชื่อลูกค้า, แผนที่นำทาง, รายงาน และเมนูเพิ่มเติม
+### 🌟 2. ระบบแนะนำการใช้งานสำหรับผู้ใช้ใหม่ (First-Time User Onboarding & Guided Tour)
+- **หน้าต่างต้อนรับอัตโนมัติ (Onboarding Welcome Modal):** แสดงข้อความต้อนรับและไฮไลต์คุณค่าของระบบเมื่อเข้าสู่ระบบครั้งแรก
+- **ทัวร์แนะนำระบบตามบทบาทผู้ใช้ (Role-Aware Guided Tour):**
+  - **👔 สำหรับนายหน้า (Broker Tour — 9 ขั้นตอน):** แดชบอร์ดภาพรวม ➔ จัดการและค้นหาลูกค้า ➔ รู้จักลูกค้าในมุมมอง 360° ➔ AI ช่วยวิเคราะห์ลูกค้า ➔ คำแนะนำผลิตภัณฑ์ที่เหมาะสม ➔ ค้นหาลูกค้าใกล้เคียง ➔ นายหน้าเป็นผู้เลือกเข้าพบ ➔ นำทางเมื่อพร้อม ➔ ดูผลการดำเนินงาน
+  - **📈 สำหรับผู้จัดการ (Manager Tour — 5 ขั้นตอน):** ภาพรวมการดำเนินงาน ➔ การวิเคราะห์ลูกค้า ➔ ความเสี่ยงและ Coverage Gap ➔ AI Insight & ประสิทธิภาพทีม ➔ การกำกับดูแลและรายงาน
+  - **🛡️ สำหรับผู้ดูแลระบบ (Admin Tour — 5 ขั้นตอน):** แดชบอร์ดศูนย์กลาง ➔ ตรวจสอบสุขภาพโมเดล AI ➔ ความโปร่งใส SHAP ➔ บันทึกประวัติการตรวจสอบย้อนกลับ ➔ การจำลองสถานการณ์นำร่อง
+- **สปอตไลต์อินเตอร์แอคทีฟ (Interactive Spotlight):** ปรับความมืดพื้นหลังและเน้นไฮไลต์สีทองรอบปุ่มเป้าหมาย พร้อมรองรับคีย์บอร์ด (`Esc`, ลูกศรซ้าย/ขวา)
+- **เปิดดูซ้ำได้ตลอดเวลา (Replay on Demand):** มีปุ่มช่วยเหลือ `?` ที่แถบด้านบน (Topbar) และในเมนูโปรไฟล์
 
-### 👥 3. ฐานข้อมูลลูกค้าและมุมมอง 360° (Customer 360° Intelligence)
-- **Customer Directory:** ค้นหา คัดกรองตามระดับความสำคัญ (High / Medium / Low), ผลิตภัณฑ์ที่แนะนำ, สถานะ KYC, และเรียงลำดับตามคะแนนความสำคัญหรือระยะทาง
-- **Customer 360 Profile:** รวบรวมข้อมูลครบทุกมิติ ได้แก่ ข้อมูลส่วนบุคคล, สินทรัพย์/หนี้สิน, กรมธรรม์ปัจจุบัน, ความเร่งด่วนของ Life Event และประวัติการติดต่อ
-- **Pitch Guide & Proposal One-Pager:** แนวทางการสนทนาเชิงปรึกษา (Consultative Pitch Guide) และเอกสารสรุปความคุ้มครอง One-Pager ที่นายหน้าสามารถนำเสนอได้ทันที
+### 🔤 3. ระบบตัวอักษรภาษาไทยระดับองค์กร (Global Thai Typography System)
+- **ระบบฟอนต์ 2 ระดับ (Two-Tier Hierarchy):**
+  - **UI Sans-Serif ("ไม่มีหัว"):** `Prompt`, `Noto Sans Thai`, `Inter` สำหรับการกวาดสายตาอย่างรวดเร็ว บนแถบนำทาง, ปุ่มกด, ป้ายสถานะ/Priority, ตัวเลข KPI, ตารางข้อมูล และฟอร์ม
+  - **Reading Serif / Looped ("มีหัว"):** `Noto Serif Thai`, `Sarabun` สำหรับการอ่านเนื้อหายาว, สรุปบทวิเคราะห์จาก AI, เหตุผลความเร่งด่วน (Why Now), บทสนทนาเตรียมพบลูกค้า และคำอธิบายผลิตภัณฑ์
+- **ขนาดตัวอักษรขั้นต่ำ 12px ทั่วทั้งระบบ:** ไม่มีข้อความ UI ปกติใดเล็กกว่า 12px (กำจัดขนาด 8–11px ทั้งหมด)
+- **ระยะห่างบรรทัดป้องกันวรรณยุกต์ซ้อน (Diacritic Collision-Free):** กำหนดความสูงบรรทัดที่เหมาะสม (`1.35` หัวข้อ, `1.45` UI, `1.65` ข้อความทั่วไป, `1.8` บทความ AI) ทำให้อ่านสระบน-ล่างและวรรณยุกต์ไทยได้อย่างชัดเจน
 
-### 🧠 4. โมเดล AI จัดลำดับความสำคัญและความโปร่งใส (Calibrated Scoring & Explainable AI)
-- **LightGBM Champion Model (v1.0.0):** ประเมินคะแนนความสำคัญ 0–100 จาก 17 ฟีเจอร์พฤติกรรมและการเงิน ($F1=0.878$, $\text{ROC-AUC}=0.956$)
+### 📱 4. โมบายล์เวิร์กสเปซจำลองบนสมาร์ตโฟน (Mobile Companion Workspace — My Protection)
+- **จำลองบน iPhone Chassis:** พร้อม Dynamic Island และแถบสถานะเสมือนจริง
+- **โหมดแดชบอร์ดมือถือ:** แบนเนอร์ทักทาย, การ์ด 4 สถิติด่วน, ลูกค้าที่ควรให้ความสนใจ 3 รายการ, งานที่ต้องทำประจำวันพร้อม Checkbox, และคำแนะนำสรุปจาก AI
+- **โหมดรายงานและพอร์ตโฟลิโอ:** Donut Chart สัดส่วนลูกค้า Priority, Ring Gauge ความคืบหน้า KYC, 4-Column Bar Chart รายการ Renewal ภายใน 30 วัน
+
+### 👥 5. ฐานข้อมูลลูกค้าและมุมมอง 360° (Customer 360° Intelligence)
+- **Customer Directory:** ค้นหา คัดกรองตามระดับความสำคัญ (High / Medium / Low), ผลิตภัณฑ์แนะนำ, สถานะ KYC, และเรียงตามคะแนนหรือระยะทาง
+- **Customer 360 Profile:** รวบรวมข้อมูลครบ 5 มิติ ได้แก่ ข้อมูลส่วนบุคคล, สินทรัพย์/หนี้สิน, กรมธรรม์ปัจจุบัน, ความเร่งด่วนของ Life Event และประวัติการติดต่อ
+- **Pitch Guide & Proposal One-Pager:** แนวทางการสนทนาเชิงปรึกษา และเอกสารสรุปความคุ้มครอง One-Pager ที่นำเสนอได้ทันที
+
+### 🧠 6. โมเดล AI จัดลำดับความสำคัญและความโปร่งใส (Calibrated Scoring & Explainable AI)
+- **LightGBM Champion Model (v1.0.0):** ประเมินคะแนนความสำคัญ 0–100 จาก 17 ฟีเจอร์ ($F1=0.878$, $\text{ROC-AUC}=0.956$)
 - **Platt Sigmoid Calibration:** ปรับเทียบความน่าจะเป็นให้อยู่ในสเกลที่เชื่อถือได้ทางสถิติ ($\text{ECE}=0.045$, $\text{Brier}=0.076$)
-- **TreeSHAP Local Explainability:** แสดงผลปัจจัยขับเคลื่อนเชิงบวกและลบ (Positive & Negative Drivers) อธิบายเป็นภาษาไทยให้นายหน้าเข้าใจได้ว่า *"ทำไมลูกค้ารายนี้ถึงเร่งด่วนในวันนี้"*
+- **TreeSHAP Local Explainability:** แสดงผลปัจจัยขับเคลื่อนเชิงบวกและลบ อธิบายเป็นภาษาไทยให้นายหน้าเข้าใจว่า *"ทำไมลูกค้ารายนี้ถึงเร่งด่วนในวันนี้"*
 
-### 🛡️ 5. ระบบแนะนำผลิตภัณฑ์พร้อม Hard Eligibility Gate (Recommendation Engine)
+### 🛡️ 7. ระบบแนะนำผลิตภัณฑ์พร้อม Hard Eligibility Gate (Recommendation Engine)
 - **Hard Eligibility Gate (0% Violations):** คัดกรองเงื่อนไขตายตัว (อายุ, รายได้ขั้นต่ำ, ประวัติสุขภาพ, สินเชื่อที่มีอยู่) ก่อนเข้าสู่ขั้นตอนจัดอันดับ เพื่อรับประกันว่าลูกค้าจะไม่ได้รับข้อเสนอที่ผิดเกณฑ์
 - **5-Need Matching Logic:** จับคู่ความต้องการ 5 มิติ (Motor, Health, Life/MRTA, Savings, Retirement/Pension)
 - **Human-in-the-Loop Discretion:** นายหน้ามีสิทธิ์ตรวจสอบ อนุมัติ ปรับเปลี่ยน หรือปฏิเสธคำแนะนำของ AI พร้อมระบุเหตุผลเพื่อส่งกลับเข้าสู่ระบบ MLOps Feedback Loop
 
-### 📊 6. การกำกับดูแล ตรวจสอบ และ MLOps (Operations & Governance)
+### 📊 8. การกำกับดูแล ตรวจสอบ และ MLOps (Operations & Governance)
 - **Business Analytics (`/analytics`):** วิเคราะห์ Conversion Rate, Approval Rate, Coverage Gap ในพอร์ตโฟลิโอ และสถิติการทำงานของนายหน้า
 - **AI Health & Explainability (`/model`):** ตรวจสอบประสิทธิภาพโมเดล, SHAP Summary Plot, Population Stability Index (PSI Drift Monitoring), และเวอร์ชันของ Artifacts
 - **Pilot Sandbox Evaluation (`/pilot`):** ชุดประเมินผลการทดสอบนำร่อง 8 สถานการณ์จำลอง พร้อมเครื่องมือจับเวลาการทำงานและแบบสอบถามความพึงพอใจ
-- **Enterprise Immutable Audit Log (`/admin/audit`):** บันทึกทุกคำสั่งการอนุมาน (Inference), คำสั่ง LLM, การตัดสินใจของนายหน้า และการเปลี่ยนแปลงสิทธิ์เพื่อการตรวจสอบย้อนกลับ (Compliance Trail)
+- **Enterprise Immutable Audit Log (`/admin/audit`):** บันทึกทุกคำสั่งการอนุมาน (Inference), คำสั่ง LLM, แผนการเดินทาง, การตัดสินใจของนายหน้า และการเปลี่ยนแปลงสิทธิ์เพื่อการตรวจสอบย้อนกลับ (Compliance Trail)
 
 ---
 
-## 4. Core AI & Decision Pipelines
+## 4. Single Source of Truth Metrics
 
-### A. Customer Scoring & Explainability Pipeline
-```mermaid
-flowchart LR
-    A[Customer Profile & Holdings] --> B[17 Feature Transformers]
-    B --> C[LightGBM Tree Classifier]
-    C --> D[Platt Sigmoid Calibrator]
-    D --> E[Calibrated Priority Score 0-100]
-    C --> F[SHAP TreeExplainer]
-    F --> G[Top-3 Key Drivers & Feature Drawer]
-    E & G --> H[Broker 360 Workspace]
-```
+ตัวเลขชี้วัดทั้งหมดได้รับการตรวจสอบและอ้างอิงจาก Artifacts การประเมินผลของระบบจริง ([`docs/master-evidence-registry.json`](file:///Users/chalermsak/Downloads/broker-insight-ai-krungsri-hackathon-main/docs/master-evidence-registry.json)):
 
-### B. Product Recommendation & Decision Pipeline
-```mermaid
-flowchart LR
-    A[Customer Needs Assessment] --> B[Catalog Hard Eligibility Gate]
-    B --> C[Profile Fit & Coverage Damping]
-    C --> D[Top-K Scored Candidates]
-    D --> E[4-Part Explanation Generator]
-    E --> F[Broker Review: Approve / Modify / Reject]
-    F --> G[MLOps Feedback Loop & Audit Log]
-```
-
-### C. AI Governance & Traceability Pipeline
-```mermaid
-flowchart TD
-    A[Inference Request] --> B[Model Version & Seed Tracking]
-    B --> C[SHAP Feature Attribution Logging]
-    A --> D[LLM Prompt Versioning & Cache]
-    D --> E[Input Sanitization & Output Guardrails]
-    C & E --> F[Immutable Audit Log with Request Tracing]
-```
-
----
-
-## 5. Single Source of Truth Metrics
-
-All metrics reported below are verified against authoritative backend evaluation artifacts ([`docs/master-evidence-registry.json`](file:///Users/chalermsak/Downloads/broker-insight-ai-krungsri-hackathon-main/docs/master-evidence-registry.json)):
-
-| Category | Metric | Measured Value | Standard / Benchmark | Significance & Source |
+| หมวดหมู่ | ตัวชี้วัด (Metric) | ค่าที่วัดได้จริง | เกณฑ์มาตรฐาน | แหล่งที่มา / ข้อมูลอ้างอิง |
 |---|---|:---:|:---:|---|
 | **ML Scoring** | **Holdout Test F1** | **0.878** | $\ge 0.80$ | 80/20 Holdout Test (`baseline.json`) |
 | | **5-Fold CV F1** | **0.857** | $\ge 0.80$ | Stratified Cross-Validation (`evaluation_metrics.json`) |
@@ -187,28 +160,28 @@ All metrics reported below are verified against authoritative backend evaluation
 | **Recommendation** | **Gating Violations** | **0.0%** | **0.0%** | Pre-ranking hard gate (`recommendation_evaluation.json`) |
 | | **Top-1 / Top-K Match** | **100.0%** | $\ge 85.0\%$ | Representative pilot scenarios (`recommendation_evaluation.json`) |
 | | **Average Latency** | **0.86 ms** | $\le 5.0\text{ ms}$ | High-throughput sub-millisecond filtering |
-| **LLM Optimization** | **Cost Reduction** | **33.5%** | $\ge 20.0\%$ | Prompt minification vs baseline (`llm_optimized.json`) |
-| | **Cache Latency Drop** | **95.8%** | $\ge 80.0\%$ | 0.15ms cached vs 3.45ms uncached (`llm_optimized.json`) |
-| | **Guardrail Violations**| **0.0%** | **0.0%** | Full structured output & safety compliance |
-| **Local Benchmark**| **Workflow P50** | **37.1 ms** | $\le 100\text{ ms}$ | Full 10-step broker session (`e2e_optimized.json`) |
-| | **Workflow P95** | **64.8 ms** | $\le 200\text{ ms}$ | Local sandbox benchmark on Darwin macOS |
-| | **ML Scorer Latency** | **2.06 ms** | $\le 25\text{ ms}$ | Sub-3ms LightGBM tree inference |
-| **Pilot Evaluation**| **Participants (n)** | **0** | Awaiting Live Pilot | Zero-data state verified (`/pilot`) |
+| **Visit Planning** | **Feasibility Accuracy** | **100.0%** | **100.0%** | Working hours & travel limits (`test_visit_planner.py`) |
+| | **Solver Latency** | **< 15 ms** | $\le 50\text{ ms}$ | Matrix distance & constraint resolution |
+| **Typography** | **Sub-12px Font Sizes** | **0 (0.0%)** | **0** | Full AST & CSS audit across entire frontend |
+| **Testing** | **Backend Tests** | **235 / 235 Passed** | **100%** | Pytest suites with async client |
+| | **Frontend Tests** | **31 / 31 Passed** | **100%** | Node test suites (Typography, Tour, Planner) |
+| | **TypeScript Errors** | **0 Errors** | **0** | `npx tsc --noEmit` clean compilation |
 
 ---
 
-## 6. Technology Stack
+## 5. Technology Stack
 
-* **Frontend:** Next.js 16 (App Router), React 19, TypeScript 5, Vanilla CSS Design System (zero external UI library dependencies).
+* **Frontend:** Next.js 16 (App Router), React 19, TypeScript 5, Vanilla CSS Enterprise Design System.
 * **Backend:** FastAPI (Python 3.11+), Uvicorn, Pydantic v2, Async SQLAlchemy, SQLite (Development) / PostgreSQL (Production).
 * **Machine Learning:** LightGBM 4.6+, Scikit-learn (Platt Sigmoid Calibration), SHAP 0.46+ (TreeExplainer).
+* **Route & Optimization:** Distance Matrix Service, Coordinate Projection Engine, Geolocation Fallback Handler.
 * **AI & LLM:** Google Gemini 1.5 Flash, In-Memory TTLCache, Rule-Based Fallback Engine.
 * **Security & Auth:** PyJWT, Passlib (Argon2 / BCrypt), Role-Based Access Control (`broker`, `manager`, `admin`).
-* **Testing:** Pytest (182 tests), AsyncIO Test Client.
+* **Testing:** Pytest (235 tests), Node.js Native Test Runner (31 tests).
 
 ---
 
-## 7. Reproducible Setup Guide
+## 6. Reproducible Setup Guide
 
 ### Prerequisites
 - Python 3.11+
@@ -217,7 +190,7 @@ All metrics reported below are verified against authoritative backend evaluation
 
 ### 1. Clone Repository & Setup Environment
 ```bash
-git clone https://github.com/chalermsak/broker-insight-ai-krungsri-hackathon.git
+git clone https://github.com/Chalermsak1/broker-insight-ai-krungsri-hackathon.git
 cd broker-insight-ai-krungsri-hackathon
 ```
 
@@ -244,34 +217,28 @@ cd ../frontend
 # Install dependencies
 npm install
 
+# Run automated tests
+npm test
+
 # Start Next.js development server
 npm run dev
 ```
-Open `http://localhost:3000` in your browser.
+เปิดบราวเซอร์ที่ `http://localhost:3000`
 
 ---
 
-## 8. Demo Credentials & User Roles
+## 7. Demo Credentials & User Roles
 
-> ⚠️ **DEMO CREDENTIALS ONLY:**
+> ⚠️ **ข้อมูลบัญชีสำหรับทดสอบระบบ (Demo Credentials Only):**
 
-| Role | Email | Password | Access Scope |
+| บทบาท (Role) | อีเมล (Email) | รหัสผ่าน (Password) | ขอบเขตการเข้าถึง (Access Scope) |
 |---|---|---|---|
-| **Broker** | `broker@demo.local` | `demo1234` | Workspace (`/dashboard`, `/customers`, `/customers/[id]`, `/visit-planner`, `/my-protection`) |
-| **Manager** | `manager@demo.local` | `demo1234` | Workspace + Operations (`/analytics`, `/model`, `/pilot`) |
-| **Admin** | `admin@demo.local` | `demo1234` | Workspace + Operations + Administration (`/admin/audit`, Model Governance) |
+| **Broker (นายหน้า)** | `broker@demo.local` | `demo1234` | Workspace (`/dashboard`, `/customers`, `/customers/[id]`, `/visit-planner`, `/my-protection`) |
+| **Manager (ผู้จัดการ)** | `manager@demo.local` | `demo1234` | Workspace + Operations (`/analytics`, `/model`, `/pilot`) |
+| **Admin (ผู้ดูแลระบบ)** | `admin@demo.local` | `demo1234` | Workspace + Operations + Governance (`/admin/audit`, Model Registry) |
 
 ---
 
-## 9. Limitations & Production Roadmap
-
-1. **Synthetic Data:** The system operates on synthetically generated customer profiles. Production deployment requires integration with real Core Banking / CRM data via secure ETL pipelines.
-2. **Enterprise SSO:** Authentication currently uses local JWT tokens with demo accounts. Production requires OAuth2 / SAML / OIDC enterprise identity integration.
-3. **Model Certification:** While calibrated ($F1=0.842$, $ECE=0.045$), the model must undergo formal banking model risk management (MRM) and regulatory approval before live deployment.
-4. **Human Pilot Evidence:** The pilot evaluation dashboard and survey instrumentation are fully built; empirical human pilot evidence will be gathered upon operational rollout.
-
----
-
-## 10. License
+## 8. License
 
 This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
