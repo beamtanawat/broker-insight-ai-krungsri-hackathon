@@ -18,9 +18,9 @@ export default function RootLayout({
         <div
           id="pilot-sandbox-banner"
           style={{
-            backgroundColor: "rgba(234, 179, 8, 0.12)",
-            color: "#fde047",
-            borderBottom: "1px solid rgba(234, 179, 8, 0.25)",
+            backgroundColor: "#000000",
+            color: "#ffffff",
+            borderBottom: "1px solid #222222",
             padding: "6px 16px",
             fontSize: "12px",
             textAlign: "center",
@@ -31,7 +31,7 @@ export default function RootLayout({
             gap: "8px",
           }}
         >
-          <span>🧪 <strong>PILOT SANDBOX:</strong> สภาพแวดล้อมจำลองเพื่อการทดสอบนำร่อง (Synthetic Demo Dataset — Not Connected to Live Production)</span>
+          <span>🧪 <strong style={{ color: "#FECB00" }}>PILOT SANDBOX:</strong> สภาพแวดล้อมจำลองเพื่อการทดสอบนำร่อง (Synthetic Demo Dataset — Not Connected to Live Production)</span>
         </div>
         <ErrorBoundary>
           <Providers>{children}</Providers>
