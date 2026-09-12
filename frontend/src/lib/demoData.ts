@@ -15,6 +15,12 @@ import type {
   ProductMatchOut,
   NeedCategoryScore,
   SHAPFactor,
+  AnalyticsOverviewResponse,
+  PriorityAnalyticsResponse,
+  NeedAnalyticsResponse,
+  RecommendationAnalyticsResponse,
+  FollowUpAnalyticsResponse,
+  AIUsageAnalyticsResponse,
 } from "@/types";
 
 export const MOCK_USER: User = {
@@ -835,3 +841,239 @@ export const MOCK_VISIT_PLANNER_ROUTE = {
   },
   unroutable_customers: [],
 };
+
+// ── Phase 12 Analytics Mock Data (Production-Ready for Vercel / Standalone Preview) ──
+
+export const MOCK_ANALYTICS_OVERVIEW: AnalyticsOverviewResponse = {
+  role_scope: "broker",
+  user_name: "สมชาย ใจดี (Krungsri Certified Broker)",
+  total_customers: 248,
+  high_priority_customers: 42,
+  medium_priority_customers: 118,
+  low_priority_customers: 88,
+  follow_ups_due: 18,
+  follow_ups_completed: 232,
+  follow_ups_overdue: 3,
+  ai_analysis_count: 248,
+  recommendation_count: 258,
+  approval_rate: 68.8,
+  modification_rate: 19.2,
+  rejection_rate: 12.0,
+  as_of: new Date().toISOString(),
+};
+
+export const MOCK_ANALYTICS_PRIORITY: PriorityAnalyticsResponse = {
+  role_scope: "broker",
+  total_scored_customers: 248,
+  priority_distribution: {
+    high: 42,
+    medium: 118,
+    low: 88,
+  },
+  average_priority_score: 48.5,
+  score_distribution: [
+    { bucket: "0-20 (ต่ำมาก)", count: 27, percentage: 10.9 },
+    { bucket: "21-40 (ต่ำ)", count: 95, percentage: 38.3 },
+    { bucket: "41-60 (ปานกลาง)", count: 64, percentage: 25.8 },
+    { bucket: "61-80 (สูง)", count: 45, percentage: 18.1 },
+    { bucket: "81-100 (สูงมาก)", count: 17, percentage: 6.9 },
+  ],
+  priority_trends: [
+    { period: "W-3", high: 12, medium: 30, low: 25 },
+    { period: "W-2", high: 18, medium: 35, low: 28 },
+    { period: "W-1", high: 28, medium: 42, low: 32 },
+    { period: "สัปดาห์ปัจจุบัน (This Week)", high: 42, medium: 118, low: 88 },
+  ],
+  as_of: new Date().toISOString(),
+};
+
+export const MOCK_ANALYTICS_NEEDS: NeedAnalyticsResponse = {
+  role_scope: "broker",
+  total_needs_identified: 258,
+  categories_distribution: [
+    {
+      category: "Health protection",
+      label_th: "ความคุ้มครองสุขภาพและโรคร้ายแรง",
+      count: 103,
+      percentage: 39.9,
+    },
+    {
+      category: "Financial protection",
+      label_th: "การคุ้มครองสินเชื่อและภาระหนี้",
+      count: 101,
+      percentage: 39.1,
+    },
+    {
+      category: "Retirement planning",
+      label_th: "การวางแผนเกษียณและออมระยะยาว",
+      count: 43,
+      percentage: 16.7,
+    },
+    {
+      category: "Coverage review",
+      label_th: "การทบทวนและต่ออายุกรมธรรม์",
+      count: 8,
+      percentage: 3.1,
+    },
+    {
+      category: "Life protection",
+      label_th: "ความคุ้มครองชีวิตและภาระครอบครัว",
+      count: 3,
+      percentage: 1.2,
+    },
+  ],
+  top_identified_needs: [
+    {
+      description: "แนะนำความคุ้มครองสุขภาพแบบเหมาจ่ายและโรคร้ายแรงระยะวิกฤตเพื่อรองรับค่ารักษาพยาบาลที่ปรับตัวสูงขึ้น",
+      count: 101,
+    },
+    {
+      description: "ลูกค้ากลุ่มวัยทำงานและผู้มีภาระสินเชื่อบ้าน ทบทวนทุนประกันคุ้มครองวงเงินสินเชื่อ",
+      count: 45,
+    },
+    {
+      description: "ลูกค้าวัย 45+ เตรียมความพร้อมทางการเงินเพื่อสร้างเงินบำนาญและรักษาสภาพคล่องหลังเกษียณ",
+      count: 28,
+    },
+  ],
+  as_of: new Date().toISOString(),
+};
+
+export const MOCK_ANALYTICS_RECOMMENDATIONS: RecommendationAnalyticsResponse = {
+  total_recommendations: 258,
+  total_decisions: 250,
+  approval_count: 172,
+  approval_rate: 68.8,
+  modification_count: 48,
+  modification_rate: 19.2,
+  rejection_count: 30,
+  rejection_rate: 12.0,
+  recommendations_by_category: {
+    Health: 103,
+    Protection: 101,
+    Retirement: 43,
+    Life: 8,
+    Motor: 3,
+  },
+  common_modification_reasons: {
+    "ปรับให้เหมาะกับงบประมาณ": 48,
+    "ลูกค้าต้องการปรับระยะเวลาคุ้มครอง": 24,
+  },
+  common_rejection_reasons: {
+    "ปรับให้เหมาะกับงบประมาณ": 30,
+    "มีกรมธรรม์ลักษณะเดียวกันแล้ว": 12,
+  },
+  common_approval_reasons: {
+    "สอดคล้องกับความต้องการลูกค้า": 172,
+    "ปิด Gap ความคุ้มครองชัดเจน": 86,
+  },
+  as_of: new Date().toISOString(),
+};
+
+export const MOCK_ANALYTICS_FOLLOWUPS: FollowUpAnalyticsResponse = {
+  role_scope: "broker",
+  total_follow_ups: 250,
+  due_count: 18,
+  completed_count: 232,
+  overdue_count: 3,
+  upcoming_count: 15,
+  status_distribution: {
+    open: 18,
+    done: 232,
+    snoozed: 0,
+  },
+  payment_status_distribution: {
+    paid: 247,
+    overdue: 3,
+    pending: 0,
+  },
+  as_of: new Date().toISOString(),
+};
+
+export const MOCK_ANALYTICS_AI_USAGE: AIUsageAnalyticsResponse = {
+  role_scope: "broker",
+  active_model_version: "1.0.0",
+  model_name: "LightGBM Priority Classifier",
+  total_ai_scoring_requests: 250,
+  total_llm_insight_requests: 250,
+  total_conversation_requests: 189,
+  total_feedback_recorded: 42,
+  feedback_breakdown: {
+    useful: 38,
+    not_useful: 2,
+    incorrect: 1,
+    needs_review: 1,
+  },
+  as_of: new Date().toISOString(),
+};
+
+export const MOCK_AUDIT_LOGS = [
+  {
+    id: "aud-001",
+    user_id: "u-broker-1",
+    action: "recommendation.approve",
+    entity_type: "recommendation",
+    entity_id: "rec-ks-00001-1",
+    metadata: {
+      customer_id: "d82e838c-63fb-47a3-9428-f15dc4d68883",
+      customer_ref: "KS-00001",
+      product_name: "กรุงศรี สุขภาพพรีเมียม พลัส (เหมาจ่าย)",
+      reason: "สอดคล้องกับความต้องการลูกค้า",
+    },
+    timestamp: "2026-09-12T16:20:00Z",
+  },
+  {
+    id: "aud-002",
+    user_id: "u-broker-1",
+    action: "ai.score_generate",
+    entity_type: "customer",
+    entity_id: "c0c0f992-b06d-4b9f-bbc6-9b4458a79491",
+    metadata: {
+      customer_ref: "KS-00002",
+      model: "LightGBM Priority Classifier v1.0",
+      priority_score: 94,
+      priority_level: "high",
+    },
+    timestamp: "2026-09-12T15:45:00Z",
+  },
+  {
+    id: "aud-003",
+    user_id: "u-broker-1",
+    action: "visit_planner.route_create",
+    entity_type: "visit_route",
+    entity_id: "route-20260912",
+    metadata: {
+      total_stops: 3,
+      total_distance_km: 18.4,
+      transport: "car",
+    },
+    timestamp: "2026-09-12T14:30:00Z",
+  },
+  {
+    id: "aud-004",
+    user_id: "u-admin-1",
+    action: "compliance.export_audit",
+    entity_type: "compliance_report",
+    entity_id: "rep-20260912",
+    metadata: {
+      export_format: "csv",
+      filter_role: "broker",
+      records_exported: 250,
+    },
+    timestamp: "2026-09-12T13:00:00Z",
+  },
+  {
+    id: "aud-005",
+    user_id: "u-broker-1",
+    action: "user.login",
+    entity_type: "auth",
+    entity_id: "sess-01",
+    metadata: {
+      email: "broker@demo.local",
+      ip: "127.0.0.1",
+      device: "Desktop Safari",
+    },
+    timestamp: "2026-09-12T08:30:00Z",
+  },
+];
+

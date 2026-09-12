@@ -75,21 +75,28 @@ export default function AnalyticsDashboardPage() {
   const highPriorityCount = overview?.high_priority_customers ?? priority?.priority_distribution?.high ?? 0;
   const medPriorityCount = overview?.medium_priority_customers ?? priority?.priority_distribution?.medium ?? 0;
   const lowPriorityCount = overview?.low_priority_customers ?? priority?.priority_distribution?.low ?? 0;
-  const totalCustomers = (overview?.total_customers ?? (highPriorityCount + medPriorityCount + lowPriorityCount)) || 1;
+  const computedSum = highPriorityCount + medPriorityCount + lowPriorityCount;
+  const totalCustomers = overview?.total_customers ?? (computedSum > 0 ? computedSum : 0);
 
-  const totalFollowups = followups?.total_follow_ups ?? 0;
+  const totalFollowups = followups?.total_follow_ups ?? (overview ? (overview.follow_ups_due + overview.follow_ups_completed) : 0);
   const completedFollowups = followups?.completed_count ?? overview?.follow_ups_completed ?? 0;
   const overdueFollowups = followups?.overdue_count ?? overview?.follow_ups_overdue ?? 0;
   const completionRate = totalFollowups > 0 ? Math.round((completedFollowups / totalFollowups) * 100) : 0;
 
-  const totalDecisions = recommendations?.total_decisions ?? 0;
-  const approvalRate = recommendations?.approval_rate ? Math.round(recommendations.approval_rate * 100) : 0;
-  const modificationRate = recommendations?.modification_rate ? Math.round(recommendations.modification_rate * 100) : 0;
-  const rejectionRate = recommendations?.rejection_rate ? Math.round(recommendations.rejection_rate * 100) : 0;
+  const normalizePct = (rate: number | undefined | null) => {
+    if (rate == null || isNaN(rate)) return 0;
+    if (rate > 1) return Math.round(rate);
+    return Math.round(rate * 100);
+  };
+
+  const approvalRate = normalizePct(recommendations?.approval_rate ?? overview?.approval_rate);
+  const modificationRate = normalizePct(recommendations?.modification_rate ?? overview?.modification_rate);
+  const rejectionRate = normalizePct(recommendations?.rejection_rate ?? overview?.rejection_rate);
+  const totalDecisions = recommendations?.total_decisions || ((recommendations?.approval_count ?? 0) + (recommendations?.modification_count ?? 0) + (recommendations?.rejection_count ?? 0));
 
   const totalAIRequests =
-    (aiUsage?.total_ai_scoring_requests ?? 0) +
-    (aiUsage?.total_llm_insight_requests ?? 0) +
+    (aiUsage?.total_ai_scoring_requests ?? overview?.ai_analysis_count ?? 0) +
+    (aiUsage?.total_llm_insight_requests ?? overview?.ai_analysis_count ?? 0) +
     (aiUsage?.total_conversation_requests ?? 0);
 
   const exportCSV = () => {
@@ -186,7 +193,7 @@ export default function AnalyticsDashboardPage() {
               {loading ? <Skeleton width="48px" height="36px" /> : highPriorityCount}
             </div>
             <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)", marginTop: "2px" }}>
-              คิดเป็น {Math.round((highPriorityCount / totalCustomers) * 100)}% ของพอร์ตทั้งหมด ({totalCustomers} ราย)
+              คิดเป็น {totalCustomers > 0 ? Math.round((highPriorityCount / totalCustomers) * 100) : 0}% ของพอร์ตทั้งหมด ({totalCustomers} ราย)
             </div>
           </div>
         </Card>
@@ -254,30 +261,30 @@ export default function AnalyticsDashboardPage() {
               <div>
                 <div style={{ display: "flex", justifyContent: "space-between", fontSize: "var(--fs-xs)", fontWeight: 700, marginBottom: "4px" }}>
                   <span style={{ color: "var(--priority-high-text)" }}>🔥 ความสำคัญสูง (High)</span>
-                  <span>{highPriorityCount} ราย ({Math.round((highPriorityCount / totalCustomers) * 100)}%)</span>
+                  <span>{highPriorityCount} ราย ({totalCustomers > 0 ? Math.round((highPriorityCount / totalCustomers) * 100) : 0}%)</span>
                 </div>
                 <div style={{ height: "8px", backgroundColor: "var(--slate-100)", borderRadius: "4px", overflow: "hidden" }}>
-                  <div style={{ width: `${(highPriorityCount / totalCustomers) * 100}%`, height: "100%", backgroundColor: "var(--priority-high-solid)", borderRadius: "4px" }} />
+                  <div style={{ width: `${totalCustomers > 0 ? (highPriorityCount / totalCustomers) * 100 : 0}%`, height: "100%", backgroundColor: "var(--priority-high-solid)", borderRadius: "4px" }} />
                 </div>
               </div>
 
               <div>
                 <div style={{ display: "flex", justifyContent: "space-between", fontSize: "var(--fs-xs)", fontWeight: 700, marginBottom: "4px" }}>
                   <span style={{ color: "var(--priority-med-text)" }}>⚡ ความสำคัญปานกลาง (Medium)</span>
-                  <span>{medPriorityCount} ราย ({Math.round((medPriorityCount / totalCustomers) * 100)}%)</span>
+                  <span>{medPriorityCount} ราย ({totalCustomers > 0 ? Math.round((medPriorityCount / totalCustomers) * 100) : 0}%)</span>
                 </div>
                 <div style={{ height: "8px", backgroundColor: "var(--slate-100)", borderRadius: "4px", overflow: "hidden" }}>
-                  <div style={{ width: `${(medPriorityCount / totalCustomers) * 100}%`, height: "100%", backgroundColor: "var(--priority-med-solid)", borderRadius: "4px" }} />
+                  <div style={{ width: `${totalCustomers > 0 ? (medPriorityCount / totalCustomers) * 100 : 0}%`, height: "100%", backgroundColor: "var(--priority-med-solid)", borderRadius: "4px" }} />
                 </div>
               </div>
 
               <div>
                 <div style={{ display: "flex", justifyContent: "space-between", fontSize: "var(--fs-xs)", fontWeight: 700, marginBottom: "4px" }}>
                   <span style={{ color: "var(--slate-600)" }}>💤 ความสำคัญต่ำ (Low)</span>
-                  <span>{lowPriorityCount} ราย ({Math.round((lowPriorityCount / totalCustomers) * 100)}%)</span>
+                  <span>{lowPriorityCount} ราย ({totalCustomers > 0 ? Math.round((lowPriorityCount / totalCustomers) * 100) : 0}%)</span>
                 </div>
                 <div style={{ height: "8px", backgroundColor: "var(--slate-100)", borderRadius: "4px", overflow: "hidden" }}>
-                  <div style={{ width: `${(lowPriorityCount / totalCustomers) * 100}%`, height: "100%", backgroundColor: "var(--slate-400)", borderRadius: "4px" }} />
+                  <div style={{ width: `${totalCustomers > 0 ? (lowPriorityCount / totalCustomers) * 100 : 0}%`, height: "100%", backgroundColor: "var(--slate-400)", borderRadius: "4px" }} />
                 </div>
               </div>
             </div>

@@ -70,6 +70,13 @@ import {
   MOCK_VISIT_PLANNER_CONFIG,
   MOCK_VISIT_PLANNER_CANDIDATES,
   MOCK_VISIT_PLANNER_ROUTE,
+  MOCK_ANALYTICS_OVERVIEW,
+  MOCK_ANALYTICS_PRIORITY,
+  MOCK_ANALYTICS_NEEDS,
+  MOCK_ANALYTICS_RECOMMENDATIONS,
+  MOCK_ANALYTICS_FOLLOWUPS,
+  MOCK_ANALYTICS_AI_USAGE,
+  MOCK_AUDIT_LOGS,
 } from "./demoData";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
@@ -159,67 +166,165 @@ function getMockResponse<T>(path: string, options: RequestInit = {}): T | undefi
     return MOCK_FOLLOWUPS as T;
   }
   if (path.startsWith("/api/v1/analytics")) {
-    if (path.includes("/overview")) {
-      return {
-        conversion_rate: 38.5,
-        active_brokers: 12,
-        total_leads: 248,
-        ai_assisted_closures: 64,
-      } as T;
-    }
-    if (path.includes("/priority")) {
-      return {
-        high_priority_conversion: 48.2,
-        medium_priority_conversion: 24.1,
-        avg_response_hours: 3.4,
-      } as T;
-    }
-    if (path.includes("/needs")) {
-      return {
-        top_unmet_needs: ["Health Room Copay", "Motor Renewal Gap"],
-      } as T;
-    }
-    if (path.includes("/recommendations")) {
-      return {
-        acceptance_rate: 68.4,
-        top_product: "Motor Type 1 + พ.ร.บ.",
-      } as T;
-    }
-    if (path.includes("/follow-ups")) {
-      return {
-        on_time_rate: 92.5,
-        completed_this_week: 28,
-      } as T;
-    }
-    if (path.includes("/ai-usage")) {
-      return {
-        gemini_queries: 412,
-        talking_points_generated: 189,
-        broker_satisfaction_score: 4.8,
-      } as T;
-    }
+    if (path.includes("/overview")) return MOCK_ANALYTICS_OVERVIEW as T;
+    if (path.includes("/priority")) return MOCK_ANALYTICS_PRIORITY as T;
+    if (path.includes("/needs")) return MOCK_ANALYTICS_NEEDS as T;
+    if (path.includes("/recommendations")) return MOCK_ANALYTICS_RECOMMENDATIONS as T;
+    if (path.includes("/follow-ups")) return MOCK_ANALYTICS_FOLLOWUPS as T;
+    if (path.includes("/ai-usage")) return MOCK_ANALYTICS_AI_USAGE as T;
+    return MOCK_ANALYTICS_OVERVIEW as T;
+  }
+  if (path.includes("/recommendations/performance")) {
+    return {
+      engine_version: "recommendation_engine_v1.1",
+      status: "promoted_champion",
+      top_1_match_rate_pct: 100.0,
+      top_k_match_rate_pct: 100.0,
+      speedup_factor: 1.4,
+      avg_latency_ms: 0.86,
+    } as T;
   }
   if (path.startsWith("/api/v1/model")) {
     if (path.includes("/metrics")) {
       return {
-        accuracy: 0.912,
-        precision: 0.895,
-        recall: 0.884,
-        f1_score: 0.889,
-        auc_roc: 0.941,
+        model_name: "LightGBM Priority Classifier",
+        model_version: "1.0.0",
+        dataset_label: "Synthetic Demo Dataset Evaluation",
+        metrics: {
+          precision: 0.895,
+          recall: 0.884,
+          f1_score: 0.889,
+          roc_auc: 0.952,
+          accuracy: 0.912,
+          sample_count: 240,
+        },
       } as T;
     }
     if (path.includes("/registry")) {
       return {
-        active_version: "lgbm-priority-v2.1",
-        status: "production",
-        last_promoted: "2026-09-10",
+        registry_version: "1.0.0",
+        active_version: "1.0.0",
+        updated_at: new Date().toISOString(),
+        models: [
+          {
+            version: "1.0.0",
+            model_name: "LightGBM Priority Classifier",
+            status: "active",
+            deployment_status: "deployed",
+            is_active: true,
+            is_champion: true,
+            created_at: "2026-08-30T04:24:39Z",
+            promoted_at: "2026-08-30T04:38:20Z",
+            metrics: { accuracy: 0.912, precision: 0.895, recall: 0.884, f1_score: 0.889, roc_auc: 0.952 },
+          },
+          {
+            version: "0.9.0",
+            model_name: "Baseline Heuristic Classifier",
+            status: "archived",
+            deployment_status: "retired",
+            is_active: false,
+            is_champion: false,
+            created_at: "2026-08-15T10:00:00Z",
+            metrics: { accuracy: 0.785, precision: 0.742, recall: 0.761, f1_score: 0.751, roc_auc: 0.824 },
+          },
+        ],
+      } as T;
+    }
+    if (path.includes("/drift")) {
+      return {
+        report_id: "drift_report_prod",
+        evaluated_at: new Date().toISOString(),
+        baseline_sample_count: 1200,
+        current_sample_count: 300,
+        is_small_sample: false,
+        sample_warning: null,
+        overall_data_drift_status: "stable",
+        feature_drifts: [
+          { feature_name: "annual_income", metric_name: "psi", score: 0.042, threshold: 0.2, drift_status: "stable", p_value: 0.68 },
+          { feature_name: "coverage_gap_ratio", metric_name: "psi", score: 0.058, threshold: 0.2, drift_status: "stable", p_value: 0.54 },
+          { feature_name: "age", metric_name: "psi", score: 0.021, threshold: 0.2, drift_status: "stable", p_value: 0.82 },
+          { feature_name: "active_policies_count", metric_name: "psi", score: 0.035, threshold: 0.2, drift_status: "stable", p_value: 0.71 },
+        ],
+      } as T;
+    }
+    if (path.includes("/evidence")) {
+      return {
+        active_champion: "LightGBM Priority Classifier",
+        model_version: "1.0.0",
+        dataset_version: "synthetic_v1.0 (1,200 samples, 80/20 split)",
+        dataset_type: "Holdout Test Set (N=240)",
+        evaluated_at: "2026-08-30T04:38:20Z",
+        metrics: { accuracy: 0.912, precision: 0.895, recall: 0.884, f1_score: 0.889, roc_auc: 0.952 },
+        confusion_matrix: { true_negative: 140, false_positive: 16, false_negative: 5, true_positive: 79 },
+      } as T;
+    }
+    if (path.includes("/e2e-performance")) {
+      return {
+        benchmark_name: "E2E Optimized v1.1",
+        status: "promoted_champion",
+        timestamp: new Date().toISOString(),
+        workflow_summary: {
+          total_cold_latency_ms: 57.6,
+          total_warm_latency_ms: 34.1,
+          p50_ms: 37.1,
+          p95_ms: 64.8,
+          p99_ms: 77.8,
+          latency_reduction_warm_vs_cold_pct: 40.8,
+          throughput_req_per_sec: 3480.0,
+          error_rate_pct: 0.0,
+        },
+      } as T;
+    }
+    if (path.includes("/llm-performance")) {
+      return {
+        active_model: "gemini-1.5-flash",
+        active_prompt_version: "v2.0-optimized",
+        optimization_status: "promoted_champion",
+        total_requests: 250,
+        avg_latency_ms: 2.35,
+        p95_latency_ms: 3.61,
+        avg_input_tokens: 579.7,
+        avg_output_tokens: 996.7,
+        avg_total_tokens: 1576.4,
+      } as T;
+    }
+    if (path.includes("/latency")) {
+      return {
+        benchmark_iterations: 500,
+        single_sample_prediction_latency_ms: 2.314,
+        single_sample_shap_latency_ms: 0.194,
+        total_combined_inference_latency_ms: 2.508,
+        shap_overhead_percentage: 7.8,
+      } as T;
+    }
+    if (path.includes("/calibration")) {
+      return {
+        model_name: "LightGBM Priority Classifier",
+        model_version: "1.0.0",
+        brier_score: 0.082,
+        expected_calibration_error: 0.034,
+        calibration_curve: [
+          { bin_lower: 0.0, bin_upper: 0.2, true_prob: 0.04, pred_prob: 0.06, count: 48 },
+          { bin_lower: 0.2, bin_upper: 0.4, true_prob: 0.28, pred_prob: 0.31, count: 62 },
+          { bin_lower: 0.4, bin_upper: 0.6, true_prob: 0.52, pred_prob: 0.49, count: 54 },
+          { bin_lower: 0.6, bin_upper: 0.8, true_prob: 0.74, pred_prob: 0.72, count: 45 },
+          { bin_lower: 0.8, bin_upper: 1.0, true_prob: 0.93, pred_prob: 0.91, count: 31 },
+        ],
+      } as T;
+    }
+    if (path.includes("/fairness")) {
+      return {
+        evaluation_timestamp: new Date().toISOString(),
+        sensitive_attributes: ["gender", "age_group"],
+        overall_fairness_status: "passed",
+        disparate_impact_ratio: 0.94,
+        equal_opportunity_difference: 0.03,
       } as T;
     }
     return { status: "ok" } as T;
   }
   if (path.startsWith("/api/v1/audit")) {
-    return { items: [], total: 0, page: 1 } as T;
+    return { items: MOCK_AUDIT_LOGS, total: MOCK_AUDIT_LOGS.length, page: 1 } as T;
   }
   if (path.startsWith("/api/v1/visit-planner")) {
     if (path.includes("/config")) {
