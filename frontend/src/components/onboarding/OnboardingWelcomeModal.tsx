@@ -216,11 +216,11 @@ export function OnboardingWelcomeModal() {
                   }}
                 >
                   <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    <span style={{ fontSize: "18px" }}>📱</span>
-                    <strong style={{ fontSize: "13px", color: "#0F172A", fontWeight: 700 }}>โมบายล์เวิร์กสเปซ</strong>
+                    <span style={{ fontSize: "18px" }}>📊</span>
+                    <strong style={{ fontSize: "13px", color: "#0F172A", fontWeight: 700 }}>ศูนย์วิเคราะห์ข้อมูลธุรกิจ</strong>
                   </div>
                   <p className="font-reading" style={{ fontSize: "12px", color: "#64748B", margin: 0, lineHeight: 1.45 }}>
-                    จำลองแอปมือถือ iPhone 17 Pro Max มีทั้งแดชบอร์ดงานและกราฟรายงานพอร์ต
+                    วิเคราะห์ช่องว่างความคุ้มครอง อัตราตอบรับ และผลการดำเนินงานของพอร์ตลูกค้า
                   </p>
                 </div>
 

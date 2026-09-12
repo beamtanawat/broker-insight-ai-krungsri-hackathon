@@ -117,27 +117,22 @@ Broker Insight AI ได้รับการออกแบบเป็นร�
 - **ขนาดตัวอักษรขั้นต่ำ 12px ทั่วทั้งระบบ:** ไม่มีข้อความ UI ปกติใดเล็กกว่า 12px (กำจัดขนาด 8–11px ทั้งหมด)
 - **ระยะห่างบรรทัดป้องกันวรรณยุกต์ซ้อน (Diacritic Collision-Free):** กำหนดความสูงบรรทัดที่เหมาะสม (`1.35` หัวข้อ, `1.45` UI, `1.65` ข้อความทั่วไป, `1.8` บทความ AI) ทำให้อ่านสระบน-ล่างและวรรณยุกต์ไทยได้อย่างชัดเจน
 
-### 📱 4. โมบายล์เวิร์กสเปซจำลองบนสมาร์ตโฟน (Mobile Companion Workspace — My Protection)
-- **จำลองบน iPhone Chassis:** พร้อม Dynamic Island และแถบสถานะเสมือนจริง
-- **โหมดแดชบอร์ดมือถือ:** แบนเนอร์ทักทาย, การ์ด 4 สถิติด่วน, ลูกค้าที่ควรให้ความสนใจ 3 รายการ, งานที่ต้องทำประจำวันพร้อม Checkbox, และคำแนะนำสรุปจาก AI
-- **โหมดรายงานและพอร์ตโฟลิโอ:** Donut Chart สัดส่วนลูกค้า Priority, Ring Gauge ความคืบหน้า KYC, 4-Column Bar Chart รายการ Renewal ภายใน 30 วัน
-
-### 👥 5. ฐานข้อมูลลูกค้าและมุมมอง 360° (Customer 360° Intelligence)
+### 👥 4. ฐานข้อมูลลูกค้าและมุมมอง 360° (Customer 360° Intelligence)
 - **Customer Directory:** ค้นหา คัดกรองตามระดับความสำคัญ (High / Medium / Low), ผลิตภัณฑ์แนะนำ, สถานะ KYC, และเรียงตามคะแนนหรือระยะทาง
 - **Customer 360 Profile:** รวบรวมข้อมูลครบ 5 มิติ ได้แก่ ข้อมูลส่วนบุคคล, สินทรัพย์/หนี้สิน, กรมธรรม์ปัจจุบัน, ความเร่งด่วนของ Life Event และประวัติการติดต่อ
 - **Pitch Guide & Proposal One-Pager:** แนวทางการสนทนาเชิงปรึกษา และเอกสารสรุปความคุ้มครอง One-Pager ที่นำเสนอได้ทันที
 
-### 🧠 6. โมเดล AI จัดลำดับความสำคัญและความโปร่งใส (Calibrated Scoring & Explainable AI)
+### 🧠 5. โมเดล AI จัดลำดับความสำคัญและความโปร่งใส (Calibrated Scoring & Explainable AI)
 - **LightGBM Champion Model (v1.0.0):** ประเมินคะแนนความสำคัญ 0–100 จาก 17 ฟีเจอร์ ($F1=0.878$, $\text{ROC-AUC}=0.956$)
 - **Platt Sigmoid Calibration:** ปรับเทียบความน่าจะเป็นให้อยู่ในสเกลที่เชื่อถือได้ทางสถิติ ($\text{ECE}=0.045$, $\text{Brier}=0.076$)
 - **TreeSHAP Local Explainability:** แสดงผลปัจจัยขับเคลื่อนเชิงบวกและลบ อธิบายเป็นภาษาไทยให้นายหน้าเข้าใจว่า *"ทำไมลูกค้ารายนี้ถึงเร่งด่วนในวันนี้"*
 
-### 🛡️ 7. ระบบแนะนำผลิตภัณฑ์พร้อม Hard Eligibility Gate (Recommendation Engine)
+### 🛡️ 6. ระบบแนะนำผลิตภัณฑ์พร้อม Hard Eligibility Gate (Recommendation Engine)
 - **Hard Eligibility Gate (0% Violations):** คัดกรองเงื่อนไขตายตัว (อายุ, รายได้ขั้นต่ำ, ประวัติสุขภาพ, สินเชื่อที่มีอยู่) ก่อนเข้าสู่ขั้นตอนจัดอันดับ เพื่อรับประกันว่าลูกค้าจะไม่ได้รับข้อเสนอที่ผิดเกณฑ์
 - **5-Need Matching Logic:** จับคู่ความต้องการ 5 มิติ (Motor, Health, Life/MRTA, Savings, Retirement/Pension)
 - **Human-in-the-Loop Discretion:** นายหน้ามีสิทธิ์ตรวจสอบ อนุมัติ ปรับเปลี่ยน หรือปฏิเสธคำแนะนำของ AI พร้อมระบุเหตุผลเพื่อส่งกลับเข้าสู่ระบบ MLOps Feedback Loop
 
-### 📊 8. การกำกับดูแล ตรวจสอบ และ MLOps (Operations & Governance)
+### 📊 7. การกำกับดูแล ตรวจสอบ และ MLOps (Operations & Governance)
 - **Business Analytics (`/analytics`):** วิเคราะห์ Conversion Rate, Approval Rate, Coverage Gap ในพอร์ตโฟลิโอ และสถิติการทำงานของนายหน้า
 - **AI Health & Explainability (`/model`):** ตรวจสอบประสิทธิภาพโมเดล, SHAP Summary Plot, Population Stability Index (PSI Drift Monitoring), และเวอร์ชันของ Artifacts
 - **Pilot Sandbox Evaluation (`/pilot`):** ชุดประเมินผลการทดสอบนำร่อง 8 สถานการณ์จำลอง พร้อมเครื่องมือจับเวลาการทำงานและแบบสอบถามความพึงพอใจ
