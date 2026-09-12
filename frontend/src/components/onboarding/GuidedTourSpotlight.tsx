@@ -463,7 +463,7 @@ export function GuidedTourSpotlight() {
             }}
           >
             {isLastStep
-              ? `${currentStep.description} ตอนนี้คุณรู้จักฟีเจอร์หลักของ Broker Insight AI แล้ว`
+              ? `${currentStep.description} คุณได้เรียนรู้ฟีเจอร์สำคัญครบถ้วนแล้ว พร้อมเริ่มต้นใช้งานจริงได้อย่างมั่นใจ!`
               : currentStep.description}
           </p>
 

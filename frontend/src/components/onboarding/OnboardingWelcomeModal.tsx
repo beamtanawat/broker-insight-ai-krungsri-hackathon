@@ -123,7 +123,7 @@ export function OnboardingWelcomeModal() {
                     backgroundColor: "#D97706",
                   }}
                 />
-                ยินดีต้อนรับสู่ระบบ Krungsri Hackathon Edition
+                ✨ ยินดีต้อนรับสู่ระบบ Broker Insight AI
               </span>
             </div>
 
@@ -209,7 +209,7 @@ export function OnboardingWelcomeModal() {
                     lineHeight: 1.3,
                   }}
                 >
-                  แนะนำฟีเจอร์ทั้งหมดในระบบ Broker Insight AI
+                  ภาพรวมฟีเจอร์อัจฉริยะสำหรับที่ปรึกษาประกันภัย
                 </h2>
                 <p
                   className="font-reading"
@@ -221,7 +221,7 @@ export function OnboardingWelcomeModal() {
                     margin: 0,
                   }}
                 >
-                  ระบบผู้ช่วยอัจฉริยะสำหรับนายหน้าประกัน ดูสรุปทีละฟีเจอร์ หรือกดเริ่มทัวร์ในหน้าจริงได้ทันที
+                  ระบบผู้ช่วย AI ที่พัฒนาขึ้นเพื่อช่วยให้คุณดูแลลูกค้าได้รวดเร็วและตรงจุด ศึกษาฟีเจอร์สำคัญทีละขั้นตอน หรือกดเริ่มนำชมบนหน้าจอจริงได้ทันที
                 </p>
               </div>
 
@@ -328,7 +328,7 @@ export function OnboardingWelcomeModal() {
                 {/* Feature-specific Action: Jump into Real Screen */}
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: "4px" }}>
                   <span style={{ fontSize: "12px", color: "#64748B" }}>
-                    💡 นายหน้าเป็นผู้ตัดสินใจในทุกขั้นตอน
+                    💡 คุณเป็นผู้พิจารณาและตัดสินใจดำเนินการเองในทุกขั้นตอน
                   </span>
                   <button
                     type="button"
@@ -356,7 +356,7 @@ export function OnboardingWelcomeModal() {
                       e.currentTarget.style.borderColor = "#2563EB";
                     }}
                   >
-                    <span>🚀 พาไปดูฟีเจอร์นี้ในหน้าจอจริง</span>
+                    <span>🚀 สลับไปดูฟีเจอร์นี้บนหน้าจอจริง</span>
                     <span>→</span>
                   </button>
                 </div>
@@ -437,7 +437,7 @@ export function OnboardingWelcomeModal() {
                     transition: "all 0.15s ease",
                   }}
                 >
-                  <span>{isLastFeature ? "เริ่มทัวร์จริง 🎉" : "ฟีเจอร์ถัดไป →"}</span>
+                  <span>{isLastFeature ? "เริ่มสำรวจหน้าจอจริง 🎉" : "ฟีเจอร์ถัดไป →"}</span>
                 </button>
               </div>
 
@@ -464,7 +464,7 @@ export function OnboardingWelcomeModal() {
                     padding: "6px 10px",
                   }}
                 >
-                  ข้ามไปก่อน
+                  เข้าสู่หน้าทำงานเลย
                 </button>
 
                 <button
@@ -494,7 +494,7 @@ export function OnboardingWelcomeModal() {
                     e.currentTarget.style.transform = "none";
                   }}
                 >
-                  <span>🌟 เริ่มทัวร์ครบทุกฟีเจอร์ในหน้าจริง →</span>
+                  <span>🌟 เริ่มทัวร์ครบทุกฟีเจอร์บนหน้าจอจริง →</span>
                 </button>
               </div>
             </>
@@ -539,7 +539,7 @@ export function OnboardingWelcomeModal() {
                   margin: "0 0 16px 0",
                 }}
               >
-                คลิกเลือกฟีเจอร์ใดก็ได้เพื่อให้ระบบพาไปเปิดและแนะนำในหน้าจอจริงทันที:
+                เลือกฟีเจอร์ที่คุณสนใจ เพื่อสลับไปยังหน้าจอจริงและรับชมคำแนะนำได้ทันที:
               </p>
 
               {/* 9 Feature Catalog Cards Grid */}
@@ -614,7 +614,7 @@ export function OnboardingWelcomeModal() {
                         ✓ {item.highlights[0]}
                       </span>
                       <span style={{ fontSize: "12px", color: "#2563EB", fontWeight: 800 }}>
-                        เริ่มทัวร์ →
+                        ดูหน้าจริง →
                       </span>
                     </div>
                   </button>
@@ -644,7 +644,7 @@ export function OnboardingWelcomeModal() {
                     padding: "6px 10px",
                   }}
                 >
-                  ปิดหน้าต่าง
+                  เข้าสู่หน้าทำงานเลย
                 </button>
 
                 <button
@@ -667,7 +667,7 @@ export function OnboardingWelcomeModal() {
                   onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#162E4F")}
                   onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#0B1E36")}
                 >
-                  <span>เริ่มทัวร์ตามลำดับตั้งแต่ต้น (9 ขั้นตอน)</span>
+                  <span>เริ่มเดินทัวร์หน้าจอจริงตามลำดับ (9 ขั้นตอน)</span>
                   <span>→</span>
                 </button>
               </div>
