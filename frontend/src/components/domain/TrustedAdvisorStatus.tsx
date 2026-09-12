@@ -188,7 +188,7 @@ export function TrustedAdvisorCard({
             {CATEGORY_ICONS[category] || "📋"}
           </div>
           <div>
-            <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 800, color: "#0b1e36" }}>{title}</h3>
+            <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 800, color: "#4a3837" }}>{title}</h3>
             <p style={{ margin: "2px 0 0", fontSize: "12px", color: "var(--slate-500)" }}>{subtitle}</p>
           </div>
         </div>
@@ -206,7 +206,7 @@ export function TrustedAdvisorCard({
           color: "var(--slate-700)",
         }}
       >
-        <span style={{ fontWeight: 700, color: "#0b1e36" }}>สถานะปัจจุบัน: </span>
+        <span style={{ fontWeight: 700, color: "#4a3837" }}>สถานะปัจจุบัน: </span>
         {currentStatus}
       </div>
 
@@ -266,7 +266,7 @@ export function TrustedAdvisorCard({
 
       {/* Advisor Reason */}
       <div style={{ fontSize: "13px", lineHeight: 1.5, color: "var(--slate-600)" }}>
-        <strong style={{ color: "#0b1e36" }}>มุมมองที่ปรึกษา (Advisor Perspective): </strong>
+        <strong style={{ color: "#4a3837" }}>มุมมองที่ปรึกษา (Advisor Perspective): </strong>
         {advisorReason}
       </div>
 
@@ -284,7 +284,7 @@ export function TrustedAdvisorCard({
           }}
         >
           <div style={{ fontSize: "12px", color: "var(--slate-500)" }}>
-            <span style={{ fontWeight: 700, color: "#0b1e36" }}>คำแนะนำถัดไป: </span>
+            <span style={{ fontWeight: 700, color: "#4a3837" }}>คำแนะนำถัดไป: </span>
             {recommendedNextStep}
           </div>
           {primaryActionLabel && onActionClick && (
@@ -328,7 +328,7 @@ export function TrustedAdvisorFrameworkBanner() {
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
             <span style={{ fontSize: "18px" }}>🤝</span>
-            <h4 style={{ margin: 0, fontSize: "14px", fontWeight: 800, color: "#0b1e36" }}>
+            <h4 style={{ margin: 0, fontSize: "14px", fontWeight: 800, color: "#4a3837" }}>
               Krungsri Trusted Advisor Framework
             </h4>
             <span
@@ -336,7 +336,7 @@ export function TrustedAdvisorFrameworkBanner() {
                 fontSize: "12px",
                 fontWeight: 800,
                 backgroundColor: "var(--krungsri-yellow)",
-                color: "#0b1e36",
+                color: "#3b2c2b",
                 padding: "2px 8px",
                 borderRadius: "9999px",
               }}

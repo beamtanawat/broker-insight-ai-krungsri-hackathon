@@ -47,6 +47,7 @@ export function Sidebar({ user, collapsed = false, onToggleCollapse, onMobileClo
       style={{
         width: collapsed ? "72px" : "260px",
         backgroundColor: "var(--bg-sidebar)",
+        background: "linear-gradient(180deg, #5a4544 0%, #3e2e2d 100%)",
         color: "var(--slate-300)",
         display: "flex",
         flexDirection: "column",
@@ -81,7 +82,7 @@ export function Sidebar({ user, collapsed = false, onToggleCollapse, onMobileClo
             alignItems: "center",
             justifyContent: "center",
             fontSize: "20px",
-            color: "#0b1e36",
+            color: "#3b2c2b",
             fontWeight: 900,
             flexShrink: 0,
             boxShadow: "0 0 14px rgba(254, 203, 0, 0.4)",
@@ -211,8 +212,8 @@ export function Sidebar({ user, collapsed = false, onToggleCollapse, onMobileClo
             margin: "0 12px 14px 12px",
             padding: "18px 14px",
             borderRadius: "14px",
-            background: "linear-gradient(145deg, rgba(14, 28, 48, 0.95) 0%, rgba(9, 18, 32, 0.98) 100%)",
-            border: "1px solid rgba(254, 203, 0, 0.25)",
+            background: "linear-gradient(145deg, rgba(58, 44, 43, 0.95) 0%, rgba(41, 31, 30, 0.98) 100%)",
+            border: "1px solid rgba(254, 203, 0, 0.35)",
             boxShadow: "0 4px 16px rgba(0, 0, 0, 0.25)",
             textAlign: "center",
           }}

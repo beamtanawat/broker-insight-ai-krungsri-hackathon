@@ -386,7 +386,7 @@ export default function MyProtectionPage() {
     <div
       style={{
         padding: "10px 14px",
-        backgroundColor: "#0B1E36",
+        backgroundColor: "#5a4544",
         color: "#ffffff",
         display: "flex",
         justifyContent: "space-between",
@@ -458,7 +458,7 @@ export default function MyProtectionPage() {
               alignItems: "center",
               justifyContent: "center",
               lineHeight: 1,
-              border: "1.5px solid #0B1E36",
+              border: "1.5px solid #5a4544",
             }}
           >
             3
@@ -493,7 +493,7 @@ export default function MyProtectionPage() {
   const mobileBottomBar = (
     <div
       style={{
-        backgroundColor: "#0B1E36",
+        backgroundColor: "#5a4544",
         borderTop: "1px solid rgba(255, 255, 255, 0.08)",
         display: "flex",
         alignItems: "center",
@@ -582,9 +582,9 @@ export default function MyProtectionPage() {
               fontWeight: 700,
               cursor: "pointer",
               border: "none",
-              backgroundColor: activeTab === "dashboard" ? "#0B1E36" : "#E2E8F0",
+              backgroundColor: activeTab === "dashboard" ? "#5a4544" : "#E2E8F0",
               color: activeTab === "dashboard" ? "#FECB00" : "#475569",
-              boxShadow: activeTab === "dashboard" ? "0 2px 6px rgba(11,30,54,0.3)" : "none",
+              boxShadow: activeTab === "dashboard" ? "0 2px 6px rgba(90,69,68,0.3)" : "none",
               display: "flex",
               alignItems: "center",
               gap: "6px",
@@ -603,9 +603,9 @@ export default function MyProtectionPage() {
               fontWeight: 700,
               cursor: "pointer",
               border: "none",
-              backgroundColor: activeTab === "reports" ? "#0B1E36" : "#E2E8F0",
+              backgroundColor: activeTab === "reports" ? "#5a4544" : "#E2E8F0",
               color: activeTab === "reports" ? "#FECB00" : "#475569",
-              boxShadow: activeTab === "reports" ? "0 2px 6px rgba(11,30,54,0.3)" : "none",
+              boxShadow: activeTab === "reports" ? "0 2px 6px rgba(90,69,68,0.3)" : "none",
               display: "flex",
               alignItems: "center",
               gap: "6px",
@@ -649,13 +649,13 @@ export default function MyProtectionPage() {
         <div
           style={{
             position: "relative",
-            background: "linear-gradient(135deg, #0B1E36 0%, #162E4F 60%, #1A365D 100%)",
+            background: "linear-gradient(135deg, #4a3837 0%, #5a4544 100%)",
             borderRadius: "14px",
             padding: "14px",
             color: "#ffffff",
             overflow: "hidden",
             marginBottom: "12px",
-            boxShadow: "0 4px 14px rgba(11,30,54,0.25)",
+            boxShadow: "0 4px 14px rgba(90,69,68,0.25)",
             border: "1px solid rgba(255,255,255,0.08)",
           }}
         >

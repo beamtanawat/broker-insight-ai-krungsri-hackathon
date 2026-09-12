@@ -90,7 +90,7 @@ export class ErrorBoundary extends Component<Props, State> {
               style={{
                 fontSize: "1.25rem",
                 fontWeight: 800,
-                color: "#0B1E36",
+                color: "#4a3837",
                 marginBottom: "8px",
                 fontFamily: "var(--font-ui-thai)",
               }}
@@ -121,7 +121,7 @@ export class ErrorBoundary extends Component<Props, State> {
                   borderRadius: "8px",
                   border: "none",
                   backgroundColor: "var(--krungsri-yellow, #FECB00)",
-                  color: "#0B1E36",
+                  color: "#3b2c2b",
                   fontWeight: 700,
                   fontSize: "0.875rem",
                   cursor: "pointer",

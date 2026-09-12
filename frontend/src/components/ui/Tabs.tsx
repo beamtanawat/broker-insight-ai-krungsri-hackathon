@@ -141,7 +141,7 @@ export function Tabs({ tabs, activeTab, onChange, variant = "underline" }: TabsP
               color: t.disabled
                 ? "var(--slate-300)"
                 : isActive
-                ? "#0b1e36"
+                ? "#4a3837"
                 : "var(--slate-600)",
               borderBottom: `3px solid ${isActive ? "var(--krungsri-yellow)" : "transparent"}`,
               backgroundColor: isActive ? "rgba(254, 203, 0, 0.08)" : "transparent",

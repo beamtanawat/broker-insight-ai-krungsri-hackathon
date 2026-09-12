@@ -144,7 +144,7 @@ export function DashboardHeroBanner({
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor = "#FECB00";
-                e.currentTarget.style.color = "#0B1E36";
+                e.currentTarget.style.color = "#3b2c2b";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.backgroundColor = "rgba(254, 203, 0, 0.16)";

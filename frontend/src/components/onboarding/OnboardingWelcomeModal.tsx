@@ -281,7 +281,7 @@ export function OnboardingWelcomeModal() {
                       style={{
                         fontSize: "17px",
                         fontWeight: 800,
-                        color: "#0B1E36",
+                        color: "#4a3837",
                         margin: "0 0 4px 0",
                       }}
                     >
@@ -429,7 +429,7 @@ export function OnboardingWelcomeModal() {
                     padding: "7px 16px",
                     borderRadius: "8px",
                     border: "none",
-                    backgroundColor: isLastFeature ? "#16A34A" : "#0B1E36",
+                    backgroundColor: isLastFeature ? "#16A34A" : "#5a4544",
                     color: "#ffffff",
                     fontSize: "12.5px",
                     fontWeight: 700,
@@ -478,7 +478,7 @@ export function OnboardingWelcomeModal() {
                     borderRadius: "8px",
                     border: "none",
                     backgroundColor: "#FECB00",
-                    color: "#0B1E36",
+                    color: "#4a3837",
                     fontSize: "14px",
                     fontWeight: 800,
                     cursor: "pointer",
@@ -657,15 +657,15 @@ export function OnboardingWelcomeModal() {
                     padding: "8px 18px",
                     borderRadius: "8px",
                     border: "none",
-                    backgroundColor: "#0B1E36",
+                    backgroundColor: "#5a4544",
                     color: "#FECB00",
                     fontSize: "13px",
                     fontWeight: 700,
                     cursor: "pointer",
                     transition: "all 0.15s ease",
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#162E4F")}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#0B1E36")}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#4a3837")}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#5a4544")}
                 >
                   <span>เริ่มแนะนำทุกฟีเจอร์บนหน้าจอจริง (ตามลำดับ 9 ขั้นตอน)</span>
                   <span>→</span>

@@ -67,7 +67,7 @@ export function CustomerHeader({
             width: "52px",
             height: "52px",
             borderRadius: "50%",
-            backgroundColor: "#0b1e36",
+            backgroundColor: "#5a4544",
             border: "2.5px solid var(--krungsri-yellow)",
             color: "var(--krungsri-yellow)",
             display: "flex",
@@ -89,7 +89,7 @@ export function CustomerHeader({
                 margin: 0,
                 fontSize: "1.25rem",
                 fontWeight: 800,
-                color: "#0b1e36",
+                color: "#4a3837",
                 lineHeight: 1.2,
                 letterSpacing: "-0.01em",
               }}

@@ -336,7 +336,7 @@ export function SmartphoneMockup({
             <div
               style={{
                 padding: "8px 14px",
-                backgroundColor: "#0b1e36",
+                backgroundColor: "#5a4544",
                 color: "#ffffff",
                 display: "flex",
                 justifyContent: "space-between",
@@ -353,7 +353,7 @@ export function SmartphoneMockup({
                     height: "24px",
                     borderRadius: "7px",
                     backgroundColor: "var(--krungsri-yellow)",
-                    color: "#0b1e36",
+                    color: "#3b2c2b",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -467,7 +467,7 @@ export function SmartphoneMockup({
           <div
             style={{
               height: "18px",
-              backgroundColor: bottomBar ? "#0B1E36" : "#ffffff",
+              backgroundColor: bottomBar ? "#5a4544" : "#ffffff",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",

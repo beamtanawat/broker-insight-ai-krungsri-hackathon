@@ -81,12 +81,12 @@ export function ProposalOnePagerModal({
           className="no-print"
           style={{
             padding: "14px 20px",
-            backgroundColor: "#0b1e36",
+            backgroundColor: "#5a4544",
             color: "#ffffff",
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            borderBottom: "1px solid #1e3a5f",
+            borderBottom: "1px solid #4a3837",
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -204,7 +204,7 @@ export function ProposalOnePagerModal({
                   margin: "0 0 4px 0",
                   fontSize: "22px",
                   fontWeight: 800,
-                  color: "#0b1e36",
+                  color: "#4a3837",
                 }}
               >
                 รายงานสรุปข้อเสนอแนะความคุ้มครองรายบุคคล

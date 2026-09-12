@@ -62,13 +62,13 @@ const VARIANT_STYLES: Record<ButtonVariant, { bg: string; text: string; border: 
   },
   gold: {
     bg: "var(--krungsri-yellow)",
-    text: "#0b1e36",
+    text: "#3b2c2b",
     border: "#e5b700",
     hoverBg: "var(--krungsri-yellow-hover)",
   },
   krungsri: {
     bg: "var(--krungsri-yellow)",
-    text: "#0b1e36",
+    text: "#3b2c2b",
     border: "#e5b700",
     hoverBg: "var(--krungsri-yellow-hover)",
   },

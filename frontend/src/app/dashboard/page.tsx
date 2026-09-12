@@ -332,7 +332,7 @@ export default function DashboardPage() {
                       <TableCell>
                         <div style={{ maxWidth: "280px", lineHeight: "var(--lh-reading, 1.7)" }}>
                           {c.why_now ? (
-                            <div style={{ fontSize: "0.75rem", fontFamily: "var(--font-reading-thai)", color: "#0B1E36" }}>
+                            <div style={{ fontSize: "0.75rem", fontFamily: "var(--font-reading-thai)", color: "#4a3837" }}>
                               <span style={{ color: "#5a4544", fontWeight: 700, marginRight: "4px", fontFamily: "var(--font-ui-thai)" }}>🔔 Why now:</span>
                               <span>{c.why_now}</span>
                             </div>

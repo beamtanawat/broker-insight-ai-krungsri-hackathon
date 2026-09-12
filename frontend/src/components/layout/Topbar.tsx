@@ -140,7 +140,7 @@ export function Topbar({ title, subtitle, user, actions, onMobileMenuToggle }: T
             style={{
               fontSize: "var(--fs-md)",
               fontWeight: 800,
-              color: "#0b1e36",
+              color: "#4a3837",
               margin: 0,
               lineHeight: 1.2,
               overflow: "hidden",

@@ -349,7 +349,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                           fontSize: "12px",
                           fontWeight: 700,
                           color: item.badgeColor || "var(--krungsri-navy)",
-                          backgroundColor: `${item.badgeColor || "#0b1e36"}14`,
+                          backgroundColor: `${item.badgeColor || "#5a4544"}14`,
                           padding: "2px 7px",
                           borderRadius: "var(--radius-full)",
                         }}
