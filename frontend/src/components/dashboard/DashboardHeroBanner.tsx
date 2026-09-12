@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import type { User } from "@/types";
+import { useOnboardingTour } from "@/context/OnboardingTourContext";
 
 interface DashboardHeroBannerProps {
   user: User | null;
@@ -14,6 +15,7 @@ export function DashboardHeroBanner({
   tasksCount = 14,
 }: DashboardHeroBannerProps) {
   const brokerName = user?.full_name ? user.full_name.split(" ")[0] : "สมชาย";
+  const { openWelcomeModal } = useOnboardingTour();
 
   return (
     <div
@@ -121,6 +123,39 @@ export function DashboardHeroBanner({
           >
             ใช้พลังของ AI เพื่อดูแลลูกค้าให้ดียิ่งขึ้น ในทุกโอกาสของชีวิต
           </p>
+
+          <div style={{ marginTop: "12px", display: "flex", gap: "10px", alignItems: "center" }}>
+            <button
+              onClick={() => openWelcomeModal()}
+              type="button"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "6px 14px",
+                borderRadius: "8px",
+                backgroundColor: "rgba(254, 203, 0, 0.16)",
+                border: "1px solid rgba(254, 203, 0, 0.6)",
+                color: "#FACC15",
+                fontSize: "0.8125rem",
+                fontWeight: 700,
+                cursor: "pointer",
+                transition: "all 0.15s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "#FECB00";
+                e.currentTarget.style.color = "#0B1E36";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "rgba(254, 203, 0, 0.16)";
+                e.currentTarget.style.color = "#FACC15";
+              }}
+              title="เปิดคู่มือและทัวร์แนะนำทุกฟีเจอร์ของระบบทีละฟีเจอร์"
+            >
+              <span>🧭</span>
+              <span>แนะนำฟีเจอร์ทั้งหมดของระบบ</span>
+            </button>
+          </div>
         </div>
 
         {/* Right: Slogan & Motto Box */}

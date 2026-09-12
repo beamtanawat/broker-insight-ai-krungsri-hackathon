@@ -32,6 +32,7 @@ interface OnboardingTourContextType {
   completeTour: () => void;
   replayTour: (roleOverride?: string) => void;
   closeWelcome: () => void;
+  openWelcomeModal: () => void;
   showFeatureCatalog: boolean;
   openFeatureCatalog: () => void;
   closeFeatureCatalog: () => void;
@@ -331,6 +332,13 @@ export function OnboardingTourProvider({ user, children }: OnboardingTourProvide
     startTour(roleOverride, 0);
   }, [startTour]);
 
+  const openWelcomeModal = useCallback(() => {
+    setOnboardingState("welcome");
+    setShowWelcome(true);
+    setIsTourActive(false);
+    setShowFeatureCatalog(false);
+  }, []);
+
   const openFeatureCatalog = useCallback(() => {
     setShowWelcome(false);
     setIsTourActive(false);
@@ -363,6 +371,7 @@ export function OnboardingTourProvider({ user, children }: OnboardingTourProvide
         completeTour,
         replayTour,
         closeWelcome,
+        openWelcomeModal,
         showFeatureCatalog,
         openFeatureCatalog,
         closeFeatureCatalog,

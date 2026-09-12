@@ -12,10 +12,11 @@ export function OnboardingWelcomeModal() {
     closeFeatureCatalog,
   } = useOnboardingTour();
 
-  const [activeView, setActiveView] = useState<"welcome" | "catalog">("welcome");
+  // Mode: "step-by-step" (interactive feature-by-feature walkthrough) or "catalog" (grid)
+  const [viewMode, setViewMode] = useState<"step-by-step" | "catalog">("step-by-step");
+  const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
 
   const isOpen = showWelcome || showFeatureCatalog;
-  const isCatalogMode = showFeatureCatalog || activeView === "catalog";
 
   if (!isOpen) return null;
 
@@ -35,6 +36,25 @@ export function OnboardingWelcomeModal() {
     startTour(undefined, stepIndex);
   };
 
+  const currentFeature = FEATURE_CATALOG_ITEMS[currentFeatureIndex] || FEATURE_CATALOG_ITEMS[0];
+  const isFirstFeature = currentFeatureIndex === 0;
+  const isLastFeature = currentFeatureIndex === FEATURE_CATALOG_ITEMS.length - 1;
+
+  const handlePrevFeature = () => {
+    if (currentFeatureIndex > 0) {
+      setCurrentFeatureIndex(currentFeatureIndex - 1);
+    }
+  };
+
+  const handleNextFeature = () => {
+    if (currentFeatureIndex < FEATURE_CATALOG_ITEMS.length - 1) {
+      setCurrentFeatureIndex(currentFeatureIndex + 1);
+    } else {
+      // If at end, start full tour
+      handleStartFullTour();
+    }
+  };
+
   return (
     <div
       role="dialog"
@@ -43,7 +63,7 @@ export function OnboardingWelcomeModal() {
       style={{
         position: "fixed",
         inset: 0,
-        backgroundColor: "rgba(11, 30, 54, 0.76)",
+        backgroundColor: "rgba(11, 30, 54, 0.78)",
         backdropFilter: "blur(8px)",
         WebkitBackdropFilter: "blur(8px)",
         display: "flex",
@@ -57,7 +77,7 @@ export function OnboardingWelcomeModal() {
       <div
         style={{
           width: "100%",
-          maxWidth: isCatalogMode ? "680px" : "560px",
+          maxWidth: viewMode === "catalog" ? "720px" : "620px",
           backgroundColor: "#ffffff",
           borderRadius: "18px",
           boxShadow: "0 25px 50px -12px rgba(11, 30, 54, 0.45)",
@@ -77,9 +97,9 @@ export function OnboardingWelcomeModal() {
           }}
         />
 
-        <div style={{ padding: "28px 26px 24px" }}>
-          {/* Header Row: Badge & Close Button */}
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "12px" }}>
+        <div style={{ padding: "26px 26px 22px" }}>
+          {/* Header Row: Badge & Mode Switcher & Close Button */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "14px", flexWrap: "wrap", gap: "8px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               <span
                 style={{
@@ -107,229 +127,379 @@ export function OnboardingWelcomeModal() {
               </span>
             </div>
 
-            <button
-              type="button"
-              onClick={handleClose}
-              aria-label="ปิด"
-              style={{
-                background: "none",
-                border: "none",
-                fontSize: "16px",
-                color: "#94A3B8",
-                cursor: "pointer",
-                padding: "4px",
-                lineHeight: 1,
-              }}
-            >
-              ✕
-            </button>
-          </div>
-
-          {!isCatalogMode ? (
-            /* ─── View 1: Main Welcome & Quick Start ─── */
-            <>
-              <h2
-                id="welcome-title"
-                style={{
-                  fontSize: "23px",
-                  fontWeight: 800,
-                  color: "#0F172A",
-                  margin: "0 0 8px 0",
-                  lineHeight: 1.3,
-                }}
-              >
-                ยินดีต้อนรับสู่ Broker Insight AI
-              </h2>
-
-              <p
-                className="font-reading"
-                style={{
-                  fontFamily: "var(--font-reading-thai)",
-                  fontSize: "14.5px",
-                  color: "#475569",
-                  lineHeight: "var(--lh-reading)",
-                  margin: "0 0 18px 0",
-                }}
-              >
-                ผู้ช่วยอัจฉริยะสำหรับช่วยให้นายหน้าประกันเข้าใจลูกค้า
-                จัดลำดับความสำคัญ และตัดสินใจได้อย่างมีประสิทธิภาพ
-              </p>
-
-              {/* 4 Flagship Feature Pillars */}
+            {/* View Mode Toggle Switch */}
+            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
               <div
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: "10px",
-                  marginBottom: "22px",
+                  display: "inline-flex",
+                  backgroundColor: "#F1F5F9",
+                  padding: "2px",
+                  borderRadius: "8px",
+                  border: "1px solid #E2E8F0",
                 }}
               >
-                <div
+                <button
+                  type="button"
+                  onClick={() => setViewMode("step-by-step")}
                   style={{
-                    backgroundColor: "#F8FAFC",
-                    border: "1px solid #E2E8F0",
-                    borderRadius: "12px",
-                    padding: "12px",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "4px",
+                    padding: "4px 10px",
+                    borderRadius: "6px",
+                    border: "none",
+                    backgroundColor: viewMode === "step-by-step" ? "#ffffff" : "transparent",
+                    color: viewMode === "step-by-step" ? "#0F172A" : "#64748B",
+                    fontSize: "12px",
+                    fontWeight: viewMode === "step-by-step" ? 800 : 600,
+                    cursor: "pointer",
+                    boxShadow: viewMode === "step-by-step" ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
+                    transition: "all 0.15s ease",
                   }}
                 >
+                  🎯 แนะนำทีละฟีเจอร์
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setViewMode("catalog")}
+                  style={{
+                    padding: "4px 10px",
+                    borderRadius: "6px",
+                    border: "none",
+                    backgroundColor: viewMode === "catalog" ? "#ffffff" : "transparent",
+                    color: viewMode === "catalog" ? "#0F172A" : "#64748B",
+                    fontSize: "12px",
+                    fontWeight: viewMode === "catalog" ? 800 : 600,
+                    cursor: "pointer",
+                    boxShadow: viewMode === "catalog" ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
+                    transition: "all 0.15s ease",
+                  }}
+                >
+                  📑 สารบัญทั้งหมด ({FEATURE_CATALOG_ITEMS.length})
+                </button>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleClose}
+                aria-label="ปิด"
+                style={{
+                  background: "none",
+                  border: "none",
+                  fontSize: "16px",
+                  color: "#94A3B8",
+                  cursor: "pointer",
+                  padding: "4px",
+                  lineHeight: 1,
+                }}
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+
+          {viewMode === "step-by-step" ? (
+            /* ─── View 1: Step-by-Step Feature Walkthrough Carousel ─── */
+            <>
+              <div style={{ marginBottom: "14px" }}>
+                <h2
+                  id="welcome-title"
+                  style={{
+                    fontSize: "21px",
+                    fontWeight: 800,
+                    color: "#0F172A",
+                    margin: "0 0 4px 0",
+                    lineHeight: 1.3,
+                  }}
+                >
+                  แนะนำฟีเจอร์ทั้งหมดในระบบ Broker Insight AI
+                </h2>
+                <p
+                  className="font-reading"
+                  style={{
+                    fontFamily: "var(--font-reading-thai)",
+                    fontSize: "13.5px",
+                    color: "#475569",
+                    lineHeight: "var(--lh-reading)",
+                    margin: 0,
+                  }}
+                >
+                  ระบบผู้ช่วยอัจฉริยะสำหรับนายหน้าประกัน ดูสรุปทีละฟีเจอร์ หรือกดเริ่มทัวร์ในหน้าจริงได้ทันที
+                </p>
+              </div>
+
+              {/* Active Feature Spotlight Card */}
+              <div
+                style={{
+                  backgroundColor: "#F8FAFC",
+                  border: "1px solid #E2E8F0",
+                  borderRadius: "14px",
+                  padding: "18px 20px",
+                  marginBottom: "16px",
+                  boxShadow: "0 2px 8px rgba(15, 23, 42, 0.04)",
+                  position: "relative",
+                  transition: "all 0.2s ease",
+                }}
+              >
+                {/* Step Metadata Header */}
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    <span style={{ fontSize: "18px" }}>🧠</span>
-                    <strong style={{ fontSize: "13px", color: "#0F172A", fontWeight: 700 }}>AI Why Now & SHAP</strong>
+                    <span
+                      style={{
+                        fontSize: "12px",
+                        fontWeight: 800,
+                        color: "#1D4ED8",
+                        backgroundColor: "#EFF6FF",
+                        border: "1px solid #BFDBFE",
+                        padding: "3px 10px",
+                        borderRadius: "999px",
+                      }}
+                    >
+                      ฟีเจอร์ที่ {currentFeatureIndex + 1} จาก {FEATURE_CATALOG_ITEMS.length}
+                    </span>
+                    <span
+                      style={{
+                        fontSize: "12px",
+                        fontWeight: 700,
+                        color: "#475569",
+                        backgroundColor: "#E2E8F0",
+                        padding: "3px 8px",
+                        borderRadius: "6px",
+                      }}
+                    >
+                      {currentFeature.tag}
+                    </span>
                   </div>
-                  <p className="font-reading" style={{ fontSize: "12px", color: "#64748B", margin: 0, lineHeight: 1.45 }}>
-                    ประเมินคะแนนเร่งด่วน พร้อมแจกแจงเหตุผลเชิงบวก/ลบด้วย TreeSHAP ภาษาไทย
-                  </p>
+
+                  <span style={{ fontSize: "12px", color: "#64748B", fontWeight: 600 }}>
+                    ปลายทาง: <code style={{ backgroundColor: "#E2E8F0", padding: "1px 5px", borderRadius: "4px" }}>{currentFeature.route}</code>
+                  </span>
                 </div>
 
-                <div
-                  style={{
-                    backgroundColor: "#F8FAFC",
-                    border: "1px solid #E2E8F0",
-                    borderRadius: "12px",
-                    padding: "12px",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "4px",
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    <span style={{ fontSize: "18px" }}>📍</span>
-                    <strong style={{ fontSize: "13px", color: "#0F172A", fontWeight: 700 }}>แผนที่ลูกค้า & นำทางจริง</strong>
+                {/* Feature Title & Subtitle */}
+                <div style={{ display: "flex", alignItems: "flex-start", gap: "12px", marginBottom: "12px" }}>
+                  <span style={{ fontSize: "32px", lineHeight: 1 }}>{currentFeature.icon}</span>
+                  <div>
+                    <h3
+                      style={{
+                        fontSize: "17px",
+                        fontWeight: 800,
+                        color: "#0B1E36",
+                        margin: "0 0 4px 0",
+                      }}
+                    >
+                      {currentFeature.title}
+                    </h3>
+                    <p
+                      className="font-reading"
+                      style={{
+                        fontFamily: "var(--font-reading-thai)",
+                        fontSize: "13.5px",
+                        color: "#334155",
+                        margin: 0,
+                        lineHeight: 1.5,
+                      }}
+                    >
+                      {currentFeature.subtitle}
+                    </p>
                   </div>
-                  <p className="font-reading" style={{ fontSize: "12px", color: "#64748B", margin: 0, lineHeight: 1.45 }}>
-                    ค้นหาลูกค้ารอบตัวในรัศมี 5–20 กม. พร้อมปุ่มนำทาง Google Maps On-Demand
-                  </p>
                 </div>
 
+                {/* Feature Key Highlights (Bullet Points) */}
                 <div
                   style={{
-                    backgroundColor: "#F8FAFC",
+                    backgroundColor: "#ffffff",
                     border: "1px solid #E2E8F0",
-                    borderRadius: "12px",
-                    padding: "12px",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "4px",
+                    borderRadius: "10px",
+                    padding: "12px 14px",
+                    marginBottom: "14px",
                   }}
                 >
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    <span style={{ fontSize: "18px" }}>📊</span>
-                    <strong style={{ fontSize: "13px", color: "#0F172A", fontWeight: 700 }}>ศูนย์วิเคราะห์ข้อมูลธุรกิจ</strong>
+                  <div style={{ fontSize: "12px", fontWeight: 700, color: "#64748B", textTransform: "uppercase", marginBottom: "6px", letterSpacing: "0.03em" }}>
+                    จุดเด่นและความสามารถสำคัญ:
                   </div>
-                  <p className="font-reading" style={{ fontSize: "12px", color: "#64748B", margin: 0, lineHeight: 1.45 }}>
-                    วิเคราะห์ช่องว่างความคุ้มครอง อัตราตอบรับ และผลการดำเนินงานของพอร์ตลูกค้า
-                  </p>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+                    {currentFeature.highlights.map((h, idx) => (
+                      <div key={idx} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#1E293B" }}>
+                        <span style={{ color: "#16A34A", fontWeight: 800, fontSize: "12px" }}>✓</span>
+                        <span>{h}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
-                <div
-                  style={{
-                    backgroundColor: "#F8FAFC",
-                    border: "1px solid #E2E8F0",
-                    borderRadius: "12px",
-                    padding: "12px",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "4px",
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    <span style={{ fontSize: "18px" }}>🛡️</span>
-                    <strong style={{ fontSize: "13px", color: "#0F172A", fontWeight: 700 }}>ตรวจเกณฑ์ 100%</strong>
-                  </div>
-                  <p className="font-reading" style={{ fontSize: "12px", color: "#64748B", margin: 0, lineHeight: 1.45 }}>
-                    Hard Eligibility Gate กรองเงื่อนไขตายตัว 0% ข้อเสนอผิดเกณฑ์ นายหน้าตัดสินใจเอง
-                  </p>
+                {/* Feature-specific Action: Jump into Real Screen */}
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: "4px" }}>
+                  <span style={{ fontSize: "12px", color: "#64748B" }}>
+                    💡 นายหน้าเป็นผู้ตัดสินใจในทุกขั้นตอน
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => handleSelectFeature(currentFeature.stepIndex)}
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "6px",
+                      padding: "6px 14px",
+                      borderRadius: "6px",
+                      border: "1px solid #2563EB",
+                      backgroundColor: "#EFF6FF",
+                      color: "#1D4ED8",
+                      fontSize: "12.5px",
+                      fontWeight: 700,
+                      cursor: "pointer",
+                      transition: "all 0.15s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = "#DBEAFE";
+                      e.currentTarget.style.borderColor = "#1D4ED8";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = "#EFF6FF";
+                      e.currentTarget.style.borderColor = "#2563EB";
+                    }}
+                  >
+                    <span>🚀 พาไปดูฟีเจอร์นี้ในหน้าจอจริง</span>
+                    <span>→</span>
+                  </button>
                 </div>
               </div>
 
-              {/* Action Buttons */}
+              {/* Stepper Dot Indicators & Prev/Next Carousel Controls */}
               <div
                 style={{
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
-                  paddingTop: "8px",
+                  marginBottom: "16px",
+                  padding: "0 4px",
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={handlePrevFeature}
+                  disabled={isFirstFeature}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    padding: "7px 14px",
+                    borderRadius: "8px",
+                    border: "1px solid #CBD5E1",
+                    backgroundColor: isFirstFeature ? "#F8FAFC" : "#ffffff",
+                    color: isFirstFeature ? "#94A3B8" : "#334155",
+                    fontSize: "12.5px",
+                    fontWeight: 700,
+                    cursor: isFirstFeature ? "not-allowed" : "pointer",
+                    transition: "all 0.15s ease",
+                  }}
+                >
+                  <span>← ย้อนกลับ</span>
+                </button>
+
+                {/* 9 Stepper Dots */}
+                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                  {FEATURE_CATALOG_ITEMS.map((item, idx) => {
+                    const isActive = idx === currentFeatureIndex;
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => setCurrentFeatureIndex(idx)}
+                        title={`ข้ามไปยัง ${item.title}`}
+                        style={{
+                          width: isActive ? "24px" : "8px",
+                          height: "8px",
+                          borderRadius: "4px",
+                          backgroundColor: isActive ? "#FECB00" : "#CBD5E1",
+                          border: "none",
+                          padding: 0,
+                          cursor: "pointer",
+                          transition: "all 0.2s ease",
+                        }}
+                      />
+                    );
+                  })}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleNextFeature}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    padding: "7px 16px",
+                    borderRadius: "8px",
+                    border: "none",
+                    backgroundColor: isLastFeature ? "#16A34A" : "#0B1E36",
+                    color: "#ffffff",
+                    fontSize: "12.5px",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    transition: "all 0.15s ease",
+                  }}
+                >
+                  <span>{isLastFeature ? "เริ่มทัวร์จริง 🎉" : "ฟีเจอร์ถัดไป →"}</span>
+                </button>
+              </div>
+
+              {/* Bottom Actions Row */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  paddingTop: "12px",
                   borderTop: "1px solid #F1F5F9",
                 }}
               >
                 <button
                   type="button"
-                  onClick={() => setActiveView("catalog")}
+                  onClick={handleClose}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: "#64748B",
+                    fontSize: "13px",
+                    fontWeight: 600,
+                    cursor: "pointer",
+                    padding: "6px 10px",
+                  }}
+                >
+                  ข้ามไปก่อน
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleStartFullTour}
                   style={{
                     display: "inline-flex",
                     alignItems: "center",
-                    gap: "6px",
-                    padding: "9px 14px",
+                    gap: "8px",
+                    padding: "10px 22px",
                     borderRadius: "8px",
-                    border: "1px solid #CBD5E1",
-                    backgroundColor: "#ffffff",
-                    color: "#334155",
-                    fontSize: "13px",
-                    fontWeight: 700,
+                    border: "none",
+                    backgroundColor: "#FECB00",
+                    color: "#0B1E36",
+                    fontSize: "14px",
+                    fontWeight: 800,
                     cursor: "pointer",
+                    boxShadow: "0 3px 10px rgba(254, 203, 0, 0.45)",
                     transition: "all 0.15s ease",
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#F8FAFC")}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#ffffff")}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = "#EAB308";
+                    e.currentTarget.style.transform = "translateY(-1px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "#FECB00";
+                    e.currentTarget.style.transform = "none";
+                  }}
                 >
-                  <span>🧭</span>
-                  <span>เลือกดูเฉพาะฟีเจอร์</span>
+                  <span>🌟 เริ่มทัวร์ครบทุกฟีเจอร์ในหน้าจริง →</span>
                 </button>
-
-                <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                  <button
-                    type="button"
-                    onClick={handleClose}
-                    style={{
-                      background: "none",
-                      border: "none",
-                      color: "#64748B",
-                      fontSize: "13px",
-                      fontWeight: 600,
-                      cursor: "pointer",
-                      padding: "8px 12px",
-                    }}
-                  >
-                    ข้ามไปก่อน
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={handleStartFullTour}
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: "8px",
-                      padding: "10px 22px",
-                      borderRadius: "8px",
-                      border: "none",
-                      backgroundColor: "#FECB00",
-                      color: "#0B1E36",
-                      fontSize: "14px",
-                      fontWeight: 800,
-                      cursor: "pointer",
-                      boxShadow: "0 3px 10px rgba(254, 203, 0, 0.45)",
-                      transition: "all 0.15s ease",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = "#EAB308";
-                      e.currentTarget.style.transform = "translateY(-1px)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = "#FECB00";
-                      e.currentTarget.style.transform = "none";
-                    }}
-                  >
-                    <span>เริ่มแนะนำระบบ →</span>
-                  </button>
-                </div>
               </div>
             </>
           ) : (
-            /* ─── View 2: Feature Catalog / Jump to Feature ─── */
+            /* ─── View 2: Complete Feature Catalog Grid (All 9 Features) ─── */
             <>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "6px" }}>
                 <h2
@@ -341,11 +511,11 @@ export function OnboardingWelcomeModal() {
                     margin: 0,
                   }}
                 >
-                  สารบัญฟีเจอร์ Broker Insight AI
+                  สารบัญฟีเจอร์ทั้งหมดในระบบ ({FEATURE_CATALOG_ITEMS.length} ฟีเจอร์)
                 </h2>
                 <button
                   type="button"
-                  onClick={() => setActiveView("welcome")}
+                  onClick={() => setViewMode("step-by-step")}
                   style={{
                     background: "none",
                     border: "none",
@@ -355,7 +525,7 @@ export function OnboardingWelcomeModal() {
                     cursor: "pointer",
                   }}
                 >
-                  ← ย้อนกลับ
+                  ← กลับสู่โหมดแนะนำทีละฟีเจอร์
                 </button>
               </div>
 
@@ -369,10 +539,10 @@ export function OnboardingWelcomeModal() {
                   margin: "0 0 16px 0",
                 }}
               >
-                คลิกเลือกโมดูลที่ต้องการให้ระบบพาไปชมและแนะนำการใช้งานแบบเจาะลึกได้ทันที:
+                คลิกเลือกฟีเจอร์ใดก็ได้เพื่อให้ระบบพาไปเปิดและแนะนำในหน้าจอจริงทันที:
               </p>
 
-              {/* 6 Feature Catalog Cards Grid */}
+              {/* 9 Feature Catalog Cards Grid */}
               <div
                 style={{
                   display: "grid",
@@ -497,7 +667,7 @@ export function OnboardingWelcomeModal() {
                   onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#162E4F")}
                   onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#0B1E36")}
                 >
-                  <span>หรือเริ่มทัวร์ตามลำดับปกติ (10 ขั้นตอน)</span>
+                  <span>เริ่มทัวร์ตามลำดับตั้งแต่ต้น (9 ขั้นตอน)</span>
                   <span>→</span>
                 </button>
               </div>

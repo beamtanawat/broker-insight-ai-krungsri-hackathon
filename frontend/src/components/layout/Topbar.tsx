@@ -26,7 +26,7 @@ const ROLE_BADGE: Record<string, { variant: "danger" | "warning" | "info"; label
 
 export function Topbar({ title, subtitle, user, actions, onMobileMenuToggle }: TopbarProps) {
   const router = useRouter();
-  const { replayTour } = useOnboardingTour();
+  const { replayTour, openWelcomeModal } = useOnboardingTour();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -265,37 +265,38 @@ export function Topbar({ title, subtitle, user, actions, onMobileMenuToggle }: T
 
         {/* Help / Guided Tour button */}
         <button
-          onClick={() => replayTour()}
+          onClick={() => openWelcomeModal()}
           data-tour="topbar-help"
-          aria-label="แนะนำการใช้งาน (Feature Tour)"
-          title="แนะนำการใช้งาน (เริ่มทัวร์แนะนำระบบ)"
+          aria-label="แนะนำฟีเจอร์ระบบ (Feature Tour)"
+          title="แนะนำฟีเจอร์ทั้งหมดของระบบ (เปิดคู่มือแนะนำทีละฟีเจอร์)"
           style={{
-            display: "flex",
+            display: "inline-flex",
             alignItems: "center",
-            justifyContent: "center",
-            width: "36px",
-            height: "36px",
-            borderRadius: "50%",
-            border: "1px solid #E2E8F0",
-            backgroundColor: "#ffffff",
+            gap: "6px",
+            padding: "5px 12px",
+            borderRadius: "999px",
+            border: "1px solid #FEF08A",
+            backgroundColor: "#FEFCE8",
             cursor: "pointer",
-            fontSize: "15px",
+            fontSize: "0.8125rem",
             fontWeight: 700,
-            color: "#475569",
+            color: "#854D0E",
             transition: "all var(--motion-fast) ease",
+            boxShadow: "0 1px 3px rgba(180, 83, 9, 0.08)",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "#FEF3C7";
-            e.currentTarget.style.borderColor = "#FDE68A";
-            e.currentTarget.style.color = "#B45309";
+            e.currentTarget.style.backgroundColor = "#FEF08A";
+            e.currentTarget.style.borderColor = "#FDE047";
+            e.currentTarget.style.transform = "translateY(-1px)";
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "#ffffff";
-            e.currentTarget.style.borderColor = "#E2E8F0";
-            e.currentTarget.style.color = "#475569";
+            e.currentTarget.style.backgroundColor = "#FEFCE8";
+            e.currentTarget.style.borderColor = "#FEF08A";
+            e.currentTarget.style.transform = "none";
           }}
         >
-          ?
+          <span style={{ fontSize: "14px" }} aria-hidden="true">✨</span>
+          <span>แนะนำฟีเจอร์</span>
         </button>
 
         {/* Notification Bell with Dropdown */}
@@ -564,7 +565,7 @@ export function Topbar({ title, subtitle, user, actions, onMobileMenuToggle }: T
                     role="menuitem"
                     onClick={() => {
                       setUserMenuOpen(false);
-                      replayTour();
+                      openWelcomeModal();
                     }}
                     style={{
                       width: "100%",

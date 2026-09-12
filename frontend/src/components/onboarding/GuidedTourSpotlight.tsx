@@ -152,6 +152,7 @@ export function GuidedTourSpotlight() {
 
   const isLastStep = currentStepIndex === totalSteps - 1;
   const isFirstStep = currentStepIndex === 0;
+  const nextStepObj = currentStepIndex + 1 < steps.length ? steps[currentStepIndex + 1] : null;
 
   return (
     <div
@@ -554,23 +555,26 @@ export function GuidedTourSpotlight() {
             <div style={{ display: "flex", gap: "8px" }}>
               <button
                 type="button"
+                id="tour-btn-next"
                 onClick={nextStep}
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
                   gap: "6px",
-                  padding: "8px 22px",
+                  padding: "8px 20px",
                   borderRadius: "8px",
                   border: "none",
                   backgroundColor: isLastStep ? "#16A34A" : "#2563EB",
                   color: "#ffffff",
-                  fontSize: "13.5px",
+                  fontSize: "13px",
                   fontWeight: 800,
                   cursor: "pointer",
                   boxShadow: isLastStep
                     ? "0 3px 10px rgba(22, 163, 74, 0.35)"
                     : "0 3px 10px rgba(37, 99, 235, 0.35)",
                   transition: "all 0.15s ease",
+                  maxWidth: "280px",
+                  whiteSpace: "nowrap",
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.filter = "brightness(1.1)";
@@ -581,7 +585,9 @@ export function GuidedTourSpotlight() {
                   e.currentTarget.style.transform = "none";
                 }}
               >
-                <span>{isLastStep ? "เริ่มใช้งาน" : "ถัดไป"}</span>
+                <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+                  {isLastStep ? "เริ่มใช้งานจริง" : nextStepObj ? `ฟีเจอร์ถัดไป: ${nextStepObj.title}` : "ถัดไป"}
+                </span>
                 <span aria-hidden="true">{isLastStep ? "✓" : "→"}</span>
               </button>
             </div>
