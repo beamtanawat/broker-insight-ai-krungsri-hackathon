@@ -99,12 +99,12 @@ export function DemoPersonaStrip() {
       >
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <span style={{ fontSize: "16px" }}>⚡</span>
-          <span style={{ fontWeight: 800, fontSize: "13px", letterSpacing: "0.02em" }}>
+          <span style={{ fontWeight: 800, fontSize: "14px", letterSpacing: "0.02em" }}>
             กรณีศึกษาและกลุ่มลูกค้าตัวอย่าง (Featured Customer Cases)
           </span>
           <span
             style={{
-              fontSize: "10px",
+              fontSize: "12px",
               background: "var(--krungsri-gold-gradient)",
               color: "var(--krungsri-navy)",
               fontWeight: 800,
@@ -119,7 +119,7 @@ export function DemoPersonaStrip() {
           </span>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "11px", color: "var(--slate-300)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "12px", color: "var(--slate-300)" }}>
           <span style={{ fontWeight: 600 }}>{collapsed ? "คลิกเพื่อเปิดดู 5 กรณีศึกษา ▼" : "คลิกเพื่อย่อ ▲"}</span>
         </div>
       </div>
@@ -169,11 +169,11 @@ export function DemoPersonaStrip() {
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                         <span style={{ fontSize: "15px" }}>{p.icon}</span>
-                        <strong style={{ fontSize: "13px", color: "var(--slate-900)" }}>{p.name}</strong>
+                        <strong style={{ fontSize: "14px", color: "var(--slate-900)" }}>{p.name}</strong>
                       </div>
                       <span
                         style={{
-                          fontSize: "10px",
+                          fontSize: "12px",
                           fontWeight: 700,
                           color: p.badgeColor,
                           backgroundColor: `${p.badgeColor}18`,
@@ -185,11 +185,11 @@ export function DemoPersonaStrip() {
                       </span>
                     </div>
 
-                    <div style={{ fontSize: "11px", color: "var(--slate-500)", marginTop: "4px" }}>
+                    <div style={{ fontSize: "12px", color: "var(--slate-500)", marginTop: "4px" }}>
                       รหัส: <strong>{p.externalRef}</strong> · {p.tier} Tier
                     </div>
 
-                    <div style={{ fontSize: "11px", color: "var(--slate-600)", marginTop: "6px", lineHeight: 1.4 }}>
+                    <div style={{ fontSize: "12px", color: "var(--slate-600)", marginTop: "6px", lineHeight: 1.4 }}>
                       {p.highlight}
                     </div>
 
@@ -197,7 +197,7 @@ export function DemoPersonaStrip() {
                       <div style={{ marginTop: "6px" }}>
                         <span
                           style={{
-                            fontSize: "10px",
+                            fontSize: "12px",
                             fontWeight: 700,
                             backgroundColor: "#eff6ff",
                             color: "#1d4ed8",
@@ -217,7 +217,7 @@ export function DemoPersonaStrip() {
 
                   <div
                     style={{
-                      fontSize: "11px",
+                      fontSize: "12px",
                       fontWeight: 700,
                       color: isActive ? "var(--krungsri-navy)" : "var(--slate-400)",
                       marginTop: "10px",

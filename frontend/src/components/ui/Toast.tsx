@@ -154,7 +154,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
               <span style={{ fontSize: "18px", lineHeight: 1.2, marginTop: "2px" }}>{config.icon}</span>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px" }}>
-                  <strong style={{ fontSize: "var(--fs-xs)", fontWeight: 700, color: "var(--slate-900)" }}>
+                  <strong style={{ fontSize: "14px", fontWeight: 700, color: "var(--slate-900)" }}>
                     {config.title}
                   </strong>
                   <button

@@ -166,6 +166,7 @@ export default function AnalyticsDashboardPage() {
 
       {/* ── 2. Actionable KPI Row ── */}
       <div
+        data-tour="analytics-overview"
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
@@ -176,7 +177,7 @@ export default function AnalyticsDashboardPage() {
         {/* KPI 1: High Priority Proportion */}
         <Card className="hover-lift" noPadding style={{ borderTop: "3px solid #ef4444" }}>
           <div style={{ padding: "18px 20px" }}>
-            <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div style={{ fontSize: "var(--fs-base)", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <span>ลูกค้าความสำคัญสูง</span>
               <span style={{ fontSize: "16px" }}>🔥</span>
             </div>
@@ -192,7 +193,7 @@ export default function AnalyticsDashboardPage() {
         {/* KPI 2: Follow-up Completion Rate */}
         <Card className="hover-lift" noPadding style={{ borderTop: "3px solid var(--krungsri-yellow)" }}>
           <div style={{ padding: "18px 20px" }}>
-            <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div style={{ fontSize: "var(--fs-base)", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <span>อัตราส่งมอบงานติดตาม</span>
               <span style={{ fontSize: "16px" }}>📋</span>
             </div>
@@ -208,7 +209,7 @@ export default function AnalyticsDashboardPage() {
         {/* KPI 3: Recommendation Acceptance Rate */}
         <Card className="hover-lift" noPadding style={{ borderTop: "3px solid #10b981" }}>
           <div style={{ padding: "18px 20px" }}>
-            <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div style={{ fontSize: "var(--fs-base)", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <span>อัตราเห็นชอบคำแนะนำ</span>
               <span style={{ fontSize: "16px" }}>🛡️</span>
             </div>
@@ -224,7 +225,7 @@ export default function AnalyticsDashboardPage() {
         {/* KPI 4: Total AI Workflows */}
         <Card className="hover-lift" noPadding style={{ borderTop: "3px solid #3b82f6" }}>
           <div style={{ padding: "18px 20px" }}>
-            <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div style={{ fontSize: "var(--fs-base)", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <span>การใช้งาน AI สนับสนุน</span>
               <span style={{ fontSize: "16px" }}>⚡</span>
             </div>
@@ -327,7 +328,7 @@ export default function AnalyticsDashboardPage() {
                 <div style={{ width: `${modificationRate}%`, backgroundColor: "#f59e0b", transition: "width 0.4s ease" }} title={`ปรับเปลี่ยน ${modificationRate}%`} />
                 <div style={{ width: `${rejectionRate}%`, backgroundColor: "#ef4444", transition: "width 0.4s ease" }} title={`ปฏิเสธ ${rejectionRate}%`} />
               </div>
-              <div style={{ display: "flex", gap: "12px", marginTop: "6px", fontSize: "11px", color: "var(--slate-500)" }}>
+              <div style={{ display: "flex", gap: "12px", marginTop: "6px", fontSize: "12px", color: "var(--slate-500)" }}>
                 <span style={{ display: "flex", alignItems: "center", gap: "4px" }}><span style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: "#10b981" }} /> เห็นชอบ ({approvalRate}%)</span>
                 <span style={{ display: "flex", alignItems: "center", gap: "4px" }}><span style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: "#f59e0b" }} /> ปรับเปลี่ยน ({modificationRate}%)</span>
                 <span style={{ display: "flex", alignItems: "center", gap: "4px" }}><span style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: "#ef4444" }} /> ปฏิเสธ ({rejectionRate}%)</span>
@@ -338,19 +339,19 @@ export default function AnalyticsDashboardPage() {
               <div className="hover-lift" style={{ padding: "14px 12px", backgroundColor: "var(--success-bg)", border: "1px solid var(--success-border)", borderRadius: "var(--radius-md)" }}>
                 <div style={{ fontSize: "var(--fs-2xl)", fontWeight: 800, color: "var(--success-solid)" }}>{approvalRate}%</div>
                 <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, color: "var(--success-text)", marginTop: "2px" }}>เห็นชอบ (Approve)</div>
-                <div style={{ fontSize: "11px", color: "var(--slate-500)", marginTop: "2px" }}>{recommendations?.approval_count ?? 0} รายการ</div>
+                <div style={{ fontSize: "12px", color: "var(--slate-500)", marginTop: "2px" }}>{recommendations?.approval_count ?? 0} รายการ</div>
               </div>
 
               <div className="hover-lift" style={{ padding: "14px 12px", backgroundColor: "var(--warning-bg)", border: "1px solid var(--warning-border)", borderRadius: "var(--radius-md)" }}>
                 <div style={{ fontSize: "var(--fs-2xl)", fontWeight: 800, color: "var(--warning-solid)" }}>{modificationRate}%</div>
                 <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, color: "var(--warning-text)", marginTop: "2px" }}>ปรับเปลี่ยน (Modify)</div>
-                <div style={{ fontSize: "11px", color: "var(--slate-500)", marginTop: "2px" }}>{recommendations?.modification_count ?? 0} รายการ</div>
+                <div style={{ fontSize: "12px", color: "var(--slate-500)", marginTop: "2px" }}>{recommendations?.modification_count ?? 0} รายการ</div>
               </div>
 
               <div className="hover-lift" style={{ padding: "14px 12px", backgroundColor: "var(--danger-bg)", border: "1px solid var(--danger-border)", borderRadius: "var(--radius-md)" }}>
                 <div style={{ fontSize: "var(--fs-2xl)", fontWeight: 800, color: "var(--danger-solid)" }}>{rejectionRate}%</div>
                 <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, color: "var(--danger-text)", marginTop: "2px" }}>ปฏิเสธ (Reject)</div>
-                <div style={{ fontSize: "11px", color: "var(--slate-500)", marginTop: "2px" }}>{recommendations?.rejection_count ?? 0} รายการ</div>
+                <div style={{ fontSize: "12px", color: "var(--slate-500)", marginTop: "2px" }}>{recommendations?.rejection_count ?? 0} รายการ</div>
               </div>
             </div>
 

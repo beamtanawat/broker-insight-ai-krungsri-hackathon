@@ -59,7 +59,7 @@ export function PriorityScore({
         }}
       >
         <span style={{ fontSize: "0.875rem", fontWeight: 800 }}>{score}</span>
-        <span style={{ fontSize: "0.6875rem", opacity: 0.75 }}>{textLabel}</span>
+        <span style={{ fontSize: "0.75rem", opacity: 0.75 }}>{textLabel}</span>
       </span>
     );
   }

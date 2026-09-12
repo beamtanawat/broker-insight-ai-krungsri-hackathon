@@ -245,7 +245,7 @@ export default function PilotEvaluationPage() {
 
       {/* ── Tab 1: Scenarios Grid ── */}
       {activeTab === "scenarios" && (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))", gap: "var(--space-5)" }}>
+        <div data-tour="pilot-sandbox" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))", gap: "var(--space-5)" }}>
           {SCENARIOS.map((sc, idx) => {
             const topColors = [
               "#ef4444", // A: High

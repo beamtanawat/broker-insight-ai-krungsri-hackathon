@@ -97,7 +97,7 @@ export function Panel({
                   display: "inline-flex",
                   alignItems: "center",
                   gap: "4px",
-                  fontSize: "0.6875rem",
+                  fontSize: "var(--fs-xs)",
                   fontWeight: 700,
                   textTransform: "uppercase",
                   letterSpacing: "0.05em",
@@ -110,7 +110,7 @@ export function Panel({
               </div>
             )}
             {title && (
-              <div style={{ fontSize: "var(--fs-sm)", fontWeight: 600, color: "var(--slate-800)" }}>
+              <div style={{ fontSize: "var(--fs-base)", fontWeight: 700, color: "var(--slate-800)" }}>
                 {title}
               </div>
             )}

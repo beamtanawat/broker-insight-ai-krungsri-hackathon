@@ -2,7 +2,7 @@
 import uuid
 from datetime import datetime, timezone
 
-from sqlalchemy import DateTime, Enum, ForeignKey, Integer, String, Text
+from sqlalchemy import DateTime, Enum, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
@@ -82,6 +82,12 @@ class CustomerProfile(Base):
     kyc_channel: Mapped[str | None] = mapped_column(String(50), nullable=True)
     risk_tolerance: Mapped[str | None] = mapped_column(String(50), nullable=True)  # Low, Moderate, High
     relationship_tier: Mapped[str | None] = mapped_column(String(50), default="Standard")  # Standard, Gold, Platinum
+    address: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    district: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    province: Mapped[str | None] = mapped_column(String(100), nullable=True, default="กรุงเทพมหานคร")
+    postal_code: Mapped[str | None] = mapped_column(String(10), nullable=True)
+    latitude: Mapped[float | None] = mapped_column(Float, nullable=True, index=True)
+    longitude: Mapped[float | None] = mapped_column(Float, nullable=True, index=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
     )

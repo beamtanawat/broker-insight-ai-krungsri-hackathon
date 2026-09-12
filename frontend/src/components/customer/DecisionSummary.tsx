@@ -49,8 +49,8 @@ export function DecisionSummary({
       }}
     >
       {/* 1. Priority */}
-      <div style={{ borderRight: "1px solid var(--border-subtle)", paddingRight: "var(--space-4)" }}>
-        <div style={{ fontSize: "11px", color: "var(--slate-500)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+      <div data-tour="ai-priority-card" style={{ borderRight: "1px solid var(--border-subtle)", paddingRight: "var(--space-4)" }}>
+        <div style={{ fontSize: "14px", color: "var(--slate-500)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
           ระดับความสำคัญ (Priority)
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "4px" }}>
@@ -65,31 +65,31 @@ export function DecisionSummary({
 
       {/* 2. Key Driver */}
       <div style={{ borderRight: "1px solid var(--border-subtle)", paddingRight: "var(--space-4)" }}>
-        <div style={{ fontSize: "11px", color: "var(--slate-500)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+        <div style={{ fontSize: "14px", color: "var(--slate-500)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
           ปัจจัยสำคัญหลัก (Key Driver)
         </div>
-        <div style={{ fontSize: "var(--fs-sm)", fontWeight: 700, color: "var(--slate-800)", marginTop: "4px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+        <div style={{ fontSize: "14px", fontWeight: 700, color: "var(--slate-800)", marginTop: "4px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
           ⚡ {topReason}
         </div>
       </div>
 
       {/* 3. Top Recommendation */}
-      <div style={{ borderRight: "1px solid var(--border-subtle)", paddingRight: "var(--space-4)" }}>
-        <div style={{ fontSize: "11px", color: "var(--slate-500)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+      <div data-tour="product-recommendations" style={{ borderRight: "1px solid var(--border-subtle)", paddingRight: "var(--space-4)" }}>
+        <div style={{ fontSize: "14px", color: "var(--slate-500)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
           ผลิตภัณฑ์แนะนำอันดับ 1
         </div>
-        <div style={{ fontSize: "var(--fs-sm)", fontWeight: 800, color: "var(--krungsri-navy)", marginTop: "4px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+        <div style={{ fontSize: "14px", fontWeight: 800, color: "var(--krungsri-navy)", marginTop: "4px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
           🛡️ {topRec ? topRec.product_name : "รอการประเมิน"}
         </div>
       </div>
 
       {/* 4. Suggested Next Action */}
       <div>
-        <div style={{ fontSize: "11px", color: "var(--slate-500)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+        <div style={{ fontSize: "14px", color: "var(--slate-500)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
           การดำเนินการถัดไป (Next Action)
         </div>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px", marginTop: "4px" }}>
-          <span style={{ fontSize: "var(--fs-sm)", fontWeight: 700, color: "var(--slate-900)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+          <span style={{ fontSize: "14px", fontWeight: 700, color: "var(--slate-900)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
             {nextAction}
           </span>
           <button
@@ -103,7 +103,7 @@ export function DecisionSummary({
               }, 120);
             }}
             style={{
-              fontSize: "11px",
+              fontSize: "12px",
               color: "var(--krungsri-navy)",
               fontWeight: 800,
               cursor: "pointer",

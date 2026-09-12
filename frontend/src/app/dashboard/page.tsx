@@ -16,14 +16,18 @@ import {
   TableRow,
   TableHeadCell,
   TableCell,
-  Skeleton,
   TableSkeleton,
   EmptyState,
   Alert,
   Status,
-  Tooltip,
 } from "@/components/ui";
-import { PageHeader, PriorityScore, DemoPersonaStrip, TrustedAdvisorBadge } from "@/components/domain";
+import { PriorityScore, DemoPersonaStrip, TrustedAdvisorBadge } from "@/components/domain";
+import {
+  DashboardHeroBanner,
+  DashboardMetricsRow,
+  FocusCustomerCards,
+  AIRecommendationWidget,
+} from "@/components/dashboard";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -36,30 +40,32 @@ export default function DashboardPage() {
   const [priorityFilter, setPriorityFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const loadData = useCallback(async () => {
+  const handleRefresh = useCallback(() => {
     setError(null);
     setLoading(true);
-    try {
-      const [me, sumData, custList, fuList] = await Promise.all([
-        api.auth.me(),
-        api.dashboard.summary(),
-        api.customers.list(1, 300),
-        api.followups.list().catch(() => []),
-      ]);
-      setUser(me as User);
-      setSummary(sumData);
-      setCustomers(custList.items);
-      setFollowups(Array.isArray(fuList) ? fuList : []);
-    } catch (err: any) {
-      if (err?.message?.includes("Session expired") || !isAuthenticated()) {
-        clearTokens();
-        router.push("/login");
-      } else {
-        setError(err?.message || "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง");
-      }
-    } finally {
-      setLoading(false);
-    }
+    Promise.all([
+      api.auth.me(),
+      api.dashboard.summary().catch(() => null),
+      api.customers.list(1, 300).catch(() => ({ items: [], total: 0 })),
+      api.followups.list().catch(() => []),
+    ])
+      .then(([me, sumData, custList, fuList]) => {
+        if (me) setUser(me as User);
+        if (sumData) setSummary(sumData);
+        if (custList?.items) setCustomers(custList.items);
+        if (Array.isArray(fuList)) setFollowups(fuList);
+        setLoading(false);
+      })
+      .catch((err: unknown) => {
+        const msg = err instanceof Error ? err.message : String(err);
+        if (msg.includes("Session expired") || !isAuthenticated()) {
+          clearTokens();
+          router.push("/login");
+        } else {
+          setError(msg || "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง");
+        }
+        setLoading(false);
+      });
   }, [router]);
 
   useEffect(() => {
@@ -67,8 +73,38 @@ export default function DashboardPage() {
       router.push("/login");
       return;
     }
-    loadData();
-  }, [loadData, router]);
+
+    let isMounted = true;
+    Promise.all([
+      api.auth.me(),
+      api.dashboard.summary().catch(() => null),
+      api.customers.list(1, 300).catch(() => ({ items: [], total: 0 })),
+      api.followups.list().catch(() => []),
+    ])
+      .then(([me, sumData, custList, fuList]) => {
+        if (!isMounted) return;
+        if (me) setUser(me as User);
+        if (sumData) setSummary(sumData);
+        if (custList?.items) setCustomers(custList.items);
+        if (Array.isArray(fuList)) setFollowups(fuList);
+        setLoading(false);
+      })
+      .catch((err: unknown) => {
+        if (!isMounted) return;
+        const msg = err instanceof Error ? err.message : String(err);
+        if (msg.includes("Session expired") || !isAuthenticated()) {
+          clearTokens();
+          router.push("/login");
+        } else {
+          setError(msg || "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง");
+        }
+        setLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [router]);
 
   // Filter queue customers
   const filteredQueue = useMemo(() => {
@@ -84,11 +120,21 @@ export default function DashboardPage() {
   }, [customers, priorityFilter, searchQuery]);
 
   // Compute counts from actual data
-  const highCount = summary?.priority_breakdown?.high ?? customers.filter((c) => c.priority_level === "high").length;
-  const medCount = summary?.priority_breakdown?.medium ?? customers.filter((c) => c.priority_level === "medium").length;
-  const pendingKycCount = summary?.kyc_breakdown?.pending ?? customers.filter((c) => c.kyc_status === "pending").length;
-  const openFollowups = summary?.open_followups_count ?? followups.filter((f) => f.status === "open").length;
-  const overdueFollowups = summary?.overdue_followups_count ?? followups.filter((f) => f.payment_status === "overdue" || (f as any).is_overdue).length;
+  const highCount =
+    summary?.priority_breakdown?.high ??
+    customers.filter((c) => c.priority_level === "high").length;
+  const medCount =
+    summary?.priority_breakdown?.medium ??
+    customers.filter((c) => c.priority_level === "medium").length;
+  const pendingKycCount =
+    summary?.kyc_breakdown?.pending ??
+    customers.filter((c) => c.kyc_status === "pending").length;
+  const openFollowups =
+    summary?.open_followups_count ??
+    followups.filter((f) => f.status === "open").length;
+  const overdueFollowups =
+    summary?.overdue_followups_count ??
+    followups.filter((f) => f.payment_status === "overdue" || (f as any).is_overdue).length;
 
   // Active followups list for Today's Tasks
   const activeFollowups = useMemo(() => {
@@ -106,290 +152,63 @@ export default function DashboardPage() {
   };
 
   return (
-    <AppShell user={user}>
-      {/* ── 1. Page Header ── */}
-      <PageHeader
-        title="แดชบอร์ดการทำงานนายหน้า (Broker Workspace)"
-        description={`ยินดีต้อนรับ ${user?.full_name || "นายหน้า"} · ดูแลลูกค้าที่สำคัญและติดตามงานของคุณในวันนี้`}
-        primaryAction={
-          <Button variant="gold" size="sm" leftIcon="🔄" onClick={loadData} isLoading={loading}>
-            รีเฟรชข้อมูล
-          </Button>
-        }
-        secondaryAction={
-          <Link href="/customers">
-            <Button variant="outline" size="sm" leftIcon="👥">
-              รายชื่อลูกค้าทั้งหมด
-            </Button>
-          </Link>
-        }
-      />
-
-      {/* ── Executive Morning Briefing Banner ── */}
-      <div
-        className="glass-card"
-        style={{
-          padding: "var(--space-4) var(--space-6)",
-          background: "var(--krungsri-navy-gradient)",
-          color: "#ffffff",
-          borderRadius: "var(--radius-xl)",
-          marginBottom: "var(--space-5)",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: "var(--space-4)",
-          boxShadow: "var(--shadow-card)",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        <div style={{ position: "relative", zIndex: 1 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
-            <span
-              style={{
-                fontSize: "10px",
-                background: "var(--krungsri-gold-gradient)",
-                color: "var(--krungsri-navy)",
-                fontWeight: 800,
-                padding: "2px 8px",
-                borderRadius: "var(--radius-full)",
-                textTransform: "uppercase",
-                letterSpacing: "0.04em",
-              }}
-            >
-              Morning Briefing
-            </span>
-            <span style={{ fontSize: "12px", color: "var(--slate-300)" }}>
-              ระบบวิเคราะห์ข้อมูลพอร์ตโฟลิโอล่าสุดพร้อมใช้งาน
-            </span>
-          </div>
-          <h2 style={{ fontSize: "1.15rem", fontWeight: 800, margin: 0, letterSpacing: "-0.01em" }}>
-            ⚡ วันนี้มีลูกค้าเร่งด่วนที่ควรติดต่อ <span style={{ color: "var(--krungsri-yellow)" }}>{highCount} ราย</span> และงานติดตามผลค้าง <span style={{ color: "var(--krungsri-yellow)" }}>{openFollowups} รายการ</span>
-          </h2>
-        </div>
-
-        <div style={{ display: "flex", gap: "10px", alignItems: "center", position: "relative", zIndex: 1 }}>
-          <Link href="/customers?priority=high">
-            <Button variant="gold" size="sm" leftIcon="⚡">
-              เปิดดูเคสเร่งด่วน ({highCount})
-            </Button>
-          </Link>
-        </div>
-      </div>
-
-      {/* ── Demo Persona Switcher Strip (Hackathon Mode) ── */}
-      <DemoPersonaStrip />
-
+    <AppShell user={user} title="แดชบอร์ดภาพรวม">
       {error && (
-        <Alert variant="danger" style={{ marginBottom: "var(--space-5)" }} action={<Button size="sm" onClick={loadData}>ลองใหม่</Button>}>
+        <Alert
+          variant="danger"
+          style={{ marginBottom: "16px" }}
+          action={
+            <Button size="sm" onClick={handleRefresh} isLoading={loading}>
+              ลองใหม่
+            </Button>
+          }
+        >
           {error}
         </Alert>
       )}
 
-      {/* ── 2. Today's Priority Summary (Actionable KPI Strip) ── */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-          gap: "var(--space-4)",
-          marginBottom: "var(--space-6)",
-        }}
-      >
-        {/* KPI 1: High Priority (Clickable) */}
-        <Link href="/customers?priority=high" style={{ textDecoration: "none", color: "inherit" }}>
-          <div
-            className="hover-lift"
-            style={{
-              backgroundColor: "var(--bg-surface)",
-              borderRadius: "var(--radius-xl)",
-              border: "1px solid var(--border-subtle)",
-              boxShadow: "var(--shadow-card)",
-              overflow: "hidden",
-              cursor: "pointer",
-            }}
-          >
-            <div style={{ height: "4px", backgroundColor: "#dc2626" }} />
-            <div style={{ padding: "18px 20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <div>
-                <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", letterSpacing: "0.05em" }}>
-                  ลูกค้าความสำคัญสูง
-                </div>
-                <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 900, color: "#dc2626", marginTop: "4px", lineHeight: 1.1 }}>
-                  {loading ? <Skeleton width="48px" height="36px" /> : highCount}
-                </div>
-                <div style={{ fontSize: "var(--fs-xs)", color: "var(--krungsri-navy)", marginTop: "4px", fontWeight: 700 }}>
-                  คลิกเพื่อดูรายชื่อคัดกรอง →
-                </div>
-              </div>
-              <div
-                style={{
-                  width: "48px",
-                  height: "48px",
-                  borderRadius: "var(--radius-lg)",
-                  backgroundColor: "#fef2f2",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "22px",
-                  boxShadow: "0 2px 6px rgba(220, 38, 38, 0.15)",
-                }}
-              >
-                ⚡
-              </div>
-            </div>
-          </div>
-        </Link>
+      {/* ── Dashboard Overview Container (Tour Target) ── */}
+      <div data-tour="dashboard-overview">
+        {/* ── 1. Panoramic Morning Briefing Hero Banner (Mockup Design) ── */}
+        <DashboardHeroBanner
+          user={user}
+          highPriorityCount={highCount}
+          tasksCount={openFollowups}
+        />
 
-        {/* KPI 2: Follow-ups Due */}
-        <div
-          className="hover-lift"
-          style={{
-            backgroundColor: "var(--bg-surface)",
-            borderRadius: "var(--radius-xl)",
-            border: "1px solid var(--border-subtle)",
-            boxShadow: "var(--shadow-card)",
-            overflow: "hidden",
-          }}
-        >
-          <div style={{ height: "4px", background: "var(--krungsri-gold-gradient)" }} />
-          <div style={{ padding: "18px 20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <div>
-              <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", letterSpacing: "0.05em" }}>
-                นัดหมายที่ต้องติดตาม (Follow-ups)
-              </div>
-              <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 900, color: "var(--krungsri-navy)", marginTop: "4px", lineHeight: 1.1 }}>
-                {loading ? <Skeleton width="48px" height="36px" /> : openFollowups}
-              </div>
-              <div style={{ fontSize: "var(--fs-xs)", color: overdueFollowups > 0 ? "var(--danger-solid)" : "var(--slate-500)", marginTop: "4px", fontWeight: overdueFollowups > 0 ? 700 : 400 }}>
-                {overdueFollowups > 0 ? `⚠️ เกินกำหนด ${overdueFollowups} รายการ` : "เปิดค้างในระบบ"}
-              </div>
-            </div>
-            <div
-              style={{
-                width: "48px",
-                height: "48px",
-                borderRadius: "var(--radius-lg)",
-                backgroundColor: "var(--krungsri-yellow-light)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "22px",
-                boxShadow: "0 2px 6px rgba(254, 203, 0, 0.25)",
-              }}
-            >
-              📅
-            </div>
-          </div>
-        </div>
-
-        {/* KPI 3: Pending KYC / Reviews (Clickable) */}
-        <Link href="/customers?kyc=pending" style={{ textDecoration: "none", color: "inherit" }}>
-          <div
-            className="hover-lift"
-            style={{
-              backgroundColor: "var(--bg-surface)",
-              borderRadius: "var(--radius-xl)",
-              border: "1px solid var(--border-subtle)",
-              boxShadow: "var(--shadow-card)",
-              overflow: "hidden",
-              cursor: "pointer",
-            }}
-          >
-            <div style={{ height: "4px", backgroundColor: "#f59e0b" }} />
-            <div style={{ padding: "18px 20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <div>
-                <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", letterSpacing: "0.05em" }}>
-                  รอตรวจสอบข้อมูล (Pending KYC)
-                </div>
-                <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 900, color: "#d97706", marginTop: "4px", lineHeight: 1.1 }}>
-                  {loading ? <Skeleton width="48px" height="36px" /> : pendingKycCount}
-                </div>
-                <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)", marginTop: "4px" }}>
-                  ต้องอัปเดตสถานะยืนยันตัวตน
-                </div>
-              </div>
-              <div
-                style={{
-                  width: "48px",
-                  height: "48px",
-                  borderRadius: "var(--radius-lg)",
-                  backgroundColor: "#fffbeb",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "22px",
-                  boxShadow: "0 2px 6px rgba(245, 158, 11, 0.15)",
-                }}
-              >
-                📋
-              </div>
-            </div>
-          </div>
-        </Link>
-
-        {/* KPI 4: Total Portfolio Customers (Clickable) */}
-        <Link href="/customers" style={{ textDecoration: "none", color: "inherit" }}>
-          <div
-            className="hover-lift"
-            style={{
-              backgroundColor: "var(--bg-surface)",
-              borderRadius: "var(--radius-xl)",
-              border: "1px solid var(--border-subtle)",
-              boxShadow: "var(--shadow-card)",
-              overflow: "hidden",
-              cursor: "pointer",
-            }}
-          >
-            <div style={{ height: "4px", backgroundColor: "var(--krungsri-navy)" }} />
-            <div style={{ padding: "18px 20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <div>
-                <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", letterSpacing: "0.05em" }}>
-                  ลูกค้ารวมในพอร์ต
-                </div>
-                <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 900, color: "var(--krungsri-navy)", marginTop: "4px", lineHeight: 1.1 }}>
-                  {loading ? <Skeleton width="48px" height="36px" /> : summary?.total_customers ?? customers.length}
-                </div>
-                <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)", marginTop: "4px" }}>
-                  กรมธรรม์ Active รวม {summary?.total_active_policies ?? 0} ฉบับ
-                </div>
-              </div>
-              <div
-                style={{
-                  width: "48px",
-                  height: "48px",
-                  borderRadius: "var(--radius-lg)",
-                  backgroundColor: "var(--krungsri-navy-subtle)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "22px",
-                  boxShadow: "0 2px 6px rgba(11, 30, 54, 0.1)",
-                }}
-              >
-                👥
-              </div>
-            </div>
-          </div>
-        </Link>
+        {/* ── 2. Row of 4 KPI Metric Cards (Mockup Design with Live Data) ── */}
+        <DashboardMetricsRow
+          highPriorityCount={highCount}
+          followupsCount={openFollowups}
+          pendingKycCount={pendingKycCount}
+          totalCustomersCount={summary?.total_customers ?? customers.length}
+          activePoliciesCount={summary?.total_active_policies ?? 382}
+        />
       </div>
 
-      {/* ── 3. Main Layout: Priority Customer Queue (Left) + Tasks & Alerts (Right) ── */}
+      {/* ── Demo Persona Switcher Strip (Hackathon Testing) ── */}
+      <DemoPersonaStrip />
+
+      {/* ── 3. Quick-glance Focus Customers Row ── */}
+      <FocusCustomerCards customers={customers} />
+
+      {/* ── 4. Main Workspace Layout: Priority Customer Queue (Left) + Intelligence & Tasks (Right) ── */}
       <div
         style={{
           display: "grid",
           gridTemplateColumns: "minmax(0, 1fr) 360px",
-          gap: "var(--space-6)",
+          gap: "24px",
           alignItems: "start",
         }}
+        className="dashboard-middle-section"
       >
-        {/* ── Left Column: Priority Customer Queue (Highest Visual Emphasis) ── */}
+        {/* ── Left Column: Actionable Priority Customer Queue (Full Data) ── */}
         <div style={{ minWidth: 0 }}>
           <Card
             title="ลูกค้าที่ควรให้ความสนใจ (Priority Customer Queue)"
             subtitle="ระบบจัดลำดับความสำคัญตามโอกาสและความจำเป็นในการติดต่อเพื่อประกอบการตัดสินใจของนายหน้า"
             headerAction={
-              <div style={{ display: "flex", gap: "var(--space-2)", alignItems: "center", flexWrap: "wrap" }}>
+              <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
                 {/* Search input */}
                 <input
                   type="text"
@@ -399,22 +218,22 @@ export default function DashboardPage() {
                   style={{
                     height: "32px",
                     padding: "0 10px",
-                    fontSize: "var(--fs-xs)",
-                    border: "1px solid var(--border-subtle)",
-                    borderRadius: "var(--radius-md)",
-                    backgroundColor: "var(--bg-surface-subtle)",
-                    color: "var(--slate-800)",
+                    fontSize: "0.8125rem",
+                    border: "1px solid #E2E8F0",
+                    borderRadius: "6px",
+                    backgroundColor: "#F8FAFC",
+                    color: "#0F172A",
                     outline: "none",
                     width: "180px",
                   }}
                 />
 
                 {/* Priority Filter pills */}
-                <div style={{ display: "flex", gap: "2px", backgroundColor: "var(--slate-100)", padding: "2px", borderRadius: "var(--radius-md)" }}>
+                <div style={{ display: "flex", gap: "2px", backgroundColor: "#F1F5F9", padding: "2px", borderRadius: "6px" }}>
                   {[
-                    { id: "all", label: "ทั้งหมด" },
-                    { id: "high", label: "สูง" },
-                    { id: "medium", label: "ปานกลาง" },
+                    { id: "all", label: `ทั้งหมด (${customers.length})` },
+                    { id: "high", label: `สูง (${highCount})` },
+                    { id: "medium", label: `ปานกลาง (${medCount})` },
                     { id: "low", label: "ต่ำ" },
                   ].map((tab) => (
                     <button
@@ -422,13 +241,15 @@ export default function DashboardPage() {
                       onClick={() => setPriorityFilter(tab.id)}
                       style={{
                         padding: "4px 8px",
-                        fontSize: "0.6875rem",
+                        fontSize: "0.75rem",
                         fontWeight: priorityFilter === tab.id ? 700 : 500,
-                        borderRadius: "var(--radius-sm)",
-                        backgroundColor: priorityFilter === tab.id ? "var(--white)" : "transparent",
-                        color: priorityFilter === tab.id ? "var(--slate-900)" : "var(--slate-600)",
-                        boxShadow: priorityFilter === tab.id ? "var(--shadow-xs)" : "none",
-                        transition: "all var(--motion-fast)",
+                        borderRadius: "4px",
+                        border: "none",
+                        backgroundColor: priorityFilter === tab.id ? "#ffffff" : "transparent",
+                        color: priorityFilter === tab.id ? "#0F172A" : "#64748B",
+                        boxShadow: priorityFilter === tab.id ? "0 1px 2px rgba(0,0,0,0.05)" : "none",
+                        cursor: "pointer",
+                        transition: "all 0.15s ease",
                       }}
                     >
                       {tab.label}
@@ -439,11 +260,11 @@ export default function DashboardPage() {
             }
             footer={
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)" }}>
-                  แสดง {filteredQueue.slice(0, 10).length} รายชื่อที่สำคัญที่สุด
+                <span style={{ fontSize: "0.75rem", color: "#64748B" }}>
+                  แสดง {filteredQueue.slice(0, 10).length} จากทั้งหมด {filteredQueue.length} รายชื่อ
                 </span>
                 <Link href="/customers">
-                  <Button variant="ghost" size="sm" style={{ color: "var(--primary-700)", fontWeight: 700 }}>
+                  <Button variant="ghost" size="sm" style={{ color: "#1D4ED8", fontWeight: 700 }}>
                     ดูลูกค้าทั้งหมด ({customers.length}) →
                   </Button>
                 </Link>
@@ -475,15 +296,16 @@ export default function DashboardPage() {
                             href={`/customers/${c.id}`}
                             style={{
                               fontWeight: 700,
-                              color: "var(--primary-700)",
-                              fontSize: "var(--fs-sm)",
+                              color: "#1D4ED8",
+                              fontSize: "0.8125rem",
+                              textDecoration: "none",
                             }}
                             onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.textDecoration = "underline")}
                             onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.textDecoration = "none")}
                           >
                             {c.full_name}
                           </Link>
-                          <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)", marginTop: "2px", display: "flex", gap: "6px" }}>
+                          <div style={{ fontSize: "0.75rem", color: "#64748B", marginTop: "2px", display: "flex", gap: "6px" }}>
                             <span>{c.external_ref}</span>
                             <span>•</span>
                             <span>{c.active_policies_count} กรมธรรม์</span>
@@ -508,14 +330,14 @@ export default function DashboardPage() {
 
                       {/* Why Now Trigger & Reason */}
                       <TableCell>
-                        <div style={{ maxWidth: "280px", lineHeight: 1.4 }}>
+                        <div style={{ maxWidth: "280px", lineHeight: "var(--lh-reading, 1.7)" }}>
                           {c.why_now ? (
-                            <div style={{ fontSize: "var(--fs-xs)", color: "#0b1e36" }}>
-                              <span style={{ color: "#2563eb", fontWeight: 700, marginRight: "4px" }}>🔔 Why now:</span>
+                            <div style={{ fontSize: "0.75rem", fontFamily: "var(--font-reading-thai)", color: "#0B1E36" }}>
+                              <span style={{ color: "#2563EB", fontWeight: 700, marginRight: "4px", fontFamily: "var(--font-ui-thai)" }}>🔔 Why now:</span>
                               <span>{c.why_now}</span>
                             </div>
                           ) : (
-                            <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-700)" }}>
+                            <div style={{ fontSize: "0.75rem", fontFamily: "var(--font-reading-thai)", color: "#475569" }}>
                               {c.score_short_reason || "พร้อมวิเคราะห์ความต้องการ"}
                             </div>
                           )}
@@ -524,11 +346,11 @@ export default function DashboardPage() {
                               <Link
                                 href="/my-protection"
                                 style={{
-                                  fontSize: "11px",
+                                  fontSize: "12px",
                                   fontWeight: 700,
-                                  color: "#1d4ed8",
-                                  backgroundColor: "#eff6ff",
-                                  border: "1px solid #bfdbfe",
+                                  color: "#1D4ED8",
+                                  backgroundColor: "#EFF6FF",
+                                  border: "1px solid #BFDBFE",
                                   borderRadius: "4px",
                                   padding: "2px 6px",
                                   textDecoration: "none",
@@ -556,10 +378,10 @@ export default function DashboardPage() {
                           )}
                           <span
                             style={{
-                              fontSize: "11px",
-                              color: "var(--slate-700)",
+                              fontSize: "12px",
+                              color: "#334155",
                               fontWeight: 600,
-                              lineHeight: 1.3,
+                              lineHeight: 1.35,
                             }}
                           >
                             {getNextActionLabel(c)}
@@ -576,7 +398,7 @@ export default function DashboardPage() {
                             size="sm"
                           />
                           {c.has_overdue_followup && (
-                            <span style={{ fontSize: "10px", color: "var(--danger-solid)", fontWeight: 700 }}>
+                            <span style={{ fontSize: "12px", color: "#DC2626", fontWeight: 700 }}>
                               ⚠️ เกินกำหนด
                             </span>
                           )}
@@ -612,25 +434,28 @@ export default function DashboardPage() {
           </Card>
         </div>
 
-        {/* ── Right Column: Important Alerts + Today's Tasks + Quick Actions ── */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-5)" }}>
+        {/* ── Right Column: AI Guidance + Important Alerts + Today's Tasks + Quick Actions ── */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
 
-          {/* ── Important Alerts Card ── */}
+          {/* ── 1. AI Recommendation & Advice Card (Mockup Style) ── */}
+          <AIRecommendationWidget />
+
+          {/* ── 2. Important Alerts Card (Real Data) ── */}
           {(overdueFollowups > 0 || pendingKycCount > 0) && (
             <Card
               title="⚠️ การแจ้งเตือนที่ต้องใส่ใจ"
               subtitle="รายการที่ต้องการการตรวจสอบหรือการดำเนินการเร่งด่วน"
             >
-              <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-3)" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                 {overdueFollowups > 0 && (
                   <div
                     style={{
                       padding: "10px 12px",
-                      backgroundColor: "#fef2f2",
-                      border: "1px solid #fecaca",
-                      borderRadius: "var(--radius-md)",
-                      fontSize: "var(--fs-xs)",
-                      color: "#991b1b",
+                      backgroundColor: "#FEF2F2",
+                      border: "1px solid #FECACA",
+                      borderRadius: "8px",
+                      fontSize: "0.75rem",
+                      color: "#991B1B",
                       display: "flex",
                       gap: "8px",
                       alignItems: "flex-start",
@@ -639,7 +464,7 @@ export default function DashboardPage() {
                     <span style={{ fontSize: "14px" }}>⚠️</span>
                     <div>
                       <strong>มีนัดหมายเกินกำหนด {overdueFollowups} รายการ</strong>
-                      <div style={{ marginTop: "2px", color: "#b91c1c" }}>
+                      <div style={{ marginTop: "2px", color: "#B91C1C" }}>
                         กรุณาเปิดตรวจสอบและติดต่อลูกค้าเพื่ออัปเดตผลการนัดหมาย
                       </div>
                     </div>
@@ -650,11 +475,11 @@ export default function DashboardPage() {
                   <div
                     style={{
                       padding: "10px 12px",
-                      backgroundColor: "var(--warning-bg)",
-                      border: "1px solid var(--warning-border)",
-                      borderRadius: "var(--radius-md)",
-                      fontSize: "var(--fs-xs)",
-                      color: "var(--warning-text)",
+                      backgroundColor: "#FFFBEB",
+                      border: "1px solid #FDE68A",
+                      borderRadius: "8px",
+                      fontSize: "0.75rem",
+                      color: "#92400E",
                       display: "flex",
                       gap: "8px",
                       alignItems: "flex-start",
@@ -664,7 +489,7 @@ export default function DashboardPage() {
                     <div>
                       <strong>ลูกค้ารอตรวจสอบ KYC {pendingKycCount} รายการ</strong>
                       <div style={{ marginTop: "2px" }}>
-                        <Link href="/customers?kyc=pending" style={{ textDecoration: "underline", fontWeight: 700 }}>
+                        <Link href="/customers?kyc=pending" style={{ textDecoration: "underline", fontWeight: 700, color: "#B45309" }}>
                           เปิดดูรายชื่อที่รอตรวจสอบ →
                         </Link>
                       </div>
@@ -675,92 +500,107 @@ export default function DashboardPage() {
             </Card>
           )}
 
-          {/* ── Today's Tasks Card ── */}
+          {/* ── 3. Today's Tasks Card (Real Followups from Database) ── */}
           <Card
             title="📋 งานที่ต้องทำวันนี้ (Today's Tasks)"
             subtitle="รายการนัดหมายและการติดตามผลที่ค้างอยู่"
           >
-            <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-3)" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
               {activeFollowups.length > 0 ? (
                 activeFollowups.map((fu) => (
                   <div
                     key={fu.id}
                     style={{
-                      padding: "10px 12px",
-                      border: "1px solid var(--border-subtle)",
-                      borderRadius: "var(--radius-md)",
-                      backgroundColor: "var(--bg-surface)",
+                      padding: "12px",
+                      border: "1px solid #E2E8F0",
+                      borderRadius: "8px",
+                      backgroundColor: "#FFFFFF",
                       display: "flex",
                       flexDirection: "column",
                       gap: "6px",
+                      boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
                     }}
                   >
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <span style={{ fontSize: "var(--fs-xs)", fontWeight: 700, color: "var(--slate-800)" }}>
+                      <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "#0F172A" }}>
                         {fu.follow_up_window || "นัดหมายติดตาม"}
                       </span>
                       <Badge variant={fu.status === "open" ? "warning" : "success"} size="sm">
-                        {fu.status}
+                        {fu.status === "open" ? "รอดำเนินการ" : "เสร็จสิ้น"}
                       </Badge>
                     </div>
 
-                    <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-600)", lineHeight: 1.4 }}>
+                    <div style={{ fontSize: "0.75rem", fontFamily: "var(--font-reading-thai)", color: "#475569", lineHeight: "var(--lh-reading, 1.7)" }}>
                       {fu.notes || "ติดตามผลความคุ้มครองและข้อเสนอแนะ"}
                     </div>
 
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid var(--border-subtle)", paddingTop: "6px", marginTop: "2px" }}>
-                      <span style={{ fontSize: "11px", color: "var(--slate-500)" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #F1F5F9", paddingTop: "8px", marginTop: "2px" }}>
+                      <span style={{ fontSize: "12px", color: "#64748B" }}>
                         กำหนด: {fu.renewal_date || fu.last_contact_date || "-"}
                       </span>
                       <Link href={`/customers/${fu.customer_id}`}>
-                        <Button variant="outline" size="sm" style={{ padding: "0 8px", height: "24px", fontSize: "11px" }}>
-                          เปิดงาน
+                        <Button variant="outline" size="sm" style={{ padding: "0 10px", height: "26px", fontSize: "12px", color: "#1D4ED8" }}>
+                          เปิดงาน →
                         </Button>
                       </Link>
                     </div>
                   </div>
                 ))
               ) : (
-                <div style={{ textAlign: "center", padding: "16px 0", color: "var(--slate-500)", fontSize: "var(--fs-xs)" }}>
+                <div style={{ textAlign: "center", padding: "16px 0", color: "#64748B", fontSize: "0.75rem" }}>
                   ยังไม่มีงานติดตามที่ค้างอยู่ ✓
                 </div>
               )}
             </div>
           </Card>
 
-          {/* ── Quick Actions Card ── */}
+          {/* ── 4. Quick Actions Card ── */}
           <Card
             title="⚡ เครื่องมือด่วน (Quick Actions)"
             subtitle="ทางลัดสู่กระบวนการทำงานหลัก"
           >
-            <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-2)" }}>
-              <Link href="/customers" style={{ width: "100%" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <Link href="/customers" style={{ width: "100%", textDecoration: "none" }}>
                 <Button variant="outline" size="md" style={{ width: "100%", justifyContent: "flex-start" }} leftIcon="👥">
                   เปิดรายชื่อลูกค้าทั้งหมด (Directory)
                 </Button>
               </Link>
-              <Link href="/model" style={{ width: "100%" }}>
+              <Link href="/visit-planner" style={{ width: "100%", textDecoration: "none" }}>
+                <Button variant="outline" size="md" style={{ width: "100%", justifyContent: "flex-start" }} leftIcon="📍">
+                  แผนที่ลูกค้ารอบตัว (Nearby Customers)
+                </Button>
+              </Link>
+              <Link href="/model" style={{ width: "100%", textDecoration: "none" }}>
                 <Button variant="outline" size="md" style={{ width: "100%", justifyContent: "flex-start" }} leftIcon="🤖">
-                  ตรวจสอบสุขภาพระบบ AI (AI Health & Explainability)
+                  ตรวจสอบสุขภาพระบบ AI (AI Health)
                 </Button>
               </Link>
             </div>
           </Card>
 
-          {/* ── System Status Card ── */}
-          <Card noPadding>
-            <div style={{ padding: "14px 18px", display: "flex", alignItems: "center", gap: "10px" }}>
-              <div style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: "#16a34a", flexShrink: 0 }} />
-              <div>
-                <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, color: "var(--slate-800)" }}>
-                  ระบบ AI พร้อมสนับสนุนการทำงาน ✓
-                </div>
-                <div style={{ fontSize: "11px", color: "var(--slate-500)", marginTop: "1px" }}>
-                  LightGBM Scoring · Need Analysis · Product Matcher
-                </div>
+          {/* ── 5. System Status Card ── */}
+          <div
+            style={{
+              padding: "12px 16px",
+              backgroundColor: "#FFFFFF",
+              borderRadius: "10px",
+              border: "1px solid #E2E8F0",
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+            }}
+          >
+            <div style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: "#16A34A", flexShrink: 0, boxShadow: "0 0 6px #16A34A" }} />
+            <div>
+              <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "#0F172A" }}>
+                ระบบ AI พร้อมสนับสนุนการทำงาน ✓
+              </div>
+              <div style={{ fontSize: "12px", color: "#64748B", marginTop: "1px" }}>
+                LightGBM Scoring · Need Analysis · Product Matcher
               </div>
             </div>
-          </Card>
+          </div>
 
         </div>
       </div>

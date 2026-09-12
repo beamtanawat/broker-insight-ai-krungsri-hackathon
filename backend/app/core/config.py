@@ -53,6 +53,21 @@ class Settings(BaseSettings):
     RATE_LIMIT_LOGIN_PER_MIN: int = 15
     RATE_LIMIT_AI_PER_MIN: int = 30
 
+    # Visit Planner Configuration (Phase 2)
+    VISIT_PLANNER_OFFICE_START_TIME: str = "08:30"
+    VISIT_PLANNER_OFFICE_END_TIME: str = "17:30"
+    VISIT_PLANNER_MAX_DAILY_TRAVEL_TIME_MINS: int = 150
+    VISIT_PLANNER_MAX_DAILY_DISTANCE_KM: float = 60.0
+    VISIT_PLANNER_DEFAULT_MEETING_DURATION_MINS: int = 45
+    VISIT_PLANNER_START_OFFICE_NAME: str = "ธนาคารกรุงศรีอยุธยา สำนักพระรามที่ 3"
+    VISIT_PLANNER_START_OFFICE_ADDRESS: str = "1222 ถนนพระรามที่ 3 แขวงบางโพงพาง เขตยานนาวา กรุงเทพมหานคร 10120"
+    VISIT_PLANNER_START_OFFICE_LAT: float = 13.6827
+    VISIT_PLANNER_START_OFFICE_LNG: float = 100.5478
+    VISIT_PLANNER_END_OFFICE_NAME: str = "ธนาคารกรุงศรีอยุธยา สำนักพระรามที่ 3"
+    VISIT_PLANNER_END_OFFICE_ADDRESS: str = "1222 ถนนพระรามที่ 3 แขวงบางโพงพาง เขตยานนาวา กรุงเทพมหานคร 10120"
+    VISIT_PLANNER_END_OFFICE_LAT: float = 13.6827
+    VISIT_PLANNER_END_OFFICE_LNG: float = 100.5478
+
     @field_validator("CORS_ORIGINS", mode="before")
     @classmethod
     def assemble_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:

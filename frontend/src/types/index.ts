@@ -1319,7 +1319,312 @@ export interface PilotAnalysisSummaryResponse {
   decision_rationale: string;
 }
 
+// ── Visit Planner Types ─────────────────────────────────────────────
 
+export interface LocationPoint {
+  name?: string | null;
+  address?: string | null;
+  latitude: number;
+  longitude: number;
+}
 
+export interface OfficeLocation {
+  id: string;
+  name: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+  is_headquarters?: boolean;
+}
 
+export interface VisitPlannerConfigResponse {
+  office_start_time: string;
+  office_end_time: string;
+  max_daily_travel_time_minutes: number;
+  max_daily_distance_km: number;
+  default_meeting_duration_minutes: number;
+  start_location: LocationPoint;
+  end_location: LocationPoint;
+  available_offices: OfficeLocation[];
+}
+
+export interface CandidateCustomerOut {
+  customer_id: string;
+  external_ref: string;
+  customer_name: string;
+  display_name: string;
+  latitude?: number | null;
+  longitude?: number | null;
+  distance_km?: number | null;
+  location_available: boolean;
+  address?: string | null;
+  district?: string | null;
+  province?: string | null;
+  postal_code?: string | null;
+  priority_score?: number | null;
+  priority_level?: "high" | "medium" | "low" | null;
+  why_now?: string | null;
+  recommended_next_action?: string | null;
+  action_state?: "action" | "review" | "no_action" | null;
+  protection_gap?: string | null;
+  latest_customer_update?: string | null;
+  follow_up_status?: string | null;
+  kyc_status: string;
+  relationship_tier?: string;
+  active_policies_count: number;
+  routable: boolean;
+  unroutable_reason?: string | null;
+  age?: number | null;
+  occupation?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  product_tags?: string[];
+  contact_history?: {
+    last_call?: string;
+    last_call_detail?: string;
+    appointment?: string;
+    appointment_detail?: string;
+    sent_doc?: string;
+    sent_doc_detail?: string;
+  };
+  ai_note?: string;
+}
+
+export interface CandidateListResponse {
+  items: CandidateCustomerOut[];
+  total: number;
+  routable_count: number;
+  unroutable_count: number;
+  broker_id?: string | null;
+  broker_name?: string | null;
+  page: number;
+  page_size: number;
+}
+
+export interface ViolatedConstraint {
+  constraint: "office_hours" | "max_travel_time" | "max_distance" | string;
+  name: string;
+  actual: any;
+  allowed: any;
+  unit: string;
+  message: string;
+}
+
+export interface SuggestedDeferral {
+  customer_id: string;
+  external_ref: string;
+  customer_name: string;
+  priority_score?: number | null;
+  priority_level?: string | null;
+  marginal_time_saved_minutes: number;
+  marginal_distance_saved_km: number;
+  reason: string;
+}
+
+export interface ConstraintUtilization {
+  travel_time_minutes: number;
+  travel_time_max_minutes: number;
+  travel_time_utilization_pct: number;
+  distance_km: number;
+  distance_max_km: number;
+  distance_utilization_pct: number;
+  working_hours_used_minutes: number;
+  working_hours_window_minutes: number;
+  working_hours_utilization_pct: number;
+  office_start_time: string;
+  office_end_time: string;
+  estimated_return_time: string;
+}
+
+export interface RouteStopOut {
+  stop_order: number;
+  stop_type: "office_start" | "customer" | "office_end" | string;
+  location_name: string;
+  address?: string | null;
+  latitude: number;
+  longitude: number;
+  meeting_duration_minutes: number;
+  travel_time_from_prev_minutes: number;
+  distance_from_prev_km: number;
+  customer?: CandidateCustomerOut | null;
+  stop_reason?: string | null;
+}
+
+export interface VisitCustomerSummary {
+  customer_id: string;
+  external_ref: string;
+  customer_name: string;
+  display_name: string;
+  kyc_status: string;
+  relationship_tier?: string;
+  active_policies_count: number;
+  protection_gap?: string | null;
+  follow_up_status?: string | null;
+}
+
+export interface VisitLocationInfo {
+  name?: string | null;
+  address?: string | null;
+  district?: string | null;
+  province?: string;
+  postal_code?: string | null;
+  latitude: number;
+  longitude: number;
+}
+
+export interface PlannedVisitStop {
+  visit_order: number;
+  customer: VisitCustomerSummary;
+  priority_level: string;
+  priority_score?: number | null;
+  why_now: string;
+  recommended_next_action: string;
+  action_state: string;
+  location: VisitLocationInfo;
+  transit_time_from_prev_minutes: number;
+  distance_from_prev_km: number;
+  explanation: string;
+}
+
+export interface WorkingWindowInfo {
+  office_start_time: string;
+  office_end_time: string;
+  window_minutes: number;
+  used_minutes: number;
+  remaining_minutes: number;
+  utilization_pct: number;
+  estimated_return_time: string;
+}
+
+export interface RouteLimitsInfo {
+  max_travel_time_minutes: number;
+  actual_travel_time_minutes: number;
+  travel_time_utilization_pct: number;
+  max_distance_km: number;
+  actual_distance_km: number;
+  distance_utilization_pct: number;
+}
+
+export interface OptimizationInfluenceSummary {
+  priority_influence: string;
+  urgency_influence: string;
+  efficiency_influence: string;
+}
+
+export interface VisitPlanRouteResponse {
+  status: "feasible" | "infeasible" | "empty";
+  is_feasible: boolean;
+  summary: string;
+  total_customers_to_visit: number;
+  total_stops: number;
+  total_distance_km: number;
+  total_travel_time_minutes: number;
+  total_meeting_time_minutes: number;
+  total_duration_minutes: number;
+  start_location: LocationPoint;
+  end_location: LocationPoint;
+  working_window: WorkingWindowInfo;
+  limits: RouteLimitsInfo;
+  visits: PlannedVisitStop[];
+  ordered_stops: RouteStopOut[];
+  violated_constraints: ViolatedConstraint[];
+  suggested_deferrals: SuggestedDeferral[];
+  explanations: string[];
+  optimization_summary?: OptimizationInfluenceSummary | null;
+  unroutable_customers: CandidateCustomerOut[];
+}
+
+export interface ValidationIssue {
+  field: string;
+  code: string;
+  message: string;
+  severity: "error" | "warning";
+}
+
+export interface VisitPlannerValidateResponse {
+  valid: boolean;
+  errors: string[];
+  warnings: string[];
+  issues: ValidationIssue[];
+  total_requested: number;
+  routable_count: number;
+  unroutable_count: number;
+  routable_customer_ids: string[];
+  unroutable_customer_ids: string[];
+  validated_customers: CandidateCustomerOut[];
+  effective_config: Record<string, any>;
+}
+
+export interface RouteOptimizeRequest {
+  customer_ids: string[];
+  office_start_time?: string;
+  office_end_time?: string;
+  max_daily_travel_time_minutes?: number;
+  max_daily_distance_km?: number;
+  meeting_duration_minutes?: number;
+  start_location?: LocationPoint;
+  end_location?: LocationPoint;
+}
+
+// ── Phases 8–10: Nearby Customer Discovery & On-Demand Navigation ──────
+
+export interface BrokerOriginInfo {
+  latitude: number;
+  longitude: number;
+  address?: string | null;
+  location_source?: "browser_gps" | "office_hub" | "manual";
+}
+
+export interface NearbyCustomerItem {
+  customer_id: string;
+  external_ref: string;
+  customer_name: string;
+  display_name: string;
+  latitude: number;
+  longitude: number;
+  distance_km: number;
+  distance_label: string;
+  priority_level?: "high" | "medium" | "low" | null;
+  priority_score?: number | null;
+  why_now?: string | null;
+  recommended_next_action?: string | null;
+  action_state?: "action" | "review" | "no_action" | null;
+  protection_gap?: string | null;
+  district?: string | null;
+  province?: string | null;
+  kyc_status: string;
+  relationship_tier?: string;
+  active_policies_count: number;
+}
+
+export interface NearbyCustomersResponse {
+  broker_origin: BrokerOriginInfo;
+  radius_km: number;
+  total_nearby: number;
+  items: NearbyCustomerItem[];
+  excluded_missing_location_count: number;
+  distance_calculation_method: string;
+}
+
+export interface SingleCustomerNavigationRequest {
+  customer_id: string;
+  broker_lat: number;
+  broker_lng: number;
+  broker_location_name?: string;
+}
+
+export interface SingleCustomerNavigationResponse {
+  customer_id: string;
+  customer_name: string;
+  external_ref: string;
+  origin: LocationPoint;
+  destination: LocationPoint;
+  distance_km: number;
+  estimated_travel_time_minutes: number;
+  why_now?: string | null;
+  recommended_next_action?: string | null;
+  external_maps_url: string;
+  route_preview_note: string;
+  status: "ready" | "in_transit" | "arrived";
+}
 

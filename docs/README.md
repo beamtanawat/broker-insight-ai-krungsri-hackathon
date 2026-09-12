@@ -6,6 +6,7 @@ Welcome to the comprehensive technical documentation for **Broker Insight AI**. 
 
 ## 1. Core Architecture & System Design
 * [System Architecture & Data Model](file:///Users/chalermsak/Downloads/broker-insight-ai-krungsri-hackathon-main/docs/architecture.md) — High-level architecture, database schema, and mock integration adapters.
+* [AI Customer Visit Planner Technical Report](file:///Users/chalermsak/Downloads/broker-insight-ai-krungsri-hackathon-main/docs/visit-planner-technical-report.md) — Route optimization engine, hard constraints, spatial clustering, and decision support.
 * [End-to-End Performance Benchmarking](file:///Users/chalermsak/Downloads/broker-insight-ai-krungsri-hackathon-main/docs/e2e-performance.md) — Component latency breakdown, P95/P99 metrics, and concurrency scaling.
 * [Production Readiness & Hardening](file:///Users/chalermsak/Downloads/broker-insight-ai-krungsri-hackathon-main/docs/production-readiness.md) — Health check probes, graceful degradation, and error handling.
 

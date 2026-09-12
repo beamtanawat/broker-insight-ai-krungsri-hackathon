@@ -100,7 +100,7 @@ export function CustomerHeader({
             {segment && (
               <span
                 style={{
-                  fontSize: "11px",
+                  fontSize: "12px",
                   fontWeight: 700,
                   backgroundColor: "rgba(254, 203, 0, 0.18)",
                   color: "#854d0e",

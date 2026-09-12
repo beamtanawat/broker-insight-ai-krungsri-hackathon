@@ -266,7 +266,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
           />
           <span
             style={{
-              fontSize: "11px",
+              fontSize: "12px",
               fontWeight: 700,
               color: "var(--slate-400)",
               backgroundColor: "var(--slate-100)",
@@ -324,12 +324,12 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                       {item.icon}
                     </div>
                     <div style={{ minWidth: 0 }}>
-                      <div style={{ fontSize: "13px", fontWeight: 700, color: "var(--slate-900)" }}>
+                      <div style={{ fontSize: "14px", fontWeight: 700, color: "var(--slate-900)" }}>
                         {item.title}
                       </div>
                       <div
                         style={{
-                          fontSize: "11px",
+                          fontSize: "12px",
                           color: "var(--slate-500)",
                           marginTop: "2px",
                           overflow: "hidden",
@@ -346,7 +346,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                     {item.badge && (
                       <span
                         style={{
-                          fontSize: "10px",
+                          fontSize: "12px",
                           fontWeight: 700,
                           color: item.badgeColor || "var(--krungsri-navy)",
                           backgroundColor: `${item.badgeColor || "#0b1e36"}14`,
@@ -380,7 +380,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            fontSize: "11px",
+            fontSize: "12px",
             color: "var(--slate-500)",
           }}
         >

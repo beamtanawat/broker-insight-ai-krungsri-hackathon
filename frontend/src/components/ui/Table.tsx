@@ -47,7 +47,7 @@ export function TableHeader({ children, style }: { children: React.ReactNode; st
         backgroundColor: "var(--slate-50)",
         borderBottom: "1px solid var(--border-subtle)",
         color: "var(--slate-600)",
-        fontSize: "var(--fs-xs)",
+        fontSize: "var(--fs-base)",
         fontWeight: 700,
         textTransform: "uppercase",
         letterSpacing: "0.05em",
@@ -133,7 +133,7 @@ export function TableHeadCell({
       <span style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
         {children}
         {sortDirection && (
-          <span aria-hidden="true" style={{ fontSize: "10px", color: "var(--primary-600)" }}>
+          <span aria-hidden="true" style={{ fontSize: "12px", color: "var(--primary-600)" }}>
             {sortDirection === "asc" ? "▲" : "▼"}
           </span>
         )}

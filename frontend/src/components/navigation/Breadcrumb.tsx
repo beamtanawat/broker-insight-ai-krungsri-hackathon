@@ -37,7 +37,7 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
               aria-current={isLast ? "page" : undefined}
             >
               {idx > 0 && (
-                <span aria-hidden="true" style={{ color: "var(--slate-300)", fontSize: "10px" }}>
+                <span aria-hidden="true" style={{ color: "var(--slate-300)", fontSize: "12px" }}>
                   ›
                 </span>
               )}

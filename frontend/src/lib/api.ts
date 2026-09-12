@@ -46,6 +46,14 @@ import type {
   RecommendationErrorAnalysisResponse,
   RecommendationConfigResponse,
   E2EPerformanceResponse,
+  CandidateListResponse,
+  VisitPlannerConfigResponse,
+  VisitPlanRouteResponse,
+  RouteOptimizeRequest,
+  VisitPlannerValidateResponse,
+  NearbyCustomersResponse,
+  SingleCustomerNavigationRequest,
+  SingleCustomerNavigationResponse,
 } from "../types";
 
 import {
@@ -59,6 +67,9 @@ import {
   MOCK_PEARL_INSIGHTS,
   MOCK_PEARL_NEEDS,
   MOCK_PEARL_ANALYSIS,
+  MOCK_VISIT_PLANNER_CONFIG,
+  MOCK_VISIT_PLANNER_CANDIDATES,
+  MOCK_VISIT_PLANNER_ROUTE,
 } from "./demoData";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
@@ -209,6 +220,39 @@ function getMockResponse<T>(path: string, options: RequestInit = {}): T | undefi
   }
   if (path.startsWith("/api/v1/audit")) {
     return { items: [], total: 0, page: 1 } as T;
+  }
+  if (path.startsWith("/api/v1/visit-planner")) {
+    if (path.includes("/config")) {
+      return MOCK_VISIT_PLANNER_CONFIG as T;
+    }
+    if (path.includes("/candidates")) {
+      return {
+        items: MOCK_VISIT_PLANNER_CANDIDATES,
+        total: MOCK_VISIT_PLANNER_CANDIDATES.length,
+        routable_count: MOCK_VISIT_PLANNER_CANDIDATES.filter((c) => c.routable).length,
+        unroutable_count: MOCK_VISIT_PLANNER_CANDIDATES.filter((c) => !c.routable).length,
+        page: 1,
+        page_size: 50,
+      } as T;
+    }
+    if (path.includes("/validate")) {
+      return {
+        valid: true,
+        errors: [],
+        warnings: [],
+        issues: [],
+        total_requested: 3,
+        routable_count: 3,
+        unroutable_count: 0,
+        routable_customer_ids: MOCK_VISIT_PLANNER_CANDIDATES.filter((c) => c.routable).map((c) => c.customer_id),
+        unroutable_customer_ids: [],
+        validated_customers: MOCK_VISIT_PLANNER_CANDIDATES.filter((c) => c.routable),
+        effective_config: {},
+      } as T;
+    }
+    if (path.includes("/route") || path.includes("/optimize")) {
+      return MOCK_VISIT_PLANNER_ROUTE as T;
+    }
   }
   return undefined;
 }
@@ -464,6 +508,67 @@ export const api = {
     getScenarioAnalysis: () => request<any[]>("/api/v1/pilot/analysis/scenarios"),
     getDecisionAnalysis: () => request<any>("/api/v1/pilot/analysis/decisions"),
     exportAnalysisUrl: (format = "json") => `/api/v1/pilot/analysis/export?format=${format}`,
+  },
+  visitPlanner: {
+    getCandidates: (params?: {
+      priority?: string;
+      location_only?: boolean;
+      search?: string;
+      origin_lat?: number;
+      origin_lng?: number;
+      radius_km?: number;
+      sort_by?: string;
+      page?: number;
+      page_size?: number;
+    }) => {
+      const query = new URLSearchParams();
+      if (params?.priority && params.priority !== "all") query.set("priority", params.priority);
+      if (params?.location_only) query.set("location_only", "true");
+      if (params?.search) query.set("search", params.search);
+      if (params?.origin_lat !== undefined && params?.origin_lat !== null) query.set("origin_lat", params.origin_lat.toString());
+      if (params?.origin_lng !== undefined && params?.origin_lng !== null) query.set("origin_lng", params.origin_lng.toString());
+      if (params?.radius_km !== undefined && params?.radius_km !== null) query.set("radius_km", params.radius_km.toString());
+      if (params?.sort_by) query.set("sort_by", params.sort_by);
+      if (params?.page) query.set("page", params.page.toString());
+      if (params?.page_size) query.set("page_size", params.page_size.toString());
+      const qs = query.toString();
+      return request<CandidateListResponse>(`/api/v1/visit-planner/candidates${qs ? `?${qs}` : ""}`);
+    },
+    getConfig: () => request<VisitPlannerConfigResponse>("/api/v1/visit-planner/config"),
+    getRoute: (payload: RouteOptimizeRequest) =>
+      request<VisitPlanRouteResponse>("/api/v1/visit-planner/route", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      }),
+    validate: (payload: RouteOptimizeRequest) =>
+      request<VisitPlannerValidateResponse>("/api/v1/visit-planner/validate", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      }),
+    getNearbyCustomers: (params: {
+      broker_lat: number;
+      broker_lng: number;
+      radius_km?: number;
+      sort_by?: "distance" | "priority" | "name";
+      limit?: number;
+      broker_id?: string;
+      location_source?: "browser_gps" | "office_hub" | "manual";
+    }) => {
+      const query = new URLSearchParams();
+      query.set("broker_lat", params.broker_lat.toString());
+      query.set("broker_lng", params.broker_lng.toString());
+      if (params.radius_km !== undefined && params.radius_km !== null) query.set("radius_km", params.radius_km.toString());
+      if (params.sort_by) query.set("sort_by", params.sort_by);
+      if (params.limit) query.set("limit", params.limit.toString());
+      if (params.broker_id) query.set("broker_id", params.broker_id);
+      if (params.location_source) query.set("location_source", params.location_source);
+      return request<NearbyCustomersResponse>(`/api/v1/visit-planner/nearby-customers?${query.toString()}`);
+    },
+    navigate: (payload: SingleCustomerNavigationRequest) =>
+      request<SingleCustomerNavigationResponse>("/api/v1/visit-planner/navigate", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      }),
   },
 };
 

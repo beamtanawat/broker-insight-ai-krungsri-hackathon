@@ -134,7 +134,7 @@ export function CustomerTasks({
           flexWrap: "wrap",
         }}
       >
-        <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, color: "var(--primary-900)", display: "flex", alignItems: "center", gap: "6px" }}>
+        <div style={{ fontSize: "var(--fs-base)", fontWeight: 700, color: "var(--primary-900)", display: "flex", alignItems: "center", gap: "6px" }}>
           <span>⚡ เทมเพลตนัดหมายด่วน:</span>
         </div>
         <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
@@ -241,14 +241,14 @@ export function CustomerTasks({
               >
                 <div style={{ flex: 1, minWidth: "260px" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    <span style={{ fontWeight: 700, fontSize: "var(--fs-sm)", color: "var(--slate-900)" }}>
+                    <span style={{ fontWeight: 700, fontSize: "var(--fs-base)", color: "var(--slate-900)" }}>
                       {task.follow_up_window || "นัดหมายติดต่อลูกค้า"}
                     </span>
                     <Badge variant={task.priority === "high" ? "high" : "neutral"} size="sm">
                       {task.priority === "high" ? "ด่วน" : "ปกติ"}
                     </Badge>
                     {task.payment_status === "overdue" && (
-                      <span style={{ fontSize: "11px", color: "#b91c1c", fontWeight: 700 }}>
+                      <span style={{ fontSize: "12px", color: "#b91c1c", fontWeight: 700 }}>
                         ⚠️ เกินกำหนดแล้ว
                       </span>
                     )}
@@ -256,7 +256,7 @@ export function CustomerTasks({
                   <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-600)", marginTop: "6px", lineHeight: 1.4 }}>
                     {task.notes || "ไม่มีบันทึกเพิ่มเติม"}
                   </div>
-                  <div style={{ fontSize: "11px", color: "var(--slate-400)", marginTop: "4px" }}>
+                  <div style={{ fontSize: "12px", color: "var(--slate-400)", marginTop: "4px" }}>
                     กำหนดการ: <strong>{task.scheduled_date || "เร็ว ๆ นี้"}</strong> · ติดต่อล่าสุด: {task.last_contact_date || "-"}
                   </div>
                 </div>
@@ -319,7 +319,7 @@ export function CustomerTasks({
               >
                 <div>
                   <strong>{task.follow_up_window || "นัดหมายเสร็จสิ้น"}:</strong> {task.notes || "ดำเนินการเรียบร้อย"}
-                  <div style={{ fontSize: "11px", color: "var(--slate-400)", marginTop: "2px" }}>
+                  <div style={{ fontSize: "12px", color: "var(--slate-400)", marginTop: "2px" }}>
                     กำหนดการเดิม: {task.scheduled_date || "-"}
                   </div>
                 </div>
@@ -333,7 +333,7 @@ export function CustomerTasks({
                       style={{
                         background: "none",
                         border: "none",
-                        fontSize: "11px",
+                        fontSize: "12px",
                         color: "var(--primary-700)",
                         textDecoration: "underline",
                         cursor: "pointer",

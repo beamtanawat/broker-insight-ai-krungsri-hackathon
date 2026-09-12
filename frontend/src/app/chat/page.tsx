@@ -135,7 +135,7 @@ function ChatContent() {
                   >
                     {m.role === "assistant" && (
                       <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "6px" }}>
-                        <span style={{ fontSize: "11px", fontWeight: 800, color: "var(--primary-700)", textTransform: "uppercase" }}>
+                        <span style={{ fontSize: "12px", fontWeight: 800, color: "var(--primary-700)", textTransform: "uppercase" }}>
                           ⚡ AI Copilot
                         </span>
                       </div>

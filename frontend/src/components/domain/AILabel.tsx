@@ -51,7 +51,7 @@ const LABEL_CONFIG: Record<AILabelType, { icon: string; defaultLabel: string; bg
 export function AILabel({ type, label, size = "sm", style, ...rest }: AILabelProps) {
   const { icon, defaultLabel, bg, text, border } = LABEL_CONFIG[type];
   const displayLabel = label ?? defaultLabel;
-  const fontSize = size === "sm" ? "0.6875rem" : "var(--fs-xs)";
+  const fontSize = size === "sm" ? "var(--text-xs)" : "var(--text-sm)";
 
   return (
     <span

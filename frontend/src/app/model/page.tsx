@@ -229,6 +229,7 @@ export default function AIHealthAndMonitoringPage() {
 
       {/* ── 2. Top System Health Pill Strip ── */}
       <div
+        data-tour="model-metrics"
         className="glass-card"
         style={{
           padding: "var(--space-4) var(--space-6)",
@@ -256,7 +257,7 @@ export default function AIHealthAndMonitoringPage() {
           </span>
         </div>
 
-        <div style={{ display: "flex", gap: "8px" }}>
+        <div data-tour="model-shap" style={{ display: "flex", gap: "8px" }}>
           <Badge variant="success" size="sm">0% Gating Violation</Badge>
           <Badge variant="info" size="sm">100% Guardrail Pass</Badge>
         </div>
@@ -290,7 +291,7 @@ export default function AIHealthAndMonitoringPage() {
             >
               <div style={{ height: "4px", background: "var(--krungsri-gold-gradient)" }} />
               <div style={{ padding: "18px 20px" }}>
-                <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", letterSpacing: "0.05em" }}>
+                <div style={{ fontSize: "14px", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", letterSpacing: "0.05em" }}>
                   F1-Score (ความแม่นยำรวม)
                 </div>
                 <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 900, color: "var(--krungsri-navy)", marginTop: "4px", lineHeight: 1.1 }}>
@@ -314,7 +315,7 @@ export default function AIHealthAndMonitoringPage() {
             >
               <div style={{ height: "4px", backgroundColor: "#16a34a" }} />
               <div style={{ padding: "18px 20px" }}>
-                <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", letterSpacing: "0.05em" }}>
+                <div style={{ fontSize: "14px", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", letterSpacing: "0.05em" }}>
                   ROC-AUC (การจำแนกกลุ่ม)
                 </div>
                 <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 900, color: "#16a34a", marginTop: "4px", lineHeight: 1.1 }}>
@@ -338,7 +339,7 @@ export default function AIHealthAndMonitoringPage() {
             >
               <div style={{ height: "4px", backgroundColor: "#2563eb" }} />
               <div style={{ padding: "18px 20px" }}>
-                <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", letterSpacing: "0.05em" }}>
+                <div style={{ fontSize: "14px", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", letterSpacing: "0.05em" }}>
                   Brier Score / ECE (Calibration)
                 </div>
                 <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 900, color: "var(--slate-900)", marginTop: "4px", lineHeight: 1.1 }}>
@@ -362,7 +363,7 @@ export default function AIHealthAndMonitoringPage() {
             >
               <div style={{ height: "4px", backgroundColor: "var(--krungsri-navy)" }} />
               <div style={{ padding: "18px 20px" }}>
-                <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", letterSpacing: "0.05em" }}>
+                <div style={{ fontSize: "14px", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", letterSpacing: "0.05em" }}>
                   เวลาแฝง E2E Latency (P95)
                 </div>
                 <div style={{ fontSize: "var(--fs-3xl)", fontWeight: 900, color: "var(--krungsri-navy)", marginTop: "4px", lineHeight: 1.1 }}>

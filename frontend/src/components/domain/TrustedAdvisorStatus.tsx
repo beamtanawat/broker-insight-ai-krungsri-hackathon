@@ -333,7 +333,7 @@ export function TrustedAdvisorFrameworkBanner() {
             </h4>
             <span
               style={{
-                fontSize: "10px",
+                fontSize: "12px",
                 fontWeight: 800,
                 backgroundColor: "var(--krungsri-yellow)",
                 color: "#0b1e36",
@@ -367,7 +367,7 @@ export function TrustedAdvisorFrameworkBanner() {
           paddingTop: "12px",
           borderTop: "1px solid rgba(11, 30, 54, 0.06)",
           overflowX: "auto",
-          fontSize: "11px",
+          fontSize: "12px",
         }}
       >
         <span style={{ fontWeight: 700, color: "var(--slate-500)", whiteSpace: "nowrap" }}>Journey Flow:</span>

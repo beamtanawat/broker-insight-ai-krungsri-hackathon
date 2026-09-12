@@ -76,7 +76,8 @@ export default function AuditPage() {
       />
 
       {/* ── 2. Audit Trail Table Card ── */}
-      <Card noPadding>
+      <div data-tour="audit-log-table">
+        <Card noPadding>
         {loading ? (
           <TableSkeleton rows={8} cols={6} />
         ) : logs.length > 0 ? (
@@ -170,6 +171,7 @@ export default function AuditPage() {
           />
         )}
       </Card>
+      </div>
 
       {/* ── Event Inspection Drawer ── */}
       {selectedLog && (
@@ -221,7 +223,7 @@ export default function AuditPage() {
                   backgroundColor: "var(--slate-900)",
                   color: "var(--slate-100)",
                   borderRadius: "var(--radius-md)",
-                  fontSize: "11px",
+                  fontSize: "12px",
                   overflowX: "auto",
                   lineHeight: 1.5,
                 }}

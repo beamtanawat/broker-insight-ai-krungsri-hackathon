@@ -106,8 +106,9 @@ export function CustomerPrep({
                 borderLeft: "4px solid var(--primary-600)",
                 borderRadius: "var(--radius-sm)",
                 fontSize: "var(--fs-base)",
+                fontFamily: "var(--font-reading-thai)",
                 color: "var(--slate-800)",
-                lineHeight: 1.6,
+                lineHeight: "var(--lh-reading, 1.8)",
                 fontStyle: "italic",
               }}
             >
@@ -133,10 +134,10 @@ export function CustomerPrep({
                   }}
                 >
                   <div style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
-                    <span style={{ fontWeight: 800, color: "var(--primary-700)", fontSize: "var(--fs-sm)" }}>
+                    <span style={{ fontWeight: 800, color: "var(--primary-700)", fontSize: "var(--fs-sm)", fontFamily: "var(--font-ui-thai)" }}>
                       {idx + 1}.
                     </span>
-                    <span style={{ fontSize: "var(--fs-sm)", color: "var(--slate-800)", lineHeight: 1.5 }}>
+                    <span style={{ fontSize: "var(--fs-sm)", fontFamily: "var(--font-reading-thai)", color: "var(--slate-800)", lineHeight: "var(--lh-reading, 1.7)" }}>
                       {q}
                     </span>
                   </div>
@@ -157,7 +158,7 @@ export function CustomerPrep({
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "var(--space-4)" }}>
             {/* Topics to explore */}
             <Card title="🔍 ประเด็นที่ควรเจาะลึก (Topics to Explore)">
-              <ul style={{ margin: 0, paddingLeft: "18px", fontSize: "var(--fs-sm)", color: "var(--slate-700)", lineHeight: 1.7 }}>
+              <ul style={{ margin: 0, paddingLeft: "18px", fontSize: "var(--fs-sm)", fontFamily: "var(--font-reading-thai)", color: "var(--slate-700)", lineHeight: "var(--lh-reading, 1.7)" }}>
                 {conversationGuide.topics_to_explore?.map((t, idx) => (
                   <li key={idx}>{t}</li>
                 ))}
@@ -166,7 +167,7 @@ export function CustomerPrep({
 
             {/* Cautions */}
             <Card title="⚠️ ข้อควรระวังในการสนทนา (Cautions)">
-              <ul style={{ margin: 0, paddingLeft: "18px", fontSize: "var(--fs-sm)", color: "var(--danger-text)", lineHeight: 1.7 }}>
+              <ul style={{ margin: 0, paddingLeft: "18px", fontSize: "var(--fs-sm)", fontFamily: "var(--font-reading-thai)", color: "var(--danger-text)", lineHeight: "var(--lh-reading, 1.7)" }}>
                 {conversationGuide.potential_concerns?.map((c, idx) => (
                   <li key={idx}>{c}</li>
                 ))}
@@ -175,7 +176,7 @@ export function CustomerPrep({
           </div>
 
           {conversationGuide.model_metadata && (
-            <div style={{ fontSize: "11px", color: "var(--slate-400)", textAlign: "right" }}>
+            <div style={{ fontSize: "12px", color: "var(--slate-400)", textAlign: "right" }}>
               สร้างโดย: {conversationGuide.model_metadata.provider} ({conversationGuide.model_metadata.model_name} v{conversationGuide.model_metadata.model_version})
             </div>
           )}

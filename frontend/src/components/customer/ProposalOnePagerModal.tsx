@@ -95,7 +95,7 @@ export function ProposalOnePagerModal({
               <div style={{ fontWeight: 700, fontSize: "14px", color: "#ffffff" }}>
                 ใบสรุปข้อเสนอแนะทางการเงินและประกันภัย (Proposal One-Pager)
               </div>
-              <div style={{ fontSize: "11px", color: "#94a3b8" }}>
+              <div style={{ fontSize: "12px", color: "#94a3b8" }}>
                 ระบบคัดกรองผลิตภัณฑ์อัจฉริยะ Broker Insight AI · ธนาคารกรุงศรีอยุธยา
               </div>
             </div>
@@ -186,7 +186,7 @@ export function ProposalOnePagerModal({
               <div
                 style={{
                   display: "inline-block",
-                  fontSize: "11px",
+                  fontSize: "12px",
                   fontWeight: 800,
                   letterSpacing: "0.08em",
                   textTransform: "uppercase",
@@ -254,7 +254,7 @@ export function ProposalOnePagerModal({
             >
               <div>
                 <span style={{ color: "#64748b", display: "block" }}>ชื่อลูกค้า:</span>
-                <strong style={{ color: "#0f172a", fontSize: "13px" }}>{customer.full_name}</strong>
+                <strong style={{ color: "#0f172a", fontSize: "14px" }}>{customer.full_name}</strong>
               </div>
               <div>
                 <span style={{ color: "#64748b", display: "block" }}>สถานะกลุ่มลูกค้า:</span>
@@ -285,19 +285,19 @@ export function ProposalOnePagerModal({
               }}
             >
               <div style={{ padding: "10px 14px", border: "1px solid #e2e8f0", borderRadius: "6px" }}>
-                <span style={{ color: "#64748b", fontSize: "11px" }}>สินทรัพย์รวม / เงินฝาก:</span>
+                <span style={{ color: "#64748b", fontSize: "12px" }}>สินทรัพย์รวม / เงินฝาก:</span>
                 <div style={{ fontWeight: 700, fontSize: "14px", color: "#0f172a", marginTop: "2px" }}>
                   {fin?.total_assets ? `฿${fin.total_assets.toLocaleString()}` : "฿1,500,000"}
                 </div>
               </div>
               <div style={{ padding: "10px 14px", border: "1px solid #e2e8f0", borderRadius: "6px" }}>
-                <span style={{ color: "#64748b", fontSize: "11px" }}>ภาระหนี้สิน / วงเงินสินเชื่อ:</span>
+                <span style={{ color: "#64748b", fontSize: "12px" }}>ภาระหนี้สิน / วงเงินสินเชื่อ:</span>
                 <div style={{ fontWeight: 700, fontSize: "14px", color: fin?.has_active_loan ? "#b91c1c" : "#0f172a", marginTop: "2px" }}>
                   {fin?.total_liabilities ? `฿${fin.total_liabilities.toLocaleString()}` : fin?.has_active_loan ? "฿5,500,000" : "฿0"}
                 </div>
               </div>
               <div style={{ padding: "10px 14px", border: "1px solid #e2e8f0", borderRadius: "6px" }}>
-                <span style={{ color: "#64748b", fontSize: "11px" }}>กรมธรรม์ที่มีอยู่เดิม:</span>
+                <span style={{ color: "#64748b", fontSize: "12px" }}>กรมธรรม์ที่มีอยู่เดิม:</span>
                 <div style={{ fontWeight: 700, fontSize: "14px", color: "#0f172a", marginTop: "2px" }}>
                   {customer.insurance_policies?.length || 0} ฉบับ
                 </div>
@@ -332,7 +332,7 @@ export function ProposalOnePagerModal({
                 <div>
                   <span
                     style={{
-                      fontSize: "11px",
+                      fontSize: "12px",
                       fontWeight: 700,
                       color: "#1d4ed8",
                       backgroundColor: "#dbeafe",
@@ -351,7 +351,7 @@ export function ProposalOnePagerModal({
                 </div>
 
                 <div style={{ textAlign: "right" }}>
-                  <div style={{ fontSize: "11px", color: "#64748b" }}>วงเงินความคุ้มครอง:</div>
+                  <div style={{ fontSize: "12px", color: "#64748b" }}>วงเงินความคุ้มครอง:</div>
                   <div style={{ fontSize: "16px", fontWeight: 800, color: "#1e3a8a" }}>
                     {primaryRec?.coverage_range || "฿500,000 - ฿5,000,000"}
                   </div>
@@ -418,10 +418,10 @@ export function ProposalOnePagerModal({
             >
               <div style={{ padding: "12px 14px", backgroundColor: "#f8fafc", borderRadius: "6px", border: "1px solid #e2e8f0" }}>
                 <span style={{ color: "#64748b", display: "block" }}>กำหนดการนัดหมายติดต่อถัดไป:</span>
-                <strong style={{ color: "#0f172a", fontSize: "13px" }}>
+                <strong style={{ color: "#0f172a", fontSize: "14px" }}>
                   {customer.follow_ups?.[0]?.scheduled_date || "ภายใน 3-5 วันทำการ"}
                 </strong>
-                <div style={{ color: "#64748b", marginTop: "4px", fontSize: "11px" }}>
+                <div style={{ color: "#64748b", marginTop: "4px", fontSize: "12px" }}>
                   ประเด็นติดตาม: นำเสนอเอกสารตารางผลประโยชน์ และตรวจสอบคุณสมบัติการรับประกัน
                 </div>
               </div>
@@ -429,7 +429,7 @@ export function ProposalOnePagerModal({
               <div style={{ padding: "12px 14px", backgroundColor: "#f8fafc", borderRadius: "6px", border: "1px solid #e2e8f0" }}>
                 <span style={{ color: "#64748b", display: "block" }}>เอกสารที่ต้องจัดเตรียม:</span>
                 <strong style={{ color: "#0f172a" }}>บัตรประจำตัวประชาชน / สำเนาสมุดบัญชีเงินฝาก</strong>
-                <div style={{ color: "#64748b", marginTop: "4px", fontSize: "11px" }}>
+                <div style={{ color: "#64748b", marginTop: "4px", fontSize: "12px" }}>
                   พร้อมหลักฐานเพื่อใช้ในการหักบัญชีอัตโนมัติหรือยื่นลดหย่อนภาษี
                 </div>
               </div>
@@ -453,7 +453,7 @@ export function ProposalOnePagerModal({
               <div style={{ borderTop: "1px dotted #94a3b8", paddingTop: "8px" }}>
                 <div>ลงชื่อ ....................................................................</div>
                 <div style={{ fontWeight: 600, color: "#0f2744", marginTop: "4px" }}>({customer.full_name})</div>
-                <div style={{ color: "#64748b", fontSize: "11px" }}>ลูกค้าผู้ขอรับคำปรึกษา</div>
+                <div style={{ color: "#64748b", fontSize: "12px" }}>ลูกค้าผู้ขอรับคำปรึกษา</div>
               </div>
             </div>
 
@@ -464,7 +464,7 @@ export function ProposalOnePagerModal({
                 <div style={{ fontWeight: 600, color: "#0f2744", marginTop: "4px" }}>
                   ({user?.full_name || "สมชาย นายหน้า (หลัก)"})
                 </div>
-                <div style={{ color: "#64748b", fontSize: "11px" }}>นายหน้าผู้ให้คำปรึกษาและวางแผนทางการเงิน</div>
+                <div style={{ color: "#64748b", fontSize: "12px" }}>นายหน้าผู้ให้คำปรึกษาและวางแผนทางการเงิน</div>
               </div>
             </div>
           </div>
@@ -475,7 +475,7 @@ export function ProposalOnePagerModal({
               marginTop: "28px",
               paddingTop: "12px",
               borderTop: "1px solid #f1f5f9",
-              fontSize: "10px",
+              fontSize: "12px",
               color: "#94a3b8",
               textAlign: "center",
               lineHeight: 1.4,

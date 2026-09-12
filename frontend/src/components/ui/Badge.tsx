@@ -86,7 +86,7 @@ const VARIANT_STYLES: Record<BadgeVariant, { bg: string; text: string; border: s
 };
 
 const SIZE_STYLES: Record<BadgeSize, { padding: string; fontSize: string }> = {
-  sm: { padding: "2px 6px", fontSize: "0.6875rem" },
+  sm: { padding: "2px 6px", fontSize: "0.75rem" },
   md: { padding: "3px 8px", fontSize: "0.75rem" },
   lg: { padding: "4px 12px", fontSize: "0.8125rem" },
 };

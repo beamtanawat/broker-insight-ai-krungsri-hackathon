@@ -34,7 +34,7 @@
 
 /* Insight */
 .insightBody { display: grid; grid-template-columns: 36px 1fr; gap: 12px; margin: 14px 0; }
-.aiMark { display: grid; width: 36px; height: 36px; place-items: center; border: 1px solid var(--teal-mid); border-radius: 11px; color: var(--teal-dark); background: var(--teal-soft); font-size: 10px; font-weight: 900; letter-spacing: 0.04em; }
+.aiMark { display: grid; width: 36px; height: 36px; place-items: center; border: 1px solid var(--teal-mid); border-radius: 11px; color: var(--teal-dark); background: var(--teal-soft); font-size: 12px; font-weight: 900; letter-spacing: 0.04em; }
 .insightText { font-size: var(--fs-sm); line-height: 1.7; color: var(--ink); }
 .topics { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 6px; }
 .topics li { position: relative; padding-left: 16px; font-size: var(--fs-sm); color: var(--ink-soft); line-height: 1.5; }

@@ -15,6 +15,12 @@ class CustomerProfileOut(BaseModel):
     kyc_channel: Optional[str] = None
     risk_tolerance: Optional[str] = None
     relationship_tier: Optional[str] = None
+    address: Optional[str] = None
+    district: Optional[str] = None
+    province: Optional[str] = None
+    postal_code: Optional[str] = None
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
     created_at: datetime
     updated_at: datetime
 

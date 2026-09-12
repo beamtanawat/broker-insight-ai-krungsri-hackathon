@@ -19,25 +19,13 @@ interface NavSection {
 
 const NAV_SECTIONS: NavSection[] = [
   {
-    title: "พื้นที่ทำงาน (Workspace)",
+    title: "",
     items: [
-      { label: "แดชบอร์ด (Dashboard)", href: "/dashboard", icon: "🏠" },
-      { label: "รายชื่อลูกค้า (Customers)", href: "/customers", icon: "👥" },
-      { label: "My Protection (ลูกค้า Gen Z)", href: "/my-protection", icon: "📱", badge: "Gen Z" },
-    ],
-  },
-  {
-    title: "ปฏิบัติการ (Operations)",
-    items: [
-      { label: "ภาพรวมธุรกิจ (Business View)", href: "/analytics", icon: "📈", roles: ["manager", "admin"] },
-      { label: "สุขภาพระบบ AI (AI Health)", href: "/model", icon: "🤖", roles: ["manager", "admin"] },
-      { label: "Pilot & Evaluation", href: "/pilot", icon: "🧪", badge: "Live", roles: ["manager", "admin"] },
-    ],
-  },
-  {
-    title: "การกำกับดูแล (Administration)",
-    items: [
-      { label: "บันทึกระบบ (System Audit)", href: "/admin/audit", icon: "📜", roles: ["admin"] },
+      { label: "แดชบอร์ด", href: "/dashboard", icon: "🏠" },
+      { label: "รายชื่อลูกค้า", href: "/customers", icon: "👥" },
+      { label: "แผนที่ลูกค้าใกล้เคียง", href: "/visit-planner", icon: "📍" },
+      { label: "รายงาน", href: "/analytics", icon: "📊" },
+      { label: "ตั้งค่า", href: "/admin/audit", icon: "⚙️" },
     ],
   },
 ];
@@ -106,7 +94,7 @@ export function Sidebar({ user, collapsed = false, onToggleCollapse, onMobileClo
             <div style={{ fontWeight: 800, color: "white", fontSize: "1.0rem", letterSpacing: "-0.01em", whiteSpace: "nowrap" }}>
               Broker Insight <span style={{ color: "var(--krungsri-yellow)" }}>AI</span>
             </div>
-            <div style={{ fontSize: "0.6875rem", color: "var(--slate-400)", whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: "6px", marginTop: "2px" }}>
+            <div style={{ fontSize: "0.75rem", color: "var(--slate-400)", whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: "6px", marginTop: "2px" }}>
               <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#22c55e", display: "inline-block", boxShadow: "0 0 6px #22c55e" }} />
               Krungsri Financial Advisory
             </div>
@@ -137,7 +125,7 @@ export function Sidebar({ user, collapsed = false, onToggleCollapse, onMobileClo
               {!collapsed && (
                 <div
                   style={{
-                    fontSize: "0.6875rem",
+                    fontSize: "0.875rem",
                     fontWeight: 700,
                     textTransform: "uppercase",
                     color: "var(--slate-400)",
@@ -164,7 +152,7 @@ export function Sidebar({ user, collapsed = false, onToggleCollapse, onMobileClo
                         padding: collapsed ? "10px" : "10px 14px",
                         justifyContent: collapsed ? "center" : "flex-start",
                         borderRadius: "var(--radius-md)",
-                        fontSize: "0.85rem",
+                        fontSize: "0.875rem",
                         fontWeight: isActive ? 700 : 500,
                         backgroundColor: isActive ? "rgba(254, 203, 0, 0.14)" : "transparent",
                         borderLeft: isActive ? "3px solid var(--krungsri-yellow)" : "3px solid transparent",
@@ -195,7 +183,7 @@ export function Sidebar({ user, collapsed = false, onToggleCollapse, onMobileClo
                       {!collapsed && item.badge && (
                         <span
                           style={{
-                            fontSize: "0.625rem",
+                            fontSize: "0.75rem",
                             fontWeight: 800,
                             padding: "2px 7px",
                             backgroundColor: "rgba(254, 203, 0, 0.2)",
@@ -216,65 +204,70 @@ export function Sidebar({ user, collapsed = false, onToggleCollapse, onMobileClo
         })}
       </div>
 
-      {/* Footer / User Profile & Collapse Toggle */}
+      {/* AI Assistant Promo Banner Card matching screenshot */}
+      {!collapsed && (
+        <div
+          style={{
+            margin: "0 12px 14px 12px",
+            padding: "18px 14px",
+            borderRadius: "14px",
+            background: "linear-gradient(145deg, rgba(14, 28, 48, 0.95) 0%, rgba(9, 18, 32, 0.98) 100%)",
+            border: "1px solid rgba(254, 203, 0, 0.25)",
+            boxShadow: "0 4px 16px rgba(0, 0, 0, 0.25)",
+            textAlign: "center",
+          }}
+        >
+          <div
+            style={{
+              fontSize: "1.85rem",
+              marginBottom: "6px",
+              filter: "drop-shadow(0 0 8px rgba(254, 203, 0, 0.6))",
+            }}
+          >
+            🧠
+          </div>
+          <div style={{ fontSize: "0.875rem", fontWeight: 800, color: "#FFFFFF", marginBottom: "3px" }}>
+            AI เคียงข้าง
+          </div>
+          <div style={{ fontSize: "0.75rem", color: "#CBD5E1", marginBottom: "6px", fontWeight: 500 }}>
+            ทุกโอกาสการดูแลลูกค้า
+          </div>
+          <div style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500 }}>
+            Empower Your Advisory Journey
+          </div>
+        </div>
+      )}
+
+      {/* Footer / Collapse Toggle */}
       <div
         style={{
-          padding: "12px",
+          padding: "8px 12px",
           borderTop: "1px solid rgba(255,255,255,0.08)",
           display: "flex",
           alignItems: "center",
-          justifyContent: collapsed ? "center" : "space-between",
-          gap: "8px",
+          justifyContent: collapsed ? "center" : "flex-end",
         }}
       >
-        {!collapsed && user && (
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", overflow: "hidden" }}>
-            <div
-              style={{
-                width: "34px",
-                height: "34px",
-                borderRadius: "50%",
-                backgroundColor: "#0f2744",
-                border: "2px solid var(--krungsri-yellow)",
-                color: "var(--krungsri-yellow)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontWeight: 800,
-                fontSize: "0.85rem",
-                flexShrink: 0,
-                boxShadow: "0 0 10px rgba(254, 203, 0, 0.25)",
-              }}
-            >
-              {user.full_name?.charAt(0) || "U"}
-            </div>
-            <div style={{ overflow: "hidden" }}>
-              <div style={{ fontSize: "0.8125rem", fontWeight: 600, color: "white", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                {user.full_name}
-              </div>
-              <div style={{ fontSize: "0.6875rem", color: "var(--slate-400)", textTransform: "capitalize" }}>
-                {user.role}
-              </div>
-            </div>
-          </div>
-        )}
-
         {onToggleCollapse && (
           <button
             onClick={onToggleCollapse}
             title={collapsed ? "ขยายเมนู (Expand)" : "ย่อเมนู (Collapse)"}
             style={{
-              padding: "6px",
-              color: "var(--slate-400)",
-              borderRadius: "var(--radius-sm)",
+              padding: "4px 8px",
+              color: "#94A3B8",
+              backgroundColor: "transparent",
+              border: "none",
+              borderRadius: "6px",
+              cursor: "pointer",
+              fontSize: "1rem",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
             }}
-            onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.backgroundColor = "var(--bg-sidebar-hover)")}
-            onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.backgroundColor = "transparent")}
+            onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "#ffffff")}
+            onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "#94A3B8")}
           >
-            {collapsed ? "▶" : "◀"}
+            {collapsed ? "»" : "«"}
           </button>
         )}
       </div>

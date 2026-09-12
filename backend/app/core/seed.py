@@ -223,6 +223,19 @@ BRANCHES_LIST = [
     "สาขาไอคอนสยาม", "สาขาเดอะมอลล์บางกะปิ", "สาขาฟิวเจอร์พาร์ครังสิต", "สาขาเชียงใหม่ ถ.สุเทพ"
 ]
 
+BANGKOK_NEIGHBORHOODS = [
+    {"district": "วัฒนา", "address_fmt": "ถนนสุขุมวิท ซอย 39 แขวงคลองตันเหนือ เขตวัฒนา กรุงเทพมหานคร 10110", "lat": 13.7345, "lng": 100.5702, "post": "10110"},
+    {"district": "บางรัก", "address_fmt": "ถนนสีลม แขวงสีลม เขตบางรัก กรุงเทพมหานคร 10500", "lat": 13.7262, "lng": 100.5312, "post": "10500"},
+    {"district": "สาทร", "address_fmt": "ถนนสาทรใต้ แขวงยานนาวา เขตสาทร กรุงเทพมหานคร 10120", "lat": 13.7198, "lng": 100.5345, "post": "10120"},
+    {"district": "ยานนาวา", "address_fmt": "ถนนพระรามที่ 3 แขวงช่องนนทรี เขตยานนาวา กรุงเทพมหานคร 10120", "lat": 13.6952, "lng": 100.5428, "post": "10120"},
+    {"district": "พญาไท", "address_fmt": "ถนนพหลโยธิน แขวงสามเสนใน เขตพญาไท กรุงเทพมหานคร 10400", "lat": 13.7782, "lng": 100.5435, "post": "10400"},
+    {"district": "ปทุมวัน", "address_fmt": "ถนนพระรามที่ 1 แขวงปทุมวัน เขตปทุมวัน กรุงเทพมหานคร 10330", "lat": 13.7465, "lng": 100.5338, "post": "10330"},
+    {"district": "จตุจักร", "address_fmt": "ถนนพหลโยธิน แขวงจตุจักร เขตจตุจักร กรุงเทพมหานคร 10900", "lat": 13.8164, "lng": 100.5614, "post": "10900"},
+    {"district": "บางนา", "address_fmt": "ถนนบางนา-ตราด แขวงบางนาใต้ เขตบางนา กรุงเทพมหานคร 10260", "lat": 13.6654, "lng": 100.6241, "post": "10260"},
+    {"district": "ห้วยขวาง", "address_fmt": "ถนนรัชดาภิเษก แขวงห้วยขวาง เขตห้วยขวาง กรุงเทพมหานคร 10310", "lat": 13.7765, "lng": 100.5732, "post": "10310"},
+    {"district": "คลองเตย", "address_fmt": "ถนนพระรามที่ 4 แขวงคลองเตย เขตคลองเตย กรุงเทพมหานคร 10110", "lat": 13.7156, "lng": 100.5601, "post": "10110"},
+]
+
 
 async def seed_database(num_customers: int = 250, force_reseed: bool = False):
     """
@@ -230,6 +243,9 @@ async def seed_database(num_customers: int = 250, force_reseed: bool = False):
     If force_reseed is True, cleanly wipes all existing transactional and customer tables.
     """
     print(f"=== Starting Database Seeding ({num_customers} high-fidelity synthetic customers, force_reseed={force_reseed}) ===")
+
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
 
     async with AsyncSessionLocal() as db:
         existing_cust = await db.execute(select(func.count(Customer.id)))
@@ -330,6 +346,13 @@ async def seed_database(num_customers: int = 250, force_reseed: bool = False):
             ext_ref = f"KS-{idx:05d}"
             assigned_broker = main_broker
 
+            addr_val = None
+            dist_val = None
+            prov_val = "กรุงเทพมหานคร"
+            post_val = None
+            lat_val = None
+            lng_val = None
+
             # -------------------------------------------------------------
             # SEED HERO PERSONAS (KS-00001 through KS-00008)
             # -------------------------------------------------------------
@@ -350,6 +373,11 @@ async def seed_database(num_customers: int = 250, force_reseed: bool = False):
                 days_renewal = 14
                 days_last_contact = 75
                 pay_stat = "paid"
+                addr_val = "99/1 ซอยทองหล่อ 10 แขวงคลองตันเหนือ เขตวัฒนา กรุงเทพมหานคร 10110"
+                dist_val = "วัฒนา"
+                post_val = "10110"
+                lat_val = 13.7314
+                lng_val = 100.5815
 
                 assets = 18500000.0
                 liabilities = 6200000.0
@@ -444,6 +472,11 @@ async def seed_database(num_customers: int = 250, force_reseed: bool = False):
                 days_renewal = 21
                 days_last_contact = 14
                 pay_stat = "paid"
+                addr_val = "88 อาคารสาทรสแควร์ ถนนสาทรเหนือ แขวงสีลม เขตบางรัก กรุงเทพมหานคร 10500"
+                dist_val = "บางรัก"
+                post_val = "10500"
+                lat_val = 13.7225
+                lng_val = 100.5284
 
                 assets = 850000.0
                 liabilities = 0.0
@@ -610,6 +643,11 @@ async def seed_database(num_customers: int = 250, force_reseed: bool = False):
                 days_renewal = 120
                 days_last_contact = 90
                 pay_stat = "paid"
+                addr_val = "253 ถนนสุขุมวิท 21 (อโศก) แขวงคลองเตยเหนือ เขตวัฒนา กรุงเทพมหานคร 10110"
+                dist_val = "วัฒนา"
+                post_val = "10110"
+                lat_val = 13.7372
+                lng_val = 100.5621
 
                 assets = 3500000.0
                 liabilities = 5500000.0
@@ -687,6 +725,11 @@ async def seed_database(num_customers: int = 250, force_reseed: bool = False):
                 days_renewal = 25
                 days_last_contact = 60
                 pay_stat = "paid"
+                addr_val = "456 ถนนพระรามที่ 3 แขวงบางโพงพาง เขตยานนาวา กรุงเทพมหานคร 10120"
+                dist_val = "ยานนาวา"
+                post_val = "10120"
+                lat_val = 13.6891
+                lng_val = 100.5412
 
                 assets = 14200000.0
                 liabilities = 0.0
@@ -777,6 +820,11 @@ async def seed_database(num_customers: int = 250, force_reseed: bool = False):
                 days_renewal = 180
                 days_last_contact = 110
                 pay_stat = "paid"
+                addr_val = "78 ซอยพหลโยธิน 7 แขวงสามเสนใน เขตพญาไท กรุงเทพมหานคร 10400"
+                dist_val = "พญาไท"
+                post_val = "10400"
+                lat_val = 13.7794
+                lng_val = 100.5447
 
                 assets = 850000.0
                 liabilities = 0.0
@@ -842,6 +890,11 @@ async def seed_database(num_customers: int = 250, force_reseed: bool = False):
                 days_renewal = 20
                 days_last_contact = 80
                 pay_stat = "paid"
+                addr_val = "123 ถนนบางนา-ตราด กม.3 แขวงบางนา เขตบางนา กรุงเทพมหานคร 10260"
+                dist_val = "บางนา"
+                post_val = "10260"
+                lat_val = 13.6675
+                lng_val = 100.6288
 
                 assets = 7500000.0
                 liabilities = 2500000.0
@@ -997,6 +1050,21 @@ async def seed_database(num_customers: int = 250, force_reseed: bool = False):
                 tier = archetype["tier"]
                 risk_tol = archetype["risk"]
                 need_focus = archetype["need_focus"]
+
+                # Geolocation: 80% have realistic Bangkok coordinates, 20% left as None to test missing location handling
+                if idx % 5 == 0:
+                    addr_val = None
+                    dist_val = None
+                    post_val = None
+                    lat_val = None
+                    lng_val = None
+                else:
+                    nh = BANGKOK_NEIGHBORHOODS[(idx + 3) % len(BANGKOK_NEIGHBORHOODS)]
+                    addr_val = f"{random.randint(10, 899)}/{random.randint(1, 99)} {nh['address_fmt']}"
+                    dist_val = nh["district"]
+                    post_val = nh["post"]
+                    lat_val = round(nh["lat"] + random.uniform(-0.006, 0.006), 4)
+                    lng_val = round(nh["lng"] + random.uniform(-0.006, 0.006), 4)
 
                 # High Priority: exactly 20 cases for idx >= 9 (4 hero + 20 = 24 total High Priority cases, ~9.6% of portfolio)
                 is_high_prio = idx in [12, 24, 36, 48, 60, 72, 84, 96, 108, 120, 132, 144, 156, 168, 180, 192, 204, 216, 228, 240]
@@ -1183,6 +1251,12 @@ async def seed_database(num_customers: int = 250, force_reseed: bool = False):
                 kyc_channel=kyc_chan,
                 risk_tolerance=risk_tol,
                 relationship_tier=tier,
+                address=addr_val,
+                district=dist_val,
+                province=prov_val,
+                postal_code=post_val,
+                latitude=lat_val,
+                longitude=lng_val,
             )
             db.add(profile)
 

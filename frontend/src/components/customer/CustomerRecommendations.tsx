@@ -165,7 +165,7 @@ export function CustomerRecommendations({
             <div>
               <div style={{ fontSize: "14px", fontWeight: 800, color: "#1e40af", display: "flex", alignItems: "center", gap: "8px" }}>
                 <span>ลูกค้า Gen Z รายนี้เข้ามาสำรวจความต้องการผ่านหน้า My Protection แล้ว</span>
-                <span style={{ fontSize: "11px", backgroundColor: "#2563eb", color: "#ffffff", padding: "1px 7px", borderRadius: "999px" }}>
+                <span style={{ fontSize: "12px", backgroundColor: "#2563eb", color: "#ffffff", padding: "1px 7px", borderRadius: "999px" }}>
                   Digital Intent
                 </span>
               </div>
@@ -253,7 +253,7 @@ export function CustomerRecommendations({
                       padding: "3px 10px",
                       background: "var(--krungsri-gold-gradient)",
                       color: "var(--krungsri-navy)",
-                      fontSize: "11px",
+                      fontSize: "12px",
                       fontWeight: 800,
                       borderRadius: "var(--radius-full)",
                       letterSpacing: "0.03em",
@@ -291,7 +291,7 @@ export function CustomerRecommendations({
                     borderRadius: "var(--radius-lg)",
                   }}
                 >
-                  <span style={{ fontSize: "10px", fontWeight: 700, textTransform: "uppercase", color: "var(--krungsri-navy)", opacity: 0.8 }}>
+                  <span style={{ fontSize: "12px", fontWeight: 700, textTransform: "uppercase", color: "var(--krungsri-navy)", opacity: 0.8 }}>
                     คะแนนความเหมาะสม
                   </span>
                   <span style={{ fontSize: "1.35rem", fontWeight: 900, color: "var(--krungsri-navy)", lineHeight: 1.1 }}>
@@ -342,7 +342,7 @@ export function CustomerRecommendations({
                   <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "var(--fs-xs)", fontWeight: 700, color: "var(--ai-text)", marginBottom: "6px" }}>
                     <span>🎯</span> 1. สัญญาณความต้องการ (Need Signal)
                   </div>
-                  <div style={{ fontSize: "var(--fs-sm)", color: "var(--slate-800)", lineHeight: 1.55 }}>
+                  <div style={{ fontSize: "var(--fs-sm)", fontFamily: "var(--font-reading-thai)", color: "var(--slate-800)", lineHeight: "var(--lh-reading, 1.7)" }}>
                     {primaryRec.structured_explanation?.need_signal || primaryRec.reasons?.[0] || "ตรงกับสัญญาณความคุ้มครองที่ยังขาดหาย"}
                   </div>
                 </div>
@@ -361,7 +361,7 @@ export function CustomerRecommendations({
                   <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "var(--fs-xs)", fontWeight: 700, color: "var(--verified-text)", marginBottom: "6px" }}>
                     <span>👤</span> 2. ความเหมาะสมกับโปรไฟล์ (Profile Fit)
                   </div>
-                  <div style={{ fontSize: "var(--fs-sm)", color: "var(--slate-800)", lineHeight: 1.55 }}>
+                  <div style={{ fontSize: "var(--fs-sm)", fontFamily: "var(--font-reading-thai)", color: "var(--slate-800)", lineHeight: "var(--lh-reading, 1.7)" }}>
                     {primaryRec.structured_explanation?.profile_fit || primaryRec.reasons?.[1] || "ระดับรายได้และช่วงอายุสอดคล้องกับเบี้ยประกัน"}
                   </div>
                 </div>
@@ -380,7 +380,7 @@ export function CustomerRecommendations({
                   <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "var(--fs-xs)", fontWeight: 700, color: "var(--rule-text)", marginBottom: "6px" }}>
                     <span>⚖️</span> 3. การตรวจสอบคุณสมบัติ (Eligibility)
                   </div>
-                  <div style={{ fontSize: "var(--fs-sm)", color: "var(--slate-800)", lineHeight: 1.55 }}>
+                  <div style={{ fontSize: "var(--fs-sm)", fontFamily: "var(--font-reading-thai)", color: "var(--slate-800)", lineHeight: "var(--lh-reading, 1.7)" }}>
                     {primaryRec.structured_explanation?.eligibility_result || (primaryRec.eligibility_status === "eligible" ? "ผ่านเกณฑ์รับประกันทุกข้อ ไม่มีข้อยกเว้น" : "ต้องตรวจสอบข้อมูลเพิ่มเติม")}
                   </div>
                 </div>
@@ -399,7 +399,7 @@ export function CustomerRecommendations({
                   <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "var(--fs-xs)", fontWeight: 700, color: "var(--broker-text)", marginBottom: "6px" }}>
                     <span>🛡️</span> 4. ความคุ้มครองเดิม (Coverage Assessment)
                   </div>
-                  <div style={{ fontSize: "var(--fs-sm)", color: "var(--slate-800)", lineHeight: 1.55 }}>
+                  <div style={{ fontSize: "var(--fs-sm)", fontFamily: "var(--font-reading-thai)", color: "var(--slate-800)", lineHeight: "var(--lh-reading, 1.7)" }}>
                     {primaryRec.structured_explanation?.existing_coverage_assessment || "ไม่ซ้ำซ้อนกับกรมธรรม์เดิมที่ถือครองอยู่"}
                   </div>
                 </div>
@@ -426,7 +426,7 @@ export function CustomerRecommendations({
                       ✓
                     </div>
                     <div>
-                      <div style={{ fontWeight: 800, fontSize: "var(--fs-sm)", color: "#14532d" }}>
+                      <div style={{ fontWeight: 800, fontSize: "var(--fs-base)", color: "#14532d" }}>
                         โบรกเกอร์บันทึกความเห็นชอบแล้ว (Approved)
                       </div>
                       <div style={{ fontSize: "var(--fs-xs)", color: "#166534", marginTop: "2px" }}>
@@ -477,7 +477,7 @@ export function CustomerRecommendations({
                       ✎
                     </div>
                     <div>
-                      <div style={{ fontWeight: 800, fontSize: "var(--fs-sm)", color: "#78350f" }}>
+                      <div style={{ fontWeight: 800, fontSize: "var(--fs-base)", color: "#78350f" }}>
                         ปรับเปลี่ยนข้อเสนอแล้ว (Modified)
                       </div>
                       <div style={{ fontSize: "var(--fs-xs)", color: "#92400e", marginTop: "2px" }}>
@@ -516,7 +516,7 @@ export function CustomerRecommendations({
                       ✕
                     </div>
                     <div>
-                      <div style={{ fontWeight: 800, fontSize: "var(--fs-sm)", color: "#7f1d1d" }}>
+                      <div style={{ fontWeight: 800, fontSize: "var(--fs-base)", color: "#7f1d1d" }}>
                         ปฏิเสธข้อเสนอนี้แล้ว (Declined)
                       </div>
                       <div style={{ fontSize: "var(--fs-xs)", color: "#991b1b", marginTop: "2px" }}>
@@ -550,7 +550,7 @@ export function CustomerRecommendations({
                   }}
                 >
                   <div>
-                    <div style={{ fontWeight: 800, fontSize: "var(--fs-sm)", color: "var(--krungsri-navy)" }}>
+                    <div style={{ fontWeight: 800, fontSize: "var(--fs-base)", color: "var(--krungsri-navy)" }}>
                       การตัดสินใจของนายหน้า (Broker Decision)
                     </div>
                     <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)", marginTop: "2px" }}>
@@ -644,7 +644,7 @@ export function CustomerRecommendations({
                     >
                       <div>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "8px" }}>
-                          <div style={{ fontWeight: 800, fontSize: "var(--fs-sm)", color: "var(--slate-900)" }}>
+                          <div style={{ fontWeight: 800, fontSize: "var(--fs-base)", color: "var(--slate-900)" }}>
                             {alt.product_name}
                           </div>
                           <Badge variant={isAltApproved ? "success" : "neutral"} size="sm">
@@ -654,7 +654,7 @@ export function CustomerRecommendations({
                         <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)", marginTop: "4px" }}>
                           {alt.category} · {alt.product_code}
                         </div>
-                        <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-600)", marginTop: "8px", lineHeight: 1.5 }}>
+                        <div style={{ fontSize: "var(--fs-xs)", fontFamily: "var(--font-reading-thai)", color: "var(--slate-600)", marginTop: "8px", lineHeight: "var(--lh-reading, 1.7)" }}>
                           {alt.reasons?.[0] || alt.structured_explanation?.need_signal || "แผนทางเลือกที่สอดคล้องกับคุณสมบัติ"}
                         </div>
                       </div>
@@ -720,7 +720,7 @@ export function CustomerRecommendations({
             </div>
 
             <div style={{ backgroundColor: "var(--slate-50)", padding: "16px", borderRadius: "var(--radius-md)", border: "1px solid var(--border-subtle)" }}>
-              <div style={{ fontWeight: 700, fontSize: "var(--fs-sm)", marginBottom: "8px", color: "var(--slate-900)" }}>
+              <div style={{ fontWeight: 700, fontSize: "var(--fs-base)", marginBottom: "8px", color: "var(--slate-900)" }}>
                 เหตุผลความเหมาะสมและการจับคู่ (Need Matching)
               </div>
               <ul style={{ margin: 0, paddingLeft: "18px", fontSize: "var(--fs-xs)", color: "var(--slate-700)", lineHeight: 1.6 }}>

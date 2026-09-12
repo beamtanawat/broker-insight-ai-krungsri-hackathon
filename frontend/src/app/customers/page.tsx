@@ -255,7 +255,7 @@ function CustomersContent() {
                     style={{
                       padding: "1px 6px",
                       borderRadius: "10px",
-                      fontSize: "10px",
+                      fontSize: "12px",
                       backgroundColor: isSelected ? "rgba(254, 203, 0, 0.25)" : "var(--slate-100)",
                       color: isSelected ? "var(--krungsri-yellow)" : "var(--slate-600)",
                       fontWeight: 700,
@@ -370,7 +370,7 @@ function CustomersContent() {
                     }}
                   >
                     <span>{item.label}</span>
-                    <span style={{ opacity: 0.65, fontSize: "0.6875rem" }}>({item.count})</span>
+                    <span style={{ opacity: 0.65, fontSize: "0.75rem" }}>({item.count})</span>
                   </button>
                 ))}
               </div>
@@ -438,7 +438,8 @@ function CustomersContent() {
       </div>
 
       {/* ── Customer List Table (Desktop View) & Cards (Mobile View) ── */}
-      <Card noPadding>
+      <div data-tour="customer-table">
+        <Card noPadding>
         {loading ? (
           <TableSkeleton rows={8} cols={6} />
         ) : filteredAndSortedCustomers.length > 0 ? (
@@ -519,7 +520,7 @@ function CustomersContent() {
                             <Badge variant="neutral" size="sm">ยังไม่ประเมิน</Badge>
                           )}
                           <Tooltip content="คะแนนประเมินโอกาสและความจำเป็นในการติดต่อจากโมเดล LightGBM">
-                            <span style={{ fontSize: "11px", color: "var(--slate-400)", cursor: "help" }}>ℹ️</span>
+                            <span style={{ fontSize: "12px", color: "var(--slate-400)", cursor: "help" }}>ℹ️</span>
                           </Tooltip>
                         </div>
                       </TableCell>
@@ -544,7 +545,7 @@ function CustomersContent() {
                           {c.active_policies_count} ฉบับ
                         </div>
                         {c.has_overdue_followup && (
-                          <div style={{ fontSize: "11px", color: "var(--danger-solid)", marginTop: "2px", fontWeight: 600 }}>
+                          <div style={{ fontSize: "12px", color: "var(--danger-solid)", marginTop: "2px", fontWeight: 600 }}>
                             ⚠️ มีนัดหมายเกินกำหนด
                           </div>
                         )}
@@ -640,6 +641,7 @@ function CustomersContent() {
           />
         )}
       </Card>
+      </div>
     </AppShell>
   );
 }

@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { clearTokens } from "@/lib/auth";
 import type { User } from "@/types";
 import { Badge } from "../ui/Badge";
-import { Button } from "../ui/Button";
 import { CommandPalette } from "./CommandPalette";
+import { useOnboardingTour } from "@/context/OnboardingTourContext";
 
 interface TopbarProps {
   title?: React.ReactNode;
@@ -25,6 +25,7 @@ const ROLE_BADGE: Record<string, { variant: "danger" | "warning" | "info"; label
 
 export function Topbar({ title, subtitle, user, actions, onMobileMenuToggle }: TopbarProps) {
   const router = useRouter();
+  const { replayTour } = useOnboardingTour();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -144,125 +145,142 @@ export function Topbar({ title, subtitle, user, actions, onMobileMenuToggle }: T
       {/* Right: AI engine status + Pilot badge + page actions + user menu */}
       <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3)", flexShrink: 0 }}>
 
-        {/* Quick Command Palette Button */}
-        <button
+        {/* Center: Search Bar matching mockup */}
+        <div
           onClick={() => setIsSearchOpen(true)}
           style={{
-            display: "inline-flex",
+            flex: "1 1 360px",
+            maxWidth: "460px",
+            backgroundColor: "#F8FAFC",
+            borderRadius: "999px",
+            padding: "7px 16px",
+            display: "flex",
             alignItems: "center",
-            gap: "8px",
-            padding: "5px 12px",
-            borderRadius: "var(--radius-md)",
-            backgroundColor: "rgba(11, 30, 54, 0.04)",
-            border: "1px solid rgba(11, 30, 54, 0.1)",
-            fontSize: "12px",
-            color: "var(--slate-600)",
+            gap: "10px",
             cursor: "pointer",
-            transition: "all var(--motion-fast) ease",
+            border: "1px solid #E2E8F0",
+            transition: "all 0.15s ease",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "rgba(11, 30, 54, 0.08)";
-            e.currentTarget.style.borderColor = "var(--krungsri-yellow)";
+            e.currentTarget.style.backgroundColor = "#F1F5F9";
+            e.currentTarget.style.borderColor = "#CBD5E1";
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "rgba(11, 30, 54, 0.04)";
-            e.currentTarget.style.borderColor = "rgba(11, 30, 54, 0.1)";
+            e.currentTarget.style.backgroundColor = "#F8FAFC";
+            e.currentTarget.style.borderColor = "#E2E8F0";
           }}
-          title="ค้นหาลูกค้าหรือเมนู (Cmd+K)"
+          title="ค้นหาลูกค้า, รหัสลูกค้า, เบอร์โทร, กรมธรรม์... (Cmd+K)"
         >
-          <span>🔍</span>
-          <span style={{ fontWeight: 600 }}>ค้นหาด่วน...</span>
+          <span style={{ fontSize: "14px", color: "#64748B" }}>🔍</span>
+          <span style={{ fontSize: "0.8125rem", color: "#64748B", fontWeight: 500, flex: 1, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+            ค้นหาลูกค้า, รหัสลูกค้า, เบอร์โทร, กรมธรรม์...
+          </span>
           <span
             style={{
-              fontSize: "10px",
+              fontSize: "12px",
               fontWeight: 700,
               backgroundColor: "#ffffff",
-              padding: "2px 5px",
+              padding: "2px 6px",
               borderRadius: "4px",
-              border: "1px solid var(--border-subtle)",
-              color: "var(--slate-500)",
+              border: "1px solid #E2E8F0",
+              color: "#94A3B8",
             }}
           >
-            ⌘K
+            Ctrl K
           </span>
-        </button>
+        </div>
 
-        {/* Customer View Quick Switch (Gen Z My Protection) */}
-        <Link
-          href="/my-protection"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "6px",
-            padding: "5px 12px",
-            borderRadius: "var(--radius-md)",
-            backgroundColor: "#eff6ff",
-            border: "1px solid #bfdbfe",
-            color: "#1d4ed8",
-            fontSize: "12px",
-            fontWeight: 700,
-            textDecoration: "none",
-            transition: "all var(--motion-fast) ease",
-          }}
-          title="สลับไปดูมุมมองลูกค้า Gen Z (Customer-Facing Prototype)"
-        >
-          <span>📱</span>
-          <span>มุมมองลูกค้า (My Protection)</span>
-          <span
-            style={{
-              fontSize: "10px",
-              background: "#dbeafe",
-              color: "#1e40af",
-              padding: "1px 5px",
-              borderRadius: "999px",
-            }}
-          >
-            Gen Z
-          </span>
-        </Link>
-
-        {/* AI Engine Status Pill */}
+        {/* AI Engine Status Pill (Green) */}
         <div
           style={{
             display: "inline-flex",
             alignItems: "center",
             gap: "6px",
-            padding: "3px 10px",
-            borderRadius: "var(--radius-full)",
-            backgroundColor: "rgba(254, 203, 0, 0.14)",
-            border: "1px solid rgba(254, 203, 0, 0.45)",
-            fontSize: "0.6875rem",
+            padding: "4px 12px",
+            borderRadius: "999px",
+            backgroundColor: "#DCFCE7",
+            border: "1px solid #BBF7D0",
+            fontSize: "0.75rem",
             fontWeight: 700,
-            color: "#854d0e",
+            color: "#15803D",
           }}
-          title="LightGBM & SHAP Explainability Engine พร้อมประมวลผล"
+          title="LightGBM & AI Customer Intelligence Engine พร้อมใช้งาน"
         >
-          <span style={{ fontSize: "11px" }}>⚡</span>
+          <span
+            style={{
+              width: "7px",
+              height: "7px",
+              borderRadius: "50%",
+              backgroundColor: "#16A34A",
+              display: "inline-block",
+              boxShadow: "0 0 6px #16A34A",
+            }}
+          />
           <span>AI Engine Active</span>
         </div>
 
-        {/* Pilot Sandbox indicator */}
+        {/* Pilot Sandbox indicator (Amber) */}
         <div
           style={{
             display: "inline-flex",
             alignItems: "center",
             gap: "6px",
-            padding: "3px 10px",
-            borderRadius: "var(--radius-full)",
-            backgroundColor: "#f0fdf4",
-            border: "1px solid #bbf7d0",
-            fontSize: "0.6875rem",
-            fontWeight: 600,
-            color: "#166534",
+            padding: "4px 12px",
+            borderRadius: "999px",
+            backgroundColor: "#FEF3C7",
+            border: "1px solid #FDE68A",
+            fontSize: "0.75rem",
+            fontWeight: 700,
+            color: "#B45309",
           }}
-          title="ระบบทำงานในโหมดทดสอบนำร่อง (Pilot Sandbox) — ใช้ชุดข้อมูลจำลองที่ปลอดภัย"
+          title="ระบบทำงานในโหมดทดสอบนำร่อง (Pilot Sandbox)"
         >
           <span
-            aria-hidden="true"
-            style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#16a34a", display: "inline-block", boxShadow: "0 0 5px #16a34a" }}
+            style={{
+              width: "7px",
+              height: "7px",
+              borderRadius: "50%",
+              backgroundColor: "#F59E0B",
+              display: "inline-block",
+            }}
           />
           <span>Sandbox</span>
         </div>
+
+        {/* Help / Guided Tour button */}
+        <button
+          onClick={() => replayTour()}
+          data-tour="topbar-help"
+          aria-label="แนะนำการใช้งาน (Feature Tour)"
+          title="แนะนำการใช้งาน (เริ่มทัวร์แนะนำระบบ)"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "36px",
+            height: "36px",
+            borderRadius: "50%",
+            border: "1px solid #E2E8F0",
+            backgroundColor: "#ffffff",
+            cursor: "pointer",
+            fontSize: "15px",
+            fontWeight: 700,
+            color: "#475569",
+            transition: "all var(--motion-fast) ease",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = "#FEF3C7";
+            e.currentTarget.style.borderColor = "#FDE68A";
+            e.currentTarget.style.color = "#B45309";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = "#ffffff";
+            e.currentTarget.style.borderColor = "#E2E8F0";
+            e.currentTarget.style.color = "#475569";
+          }}
+        >
+          ?
+        </button>
 
         {/* Notification Bell with Dropdown */}
         <div ref={notifRef} style={{ position: "relative" }}>
@@ -275,9 +293,9 @@ export function Topbar({ title, subtitle, user, actions, onMobileMenuToggle }: T
               justifyContent: "center",
               width: "36px",
               height: "36px",
-              borderRadius: "var(--radius-md)",
-              border: "1px solid var(--border-subtle)",
-              backgroundColor: notifOpen ? "var(--slate-100)" : "var(--white)",
+              borderRadius: "50%",
+              border: "1px solid #E2E8F0",
+              backgroundColor: notifOpen ? "#F1F5F9" : "#ffffff",
               cursor: "pointer",
               position: "relative",
               fontSize: "16px",
@@ -289,11 +307,11 @@ export function Topbar({ title, subtitle, user, actions, onMobileMenuToggle }: T
             <span
               style={{
                 position: "absolute",
-                top: "-4px",
-                right: "-4px",
-                backgroundColor: "#dc2626",
+                top: "-3px",
+                right: "-3px",
+                backgroundColor: "#DC2626",
                 color: "#ffffff",
-                fontSize: "10px",
+                fontSize: "12px",
                 fontWeight: 800,
                 width: "18px",
                 height: "18px",
@@ -304,7 +322,7 @@ export function Topbar({ title, subtitle, user, actions, onMobileMenuToggle }: T
                 boxShadow: "0 1px 3px rgba(220, 38, 38, 0.4)",
               }}
             >
-              2
+              3
             </span>
           </button>
 
@@ -335,10 +353,10 @@ export function Topbar({ title, subtitle, user, actions, onMobileMenuToggle }: T
                   alignItems: "center",
                 }}
               >
-                <div style={{ fontWeight: 800, fontSize: "13px" }}>
+                <div style={{ fontWeight: 800, fontSize: "14px" }}>
                   🔔 การแจ้งเตือนด่วน (2 รายการ)
                 </div>
-                <span style={{ fontSize: "10px", color: "var(--krungsri-yellow)", fontWeight: 700 }}>
+                <span style={{ fontSize: "12px", color: "var(--krungsri-yellow)", fontWeight: 700 }}>
                   Real-time
                 </span>
               </div>
@@ -363,12 +381,12 @@ export function Topbar({ title, subtitle, user, actions, onMobileMenuToggle }: T
                     onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#fef2f2")}
                   >
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <span style={{ fontSize: "12px", fontWeight: 700, color: "#991b1b" }}>
+                      <span style={{ fontSize: "14px", fontWeight: 700, color: "#991b1b" }}>
                         ⚡ ต่ออายุด่วนใน 14 วัน
                       </span>
-                      <span style={{ fontSize: "10px", color: "#b91c1c", fontWeight: 600 }}>KS-00001</span>
+                      <span style={{ fontSize: "12px", color: "#b91c1c", fontWeight: 600 }}>KS-00001</span>
                     </div>
-                    <div style={{ fontSize: "11px", color: "#7f1d1d", marginTop: "2px" }}>
+                    <div style={{ fontSize: "12px", color: "#7f1d1d", marginTop: "2px" }}>
                       คุณณัฐพร วาริน (Platinum) กรมธรรม์ใกล้ครบกำหนด
                     </div>
                   </div>
@@ -393,12 +411,12 @@ export function Topbar({ title, subtitle, user, actions, onMobileMenuToggle }: T
                     onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#fffbeb")}
                   >
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <span style={{ fontSize: "12px", fontWeight: 700, color: "#92400e" }}>
+                      <span style={{ fontSize: "14px", fontWeight: 700, color: "#92400e" }}>
                         ⚠️ งานติดตามผลเกินกำหนด
                       </span>
-                      <span style={{ fontSize: "10px", color: "#b45309", fontWeight: 600 }}>1 งาน</span>
+                      <span style={{ fontSize: "12px", color: "#b45309", fontWeight: 600 }}>1 งาน</span>
                     </div>
-                    <div style={{ fontSize: "11px", color: "#78350f", marginTop: "2px" }}>
+                    <div style={{ fontSize: "12px", color: "#78350f", marginTop: "2px" }}>
                       มีนัดหมายค้างที่ต้องติดต่อด่วนเพื่ออัปเดตผลงาน
                     </div>
                   </div>
@@ -416,7 +434,7 @@ export function Topbar({ title, subtitle, user, actions, onMobileMenuToggle }: T
                 <Link
                   href="/customers"
                   onClick={() => setNotifOpen(false)}
-                  style={{ fontSize: "11px", color: "var(--krungsri-navy)", fontWeight: 700, textDecoration: "none" }}
+                  style={{ fontSize: "12px", color: "var(--krungsri-navy)", fontWeight: 700, textDecoration: "none" }}
                 >
                   ดูรายชื่อลูกค้าทั้งหมด →
                 </Link>
@@ -439,40 +457,56 @@ export function Topbar({ title, subtitle, user, actions, onMobileMenuToggle }: T
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "var(--space-2)",
-                padding: "var(--space-1) var(--space-2)",
-                borderRadius: "var(--radius-md)",
-                border: "1px solid var(--border-subtle)",
-                backgroundColor: "var(--white)",
+                gap: "10px",
+                padding: "4px 8px",
+                borderRadius: "999px",
+                border: "1px solid #E2E8F0",
+                backgroundColor: "#ffffff",
                 cursor: "pointer",
                 transition: "all var(--motion-fast)",
               }}
-              onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.backgroundColor = "var(--slate-50)")}
-              onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.backgroundColor = "var(--white)")}
+              onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.backgroundColor = "#F8FAFC")}
+              onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.backgroundColor = "#ffffff")}
             >
-              {/* Avatar */}
+              {/* Avatar Image */}
               <div
                 style={{
-                  width: "28px",
-                  height: "28px",
+                  width: "32px",
+                  height: "32px",
                   borderRadius: "50%",
-                  backgroundColor: "var(--primary-100)",
-                  color: "var(--primary-700)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontWeight: 700,
-                  fontSize: "var(--fs-xs)",
+                  backgroundImage: "url('/images/somchai_avatar.jpg')",
+                  backgroundSize: "cover",
+                  backgroundPosition: "center top",
+                  border: "1px solid #CBD5E1",
                   flexShrink: 0,
                 }}
-              >
-                {user.full_name?.charAt(0) ?? "U"}
+              />
+              {/* Name & Title */}
+              <div style={{ textAlign: "left", lineHeight: 1.2 }}>
+                <div
+                  style={{
+                    fontSize: "0.8125rem",
+                    fontWeight: 700,
+                    color: "#0F172A",
+                    maxWidth: "140px",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {user.full_name || "สมชาย มุ่งมั่น"}
+                </div>
+                <div
+                  style={{
+                    fontSize: "0.75rem",
+                    color: "#64748B",
+                    fontWeight: 500,
+                  }}
+                >
+                  {user.role === "broker" ? "Broker • KS-10001" : user.role}
+                </div>
               </div>
-              {/* Name — hidden on narrow viewports via CSS would be ideal; inline hidden on xs */}
-              <span style={{ fontSize: "var(--fs-sm)", fontWeight: 600, color: "var(--slate-700)", maxWidth: "120px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                {user.full_name}
-              </span>
-              <span aria-hidden="true" style={{ fontSize: "10px", color: "var(--slate-400)" }}>
+              <span aria-hidden="true" style={{ fontSize: "12px", color: "#94A3B8", marginLeft: "2px" }}>
                 {userMenuOpen ? "▲" : "▼"}
               </span>
             </button>
@@ -497,7 +531,7 @@ export function Topbar({ title, subtitle, user, actions, onMobileMenuToggle }: T
               >
                 {/* User info header */}
                 <div style={{ padding: "var(--space-4)", borderBottom: "1px solid var(--border-subtle)" }}>
-                  <div style={{ fontWeight: 700, fontSize: "var(--fs-sm)", color: "var(--slate-900)" }}>
+                  <div style={{ fontWeight: 700, fontSize: "14px", color: "var(--slate-900)" }}>
                     {user.full_name}
                   </div>
                   <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)", marginTop: "2px", display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
@@ -509,7 +543,36 @@ export function Topbar({ title, subtitle, user, actions, onMobileMenuToggle }: T
                 </div>
 
                 {/* Actions */}
-                <div style={{ padding: "var(--space-2)" }}>
+                <div style={{ padding: "var(--space-2)", display: "flex", flexDirection: "column", gap: "4px" }}>
+                  <button
+                    role="menuitem"
+                    onClick={() => {
+                      setUserMenuOpen(false);
+                      replayTour();
+                    }}
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "var(--space-2)",
+                      padding: "var(--space-2) var(--space-3)",
+                      borderRadius: "var(--radius-md)",
+                      fontSize: "var(--fs-sm)",
+                      color: "var(--primary-700)",
+                      fontWeight: 600,
+                      cursor: "pointer",
+                      textAlign: "left",
+                      backgroundColor: "transparent",
+                      border: "none",
+                      transition: "background-color var(--motion-fast)",
+                    }}
+                    onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.backgroundColor = "var(--primary-50)")}
+                    onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.backgroundColor = "transparent")}
+                  >
+                    <span aria-hidden="true">💡</span>
+                    <span>แนะนำการใช้งานระบบ (Feature Tour)</span>
+                  </button>
+
                   <button
                     role="menuitem"
                     onClick={handleLogout}

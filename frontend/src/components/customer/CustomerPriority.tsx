@@ -144,7 +144,7 @@ export function CustomerPriority({
                     <span style={{ color: f.impact === "positive" ? "#16a34a" : "#dc2626", fontWeight: 800 }}>
                       {f.impact === "positive" ? "▲" : "▼"}
                     </span>
-                    <span style={{ fontSize: "var(--fs-sm)", fontWeight: 600, color: "var(--slate-800)" }}>
+                    <span style={{ fontSize: "var(--fs-base)", fontWeight: 600, color: "var(--slate-800)" }}>
                       {f.label}
                     </span>
                   </div>
@@ -170,17 +170,17 @@ export function CustomerPriority({
           title="สรุปภาพรวมและข้อควรสังเกตจากข้อมูลเชิงลึก"
         >
           <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
-            <p style={{ margin: 0, fontSize: "var(--fs-base)", color: "var(--slate-800)", lineHeight: 1.6 }}>
+            <p style={{ margin: 0, fontSize: "var(--fs-base)", color: "var(--slate-800)", fontFamily: "var(--font-reading-thai)", lineHeight: "var(--lh-reading, 1.8)" }}>
               {insights.customer_summary}
             </p>
 
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "var(--space-4)" }}>
               {/* Key Observations */}
               <div style={{ padding: "12px", backgroundColor: "var(--white)", borderRadius: "var(--radius-md)", border: "1px solid var(--border-subtle)" }}>
-                <div style={{ fontWeight: 700, fontSize: "var(--fs-sm)", color: "var(--slate-900)", marginBottom: "6px" }}>
+                <div style={{ fontWeight: 700, fontSize: "var(--fs-base)", color: "var(--slate-900)", marginBottom: "6px" }}>
                   🔍 ข้อสังเกตสำคัญ (Key Observations)
                 </div>
-                <ul style={{ margin: 0, paddingLeft: "18px", fontSize: "var(--fs-xs)", color: "var(--slate-700)", lineHeight: 1.6 }}>
+                <ul style={{ margin: 0, paddingLeft: "18px", fontSize: "var(--fs-xs)", color: "var(--slate-700)", fontFamily: "var(--font-reading-thai)", lineHeight: "var(--lh-reading, 1.7)" }}>
                   {insights.key_observations?.map((obs, i) => (
                     <li key={i}>{obs}</li>
                   ))}
@@ -189,10 +189,10 @@ export function CustomerPriority({
 
               {/* Potential Needs */}
               <div style={{ padding: "12px", backgroundColor: "var(--white)", borderRadius: "var(--radius-md)", border: "1px solid var(--border-subtle)" }}>
-                <div style={{ fontWeight: 700, fontSize: "var(--fs-sm)", color: "var(--primary-700)", marginBottom: "6px" }}>
+                <div style={{ fontWeight: 700, fontSize: "var(--fs-base)", color: "var(--primary-700)", marginBottom: "6px" }}>
                   🎯 ความต้องการที่อาจต้องทบทวน (Potential Needs)
                 </div>
-                <ul style={{ margin: 0, paddingLeft: "18px", fontSize: "var(--fs-xs)", color: "var(--slate-700)", lineHeight: 1.6 }}>
+                <ul style={{ margin: 0, paddingLeft: "18px", fontSize: "var(--fs-xs)", color: "var(--slate-700)", fontFamily: "var(--font-reading-thai)", lineHeight: "var(--lh-reading, 1.7)" }}>
                   {insights.potential_needs?.map((need, i) => (
                     <li key={i}>{need}</li>
                   ))}
@@ -201,10 +201,10 @@ export function CustomerPriority({
 
               {/* Cautions */}
               <div style={{ padding: "12px", backgroundColor: "var(--white)", borderRadius: "var(--radius-md)", border: "1px solid var(--border-subtle)" }}>
-                <div style={{ fontWeight: 700, fontSize: "var(--fs-sm)", color: "var(--danger-text)", marginBottom: "6px" }}>
+                <div style={{ fontWeight: 700, fontSize: "var(--fs-base)", color: "var(--danger-text)", marginBottom: "6px" }}>
                   ⚠️ ข้อควรระวัง (Cautions)
                 </div>
-                <ul style={{ margin: 0, paddingLeft: "18px", fontSize: "var(--fs-xs)", color: "var(--slate-700)", lineHeight: 1.6 }}>
+                <ul style={{ margin: 0, paddingLeft: "18px", fontSize: "var(--fs-xs)", color: "var(--slate-700)", fontFamily: "var(--font-reading-thai)", lineHeight: "var(--lh-reading, 1.7)" }}>
                   {insights.cautions?.map((c, i) => (
                     <li key={i}>{c}</li>
                   ))}
@@ -237,7 +237,7 @@ export function CustomerPriority({
                 }}
               >
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ fontWeight: 700, fontSize: "var(--fs-sm)", color: "var(--slate-900)" }}>
+                  <span style={{ fontWeight: 700, fontSize: "var(--fs-base)", color: "var(--slate-900)" }}>
                     {NEED_CATEGORY_LABELS[item.category] || item.label_th || item.category}
                   </span>
                   <Badge variant={item.severity as any} size="sm">
@@ -245,12 +245,12 @@ export function CustomerPriority({
                   </Badge>
                 </div>
 
-                <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-600)", lineHeight: 1.5 }}>
+                <div style={{ fontSize: "var(--fs-xs)", fontFamily: "var(--font-reading-thai)", color: "var(--slate-600)", lineHeight: "var(--lh-reading, 1.7)" }}>
                   {item.explanation}
                 </div>
 
                 {item.supporting_signals && item.supporting_signals.length > 0 && (
-                  <div style={{ fontSize: "11px", color: "var(--slate-500)", borderTop: "1px solid var(--border-subtle)", paddingTop: "6px" }}>
+                  <div style={{ fontSize: "12px", color: "var(--slate-500)", borderTop: "1px solid var(--border-subtle)", paddingTop: "6px" }}>
                     สัญญาณ: {item.supporting_signals.join(", ")}
                   </div>
                 )}
@@ -273,7 +273,7 @@ export function CustomerPriority({
         width="560px"
       >
         <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
-          <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-600)", lineHeight: 1.5, backgroundColor: "var(--slate-50)", padding: "12px", borderRadius: "var(--radius-md)" }}>
+          <div style={{ fontSize: "var(--fs-xs)", fontFamily: "var(--font-reading-thai)", color: "var(--slate-600)", lineHeight: "var(--lh-reading, 1.7)", backgroundColor: "var(--slate-50)", padding: "12px", borderRadius: "var(--radius-md)" }}>
             SHAP (SHapley Additive exPlanations) แสดงผลกระทบของแต่ละฟีเจอร์ต่อคะแนนความสำคัญ ค่าบวกเพิ่มโอกาสในการติดต่อ ค่าลบลดโอกาส
           </div>
 
@@ -290,7 +290,7 @@ export function CustomerPriority({
                 <TableRow key={idx}>
                   <TableCell>
                     <div style={{ fontWeight: 600, fontSize: "var(--fs-xs)" }}>{f.label}</div>
-                    <div style={{ fontSize: "10px", color: "var(--slate-400)" }}>{f.feature}</div>
+                    <div style={{ fontSize: "12px", color: "var(--slate-400)" }}>{f.feature}</div>
                   </TableCell>
                   <TableCell align="center">
                     <span style={{ color: f.impact === "positive" ? "#16a34a" : "#dc2626", fontWeight: 700 }}>
@@ -310,7 +310,7 @@ export function CustomerPriority({
           </Table>
 
           {aiAnalysis?.model_metadata && (
-            <div style={{ fontSize: "11px", color: "var(--slate-400)", borderTop: "1px solid var(--border-subtle)", paddingTop: "12px" }}>
+            <div style={{ fontSize: "12px", color: "var(--slate-400)", borderTop: "1px solid var(--border-subtle)", paddingTop: "12px" }}>
               โมเดล: {aiAnalysis.model_metadata.model_name} (v{aiAnalysis.model_metadata.model_version}) · {aiAnalysis.model_metadata.timestamp}
             </div>
           )}

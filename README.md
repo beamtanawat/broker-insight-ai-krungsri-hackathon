@@ -82,7 +82,60 @@ flowchart TD
 
 ---
 
-## 3. Core AI & Decision Pipelines
+## 3. Comprehensive Feature Modules (ภาพรวมฟีเจอร์ทั้งหมดของระบบ)
+
+Broker Insight AI ได้รับการออกแบบเป็นระบบช่วยตัดสินใจ (Decision-Support System) แบบครบวงจรสำหรับนายหน้าประกันภัยและที่ปรึกษาทางการเงิน ประกอบด้วย 6 โมดูลหลัก:
+
+### 📍 1. แผนที่ลูกค้าใกล้เคียงและการนำทางตามความต้องการ (Nearby Customers & Proximity Navigation)
+- **การระบุตำแหน่งสดจากอุปกรณ์ (Live Device GPS):** เชื่อมต่อ Geolocation API เพื่อดึงพิกัดจริงของนายหน้า หรือเลือกจุดอ้างอิง (Location Presets) พร้อมคำนวณความสดของข้อมูล (Freshness Timestamp)
+- **การค้นหาแบบปรับรัศมีได้ (Dynamic Proximity Radius):** ค้นหาและกรองลูกค้าในรัศมี 5 กม., 10 กม. หรือ 20 กม. พร้อมแสดงจำนวนลูกค้าที่ถูกคัดออกเนื่องจากขาดพิกัดที่อยู่ (Partial-data transparency)
+- **แผนที่ Proximity Map เวกเตอร์แบบอินเตอร์แอคทีฟ:** แสดงหมุดสีตามระดับความสำคัญ AI (แดง-สูง, เหลือง-กลาง, เขียว-ต่ำ), เส้นรัศมีวงซ้อน, และจุด Beacon พิกัดนายหน้า
+- **เครื่องมือนำทาง 3 ระดับ (3-State Navigation Engine):**
+  - `idle`: ดูข้อมูลลูกค้าเบื้องต้น คะแนน AI และเหตุผลที่ควรเข้าพบ (Why Now)
+  - `route_preview`: ดึงระยะทางจริงและเวลาเดินทางโดยประมาณ (ความเร็วเฉลี่ยในเมือง) จาก Backend `/navigate` API
+  - `navigating`: เริ่มนำทางด้วย Google Maps Deep-link พร้อมโหมดกำลังนำทางในแอปที่วาดเส้นทางบนแผนที่และหรี่หมุดอื่น
+- **การบันทึกสถานะการเข้าพบ (Visit Lifecycle Handoff):** เมื่อกด "เสร็จสิ้นการเข้าพบ" ระบบจะย้ายพิกัดนายหน้าไปยังตำแหน่งลูกค้าล่าสุด และรีเฟรชรายชื่อลูกค้าใกล้เคียงจุดใหม่อัตโนมัติ
+
+### 📱 2. โมบายล์เวิร์กสเปซจำลองบนสมาร์ตโฟน (Mobile Companion Workspace)
+- **จำลองบน iPhone 17 Pro Max Chassis:** พร้อม Dynamic Island, แถบสถานะ 5G และแบตเตอรี่เสมือนจริง
+- **โหมดแดชบอร์ดมือถือ (Mobile Dashboard View):**
+  - แบนเนอร์ทักทายคุณสมชาย สรุปลูกค้าความสำคัญสูง 42 ราย และงานติดตาม 14 รายการ
+  - การ์ดสถิติประจำวัน 4 ช่อง (ลูกค้าด่วน, งานนัดหมาย, รอ KYC, พอร์ตรวม)
+  - รายการ "ลูกค้าที่ควรให้ความสนใจวันนี้" 3 การ์ดแนวนอน พร้อม Trigger กรมธรรม์ใกล้หมดอายุ และปุ่มดูรายละเอียด
+  - งานที่ต้องทำวันนี้ 4 รายการ พร้อม Checkbox ที่กดติ๊กถูกเพื่ออัปเดตสถานะได้ทันที
+  - กล่องคำแนะนำจาก AI (AI Recommendation Banner)
+- **โหมดรายงานและพอร์ตโฟลิโอ (Mobile Reports View):**
+  - การ์ดติดตามผลงาน 4 ช่อง (งานทั้งหมด, งานเกินกำหนด, ติดต่อสำเร็จ, Renewal 30 วัน)
+  - กราฟโดนัท **สัดส่วนลูกค้า Priority** (Donut Chart: Priority 94, 76, 65, อื่นๆ)
+  - เกจวงกลม **ความคืบหน้า KYC** (Ring Gauge: ตรวจสอบแล้ว 78%, รอดำเนินการ, เอกสารไม่ครบ)
+  - กราฟแท่ง **Renewal Pipeline ภายใน 30 วัน** (4-Column Bar Chart)
+  - สรุปภาพรวมจาก AI (AI Insight Banner)
+- **แถบนำทางล่าง 5 แท็บ:** สลับระหว่าง แดชบอร์ด, รายชื่อลูกค้า, แผนที่นำทาง, รายงาน และเมนูเพิ่มเติม
+
+### 👥 3. ฐานข้อมูลลูกค้าและมุมมอง 360° (Customer 360° Intelligence)
+- **Customer Directory:** ค้นหา คัดกรองตามระดับความสำคัญ (High / Medium / Low), ผลิตภัณฑ์ที่แนะนำ, สถานะ KYC, และเรียงลำดับตามคะแนนความสำคัญหรือระยะทาง
+- **Customer 360 Profile:** รวบรวมข้อมูลครบทุกมิติ ได้แก่ ข้อมูลส่วนบุคคล, สินทรัพย์/หนี้สิน, กรมธรรม์ปัจจุบัน, ความเร่งด่วนของ Life Event และประวัติการติดต่อ
+- **Pitch Guide & Proposal One-Pager:** แนวทางการสนทนาเชิงปรึกษา (Consultative Pitch Guide) และเอกสารสรุปความคุ้มครอง One-Pager ที่นายหน้าสามารถนำเสนอได้ทันที
+
+### 🧠 4. โมเดล AI จัดลำดับความสำคัญและความโปร่งใส (Calibrated Scoring & Explainable AI)
+- **LightGBM Champion Model (v1.0.0):** ประเมินคะแนนความสำคัญ 0–100 จาก 17 ฟีเจอร์พฤติกรรมและการเงิน ($F1=0.878$, $\text{ROC-AUC}=0.956$)
+- **Platt Sigmoid Calibration:** ปรับเทียบความน่าจะเป็นให้อยู่ในสเกลที่เชื่อถือได้ทางสถิติ ($\text{ECE}=0.045$, $\text{Brier}=0.076$)
+- **TreeSHAP Local Explainability:** แสดงผลปัจจัยขับเคลื่อนเชิงบวกและลบ (Positive & Negative Drivers) อธิบายเป็นภาษาไทยให้นายหน้าเข้าใจได้ว่า *"ทำไมลูกค้ารายนี้ถึงเร่งด่วนในวันนี้"*
+
+### 🛡️ 5. ระบบแนะนำผลิตภัณฑ์พร้อม Hard Eligibility Gate (Recommendation Engine)
+- **Hard Eligibility Gate (0% Violations):** คัดกรองเงื่อนไขตายตัว (อายุ, รายได้ขั้นต่ำ, ประวัติสุขภาพ, สินเชื่อที่มีอยู่) ก่อนเข้าสู่ขั้นตอนจัดอันดับ เพื่อรับประกันว่าลูกค้าจะไม่ได้รับข้อเสนอที่ผิดเกณฑ์
+- **5-Need Matching Logic:** จับคู่ความต้องการ 5 มิติ (Motor, Health, Life/MRTA, Savings, Retirement/Pension)
+- **Human-in-the-Loop Discretion:** นายหน้ามีสิทธิ์ตรวจสอบ อนุมัติ ปรับเปลี่ยน หรือปฏิเสธคำแนะนำของ AI พร้อมระบุเหตุผลเพื่อส่งกลับเข้าสู่ระบบ MLOps Feedback Loop
+
+### 📊 6. การกำกับดูแล ตรวจสอบ และ MLOps (Operations & Governance)
+- **Business Analytics (`/analytics`):** วิเคราะห์ Conversion Rate, Approval Rate, Coverage Gap ในพอร์ตโฟลิโอ และสถิติการทำงานของนายหน้า
+- **AI Health & Explainability (`/model`):** ตรวจสอบประสิทธิภาพโมเดล, SHAP Summary Plot, Population Stability Index (PSI Drift Monitoring), และเวอร์ชันของ Artifacts
+- **Pilot Sandbox Evaluation (`/pilot`):** ชุดประเมินผลการทดสอบนำร่อง 8 สถานการณ์จำลอง พร้อมเครื่องมือจับเวลาการทำงานและแบบสอบถามความพึงพอใจ
+- **Enterprise Immutable Audit Log (`/admin/audit`):** บันทึกทุกคำสั่งการอนุมาน (Inference), คำสั่ง LLM, การตัดสินใจของนายหน้า และการเปลี่ยนแปลงสิทธิ์เพื่อการตรวจสอบย้อนกลับ (Compliance Trail)
+
+---
+
+## 4. Core AI & Decision Pipelines
 
 ### A. Customer Scoring & Explainability Pipeline
 ```mermaid
@@ -119,7 +172,7 @@ flowchart TD
 
 ---
 
-## 4. Single Source of Truth Metrics
+## 5. Single Source of Truth Metrics
 
 All metrics reported below are verified against authoritative backend evaluation artifacts ([`docs/master-evidence-registry.json`](file:///Users/chalermsak/Downloads/broker-insight-ai-krungsri-hackathon-main/docs/master-evidence-registry.json)):
 
@@ -144,7 +197,7 @@ All metrics reported below are verified against authoritative backend evaluation
 
 ---
 
-## 5. Technology Stack
+## 6. Technology Stack
 
 * **Frontend:** Next.js 16 (App Router), React 19, TypeScript 5, Vanilla CSS Design System (zero external UI library dependencies).
 * **Backend:** FastAPI (Python 3.11+), Uvicorn, Pydantic v2, Async SQLAlchemy, SQLite (Development) / PostgreSQL (Production).
@@ -155,7 +208,7 @@ All metrics reported below are verified against authoritative backend evaluation
 
 ---
 
-## 6. Reproducible Setup Guide
+## 7. Reproducible Setup Guide
 
 ### Prerequisites
 - Python 3.11+
@@ -198,19 +251,19 @@ Open `http://localhost:3000` in your browser.
 
 ---
 
-## 7. Demo Credentials & User Roles
+## 8. Demo Credentials & User Roles
 
 > ⚠️ **DEMO CREDENTIALS ONLY:**
 
 | Role | Email | Password | Access Scope |
 |---|---|---|---|
-| **Broker** | `broker@demo.local` | `demo1234` | Workspace (`/dashboard`, `/customers`, `/customers/[id]`, `/chat`) |
+| **Broker** | `broker@demo.local` | `demo1234` | Workspace (`/dashboard`, `/customers`, `/customers/[id]`, `/visit-planner`, `/my-protection`) |
 | **Manager** | `manager@demo.local` | `demo1234` | Workspace + Operations (`/analytics`, `/model`, `/pilot`) |
 | **Admin** | `admin@demo.local` | `demo1234` | Workspace + Operations + Administration (`/admin/audit`, Model Governance) |
 
 ---
 
-## 8. Limitations & Production Roadmap
+## 9. Limitations & Production Roadmap
 
 1. **Synthetic Data:** The system operates on synthetically generated customer profiles. Production deployment requires integration with real Core Banking / CRM data via secure ETL pipelines.
 2. **Enterprise SSO:** Authentication currently uses local JWT tokens with demo accounts. Production requires OAuth2 / SAML / OIDC enterprise identity integration.
@@ -219,6 +272,6 @@ Open `http://localhost:3000` in your browser.
 
 ---
 
-## 9. License
+## 10. License
 
 This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.

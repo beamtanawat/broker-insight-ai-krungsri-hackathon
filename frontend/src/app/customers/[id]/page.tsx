@@ -285,7 +285,7 @@ export default function CustomerDetailPage({ params }: { params: Promise<{ id: s
       <DemoPersonaStrip />
 
       {/* ── 1. Persistent Customer Header Strip ── */}
-      <div style={{ marginBottom: "var(--space-4)" }}>
+      <div data-tour="customer-profile-header" style={{ marginBottom: "var(--space-4)" }}>
         <CustomerHeader
           fullName={customer.full_name}
           externalRef={`รหัส: ${customer.external_ref}`}

@@ -102,7 +102,7 @@ export function PremiumCalculatorModal({
           }}
         >
           <div>
-            <div style={{ fontWeight: 800, fontSize: "var(--fs-sm)", color: "var(--krungsri-navy)" }}>
+            <div style={{ fontWeight: 800, fontSize: "var(--fs-base)", color: "var(--krungsri-navy)" }}>
               {product.product_name}
             </div>
             <div style={{ fontSize: "var(--fs-xs)", color: "var(--slate-500)", marginTop: "2px" }}>
@@ -140,7 +140,7 @@ export function PremiumCalculatorModal({
               cursor: "pointer",
             }}
           />
-          <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", color: "var(--slate-400)", marginTop: "4px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", color: "var(--slate-400)", marginTop: "4px" }}>
             <span>200,000 บาท</span>
             <span>5,000,000 บาท</span>
             <span>10,000,000 บาท</span>
@@ -217,17 +217,17 @@ export function PremiumCalculatorModal({
               {periodPremium.toLocaleString()} <span style={{ fontSize: "var(--fs-sm)", color: "#ffffff", fontWeight: 500 }}>บาท</span>
             </div>
             {paymentFrequency !== "annual" && (
-              <div style={{ fontSize: "11px", color: "rgba(255, 255, 255, 0.6)", marginTop: "2px" }}>
+              <div style={{ fontSize: "12px", color: "rgba(255, 255, 255, 0.6)", marginTop: "2px" }}>
                 เทียบเท่า {calculatedAnnual.toLocaleString()} บาท/ปี
               </div>
             )}
           </div>
 
           <div style={{ textAlign: "right", maxWidth: "160px" }}>
-            <div style={{ fontSize: "11px", color: "#10b981", fontWeight: 700, display: "flex", alignItems: "center", gap: "4px", justifyContent: "flex-end" }}>
+            <div style={{ fontSize: "12px", color: "#10b981", fontWeight: 700, display: "flex", alignItems: "center", gap: "4px", justifyContent: "flex-end" }}>
               <span>✓ ลดหย่อนภาษีได้</span>
             </div>
-            <div style={{ fontSize: "10px", color: "rgba(255, 255, 255, 0.7)", marginTop: "2px", lineHeight: 1.3 }}>
+            <div style={{ fontSize: "12px", color: "rgba(255, 255, 255, 0.7)", marginTop: "2px", lineHeight: 1.3 }}>
               สูงสุด 100,000 บาท ตามเกณฑ์กรมสรรพากร
             </div>
           </div>

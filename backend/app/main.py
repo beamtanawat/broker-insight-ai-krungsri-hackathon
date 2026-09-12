@@ -12,7 +12,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from app.core.config import settings
 from app.core.tracing import RequestTracingMiddleware
 from app.ml.predict import predictor
-from app.routers import auth, admin, customers, products, dashboard, scoring, insights, followup, audit, chat, mock, recommendations, model, analytics, pilot
+from app.routers import auth, admin, customers, products, dashboard, scoring, insights, followup, audit, chat, mock, recommendations, model, analytics, pilot, visit_planner
 
 logger = structlog.get_logger()
 
@@ -113,6 +113,9 @@ app.include_router(analytics.router, prefix="/api/v1/analytics", tags=["analytic
 
 app.include_router(pilot.router, prefix="/pilot", tags=["pilot-evaluation"])
 app.include_router(pilot.router, prefix="/api/v1/pilot", tags=["pilot-evaluation"])
+
+app.include_router(visit_planner.router, prefix="/visit-planner", tags=["visit-planner"])
+app.include_router(visit_planner.router, prefix="/api/v1/visit-planner", tags=["visit-planner"])
 
 
 from sqlalchemy import text
