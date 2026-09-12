@@ -73,12 +73,33 @@ export function OnboardingTourProvider({ user, children }: OnboardingTourProvide
   const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const hasInitializedRef = useRef(false);
 
-  // Check state & persistence on client mount
+  // Check state & persistence on client mount or route change
   useEffect(() => {
-    if (typeof window === "undefined" || hasInitializedRef.current) return;
-    hasInitializedRef.current = true;
+    if (typeof window === "undefined") return;
+
+    // Do NOT show welcome on login page
+    if (pathname === "/login") {
+      setShowWelcome(false);
+      setIsTourActive(false);
+      return;
+    }
 
     try {
+      // 1. Explicit trigger when entering the system (after login or persona switch)
+      const triggeredByLogin = sessionStorage.getItem("trigger_welcome_onboarding") === "true";
+      if (triggeredByLogin) {
+        sessionStorage.removeItem("trigger_welcome_onboarding");
+        setOnboardingState("welcome");
+        setIsTourActive(false);
+        const timer = setTimeout(() => {
+          setShowWelcome(true);
+        }, 300);
+        return () => clearTimeout(timer);
+      }
+
+      if (hasInitializedRef.current) return;
+      hasInitializedRef.current = true;
+
       const isCompleted =
         localStorage.getItem(ONBOARDING_COMPLETED_KEY) === "true" ||
         localStorage.getItem(LEGACY_STORAGE_KEY) === "completed";
@@ -112,7 +133,7 @@ export function OnboardingTourProvider({ user, children }: OnboardingTourProvide
         return;
       }
 
-      // First time user: show welcome modal after brief delay
+      // First time user entering app: show welcome modal after brief delay
       setOnboardingState("welcome");
       const timer = setTimeout(() => {
         setShowWelcome(true);
@@ -121,7 +142,7 @@ export function OnboardingTourProvider({ user, children }: OnboardingTourProvide
     } catch {
       // LocalStorage access failsafe
     }
-  }, [steps.length]);
+  }, [pathname, steps.length]);
 
   const currentStep = useMemo(() => {
     if (!isTourActive || currentStepIndex < 0 || currentStepIndex >= steps.length) {

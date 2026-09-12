@@ -40,6 +40,11 @@ export function Topbar({ title, subtitle, user, actions, onMobileMenuToggle }: T
     try {
       const tokens = await api.auth.login(targetEmail, "demo1234");
       setTokens(tokens.access_token, tokens.refresh_token);
+      try {
+        sessionStorage.setItem("trigger_welcome_onboarding", "true");
+        localStorage.removeItem("broker-insight-onboarding-completed");
+        localStorage.removeItem("broker-insight-onboarding-dismissed");
+      } catch {}
       setUserMenuOpen(false);
       window.location.reload();
     } catch (err) {
@@ -50,6 +55,11 @@ export function Topbar({ title, subtitle, user, actions, onMobileMenuToggle }: T
 
   function handleLogout() {
     clearTokens();
+    try {
+      sessionStorage.setItem("trigger_welcome_onboarding", "true");
+      localStorage.removeItem("broker-insight-onboarding-completed");
+      localStorage.removeItem("broker-insight-onboarding-dismissed");
+    } catch {}
     router.push("/login");
   }
 

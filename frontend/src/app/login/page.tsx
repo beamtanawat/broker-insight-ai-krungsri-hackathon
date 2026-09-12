@@ -27,6 +27,14 @@ export default function LoginPage() {
     try {
       const tokens = await api.auth.login(email, password);
       setTokens(tokens.access_token, tokens.refresh_token);
+      try {
+        sessionStorage.setItem("trigger_welcome_onboarding", "true");
+        localStorage.removeItem("broker-insight-onboarding-completed");
+        localStorage.removeItem("broker-insight-onboarding-dismissed");
+        localStorage.removeItem("broker_insight_onboarding_state");
+        localStorage.removeItem("broker-insight-onboarding-state");
+        localStorage.removeItem("broker-insight-onboarding-current-step");
+      } catch {}
       router.push("/dashboard");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบอีเมลหรือรหัสผ่าน");
@@ -44,6 +52,14 @@ export default function LoginPage() {
     try {
       const tokens = await api.auth.login(demoEmail, "demo1234");
       setTokens(tokens.access_token, tokens.refresh_token);
+      try {
+        sessionStorage.setItem("trigger_welcome_onboarding", "true");
+        localStorage.removeItem("broker-insight-onboarding-completed");
+        localStorage.removeItem("broker-insight-onboarding-dismissed");
+        localStorage.removeItem("broker_insight_onboarding_state");
+        localStorage.removeItem("broker-insight-onboarding-state");
+        localStorage.removeItem("broker-insight-onboarding-current-step");
+      } catch {}
       router.push("/dashboard");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");

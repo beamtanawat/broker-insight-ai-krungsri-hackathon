@@ -274,4 +274,42 @@ describe("First-Time User Onboarding & Guided Feature Tour", () => {
     assert.equal(elementPos.isCentered, false, "Must anchor when target exists");
     assert.equal(elementPos.top, 164);
   });
+
+  // ── 6. Login Trigger Auto-displays Feature Tour Modal ──
+  test("Logging into the system triggers immediate feature tour welcome modal", () => {
+    const sessionStorage = new Map();
+    const localStorage = new Map();
+
+    // Emulate Login action
+    function onLoginSuccess() {
+      sessionStorage.set("trigger_welcome_onboarding", "true");
+      localStorage.delete("broker-insight-onboarding-completed");
+      localStorage.delete("broker-insight-onboarding-dismissed");
+    }
+
+    // Emulate Dashboard Landing & Route Check
+    let showWelcome = false;
+    let onboardingState = "idle";
+
+    function onEnterRoute(pathname) {
+      if (pathname === "/login") {
+        showWelcome = false;
+        return;
+      }
+      if (sessionStorage.get("trigger_welcome_onboarding") === "true") {
+        sessionStorage.delete("trigger_welcome_onboarding");
+        onboardingState = "welcome";
+        showWelcome = true;
+      }
+    }
+
+    onLoginSuccess();
+    assert.equal(sessionStorage.get("trigger_welcome_onboarding"), "true");
+
+    // Land on /dashboard
+    onEnterRoute("/dashboard");
+    assert.equal(showWelcome, true, "Entering system from login MUST immediately show feature guide modal");
+    assert.equal(onboardingState, "welcome");
+    assert.equal(sessionStorage.get("trigger_welcome_onboarding"), undefined, "Trigger flag is consumed");
+  });
 });
