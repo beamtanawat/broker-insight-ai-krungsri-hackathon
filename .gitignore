@@ -20,6 +20,7 @@ backend/app/ml/artifacts/synthetic_customers.csv
 frontend/.next/
 frontend/out/
 frontend/node_modules/
+frontend/frontend/
 
 # ── Docker volumes ───────────────────────────────────────────────
 pgdata/

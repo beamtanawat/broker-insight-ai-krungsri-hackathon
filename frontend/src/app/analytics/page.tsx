@@ -166,7 +166,8 @@ export default function AnalyticsDashboardPage() {
 
       {/* ── 2. Actionable KPI Row ── */}
       <div
-        data-tour="analytics-overview"
+        data-tour="analytics"
+        id="tour-analytics-overview"
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",

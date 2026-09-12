@@ -49,7 +49,7 @@ export function DecisionSummary({
       }}
     >
       {/* 1. Priority */}
-      <div data-tour="ai-priority-card" style={{ borderRight: "1px solid var(--border-subtle)", paddingRight: "var(--space-4)" }}>
+      <div data-tour="ai-insight" id="tour-ai-priority-card" style={{ borderRight: "1px solid var(--border-subtle)", paddingRight: "var(--space-4)" }}>
         <div style={{ fontSize: "14px", color: "var(--slate-500)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
           ระดับความสำคัญ (Priority)
         </div>
@@ -74,7 +74,7 @@ export function DecisionSummary({
       </div>
 
       {/* 3. Top Recommendation */}
-      <div data-tour="product-recommendations" style={{ borderRight: "1px solid var(--border-subtle)", paddingRight: "var(--space-4)" }}>
+      <div data-tour="recommendation" id="tour-product-recommendations" style={{ borderRight: "1px solid var(--border-subtle)", paddingRight: "var(--space-4)" }}>
         <div style={{ fontSize: "14px", color: "var(--slate-500)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
           ผลิตภัณฑ์แนะนำอันดับ 1
         </div>

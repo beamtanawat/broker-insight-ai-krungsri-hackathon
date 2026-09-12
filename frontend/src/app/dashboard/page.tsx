@@ -168,7 +168,7 @@ export default function DashboardPage() {
       )}
 
       {/* ── Dashboard Overview Container (Tour Target) ── */}
-      <div data-tour="dashboard-overview">
+      <div data-tour="dashboard" id="tour-dashboard-overview">
         {/* ── 1. Panoramic Morning Briefing Hero Banner (Mockup Design) ── */}
         <DashboardHeroBanner
           user={user}

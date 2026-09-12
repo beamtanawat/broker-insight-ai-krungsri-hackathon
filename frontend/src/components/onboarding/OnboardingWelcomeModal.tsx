@@ -103,10 +103,7 @@ export function OnboardingWelcomeModal() {
                     backgroundColor: "#D97706",
                   }}
                 />
-                ยินดีต้อนรับสู่ระบบ
-              </span>
-              <span style={{ fontSize: "12px", color: "#64748B", fontWeight: 600 }}>
-                Krungsri Financial Advisory
+                ยินดีต้อนรับสู่ระบบ Krungsri Hackathon Edition
               </span>
             </div>
 
@@ -154,8 +151,8 @@ export function OnboardingWelcomeModal() {
                   margin: "0 0 18px 0",
                 }}
               >
-                ผู้ช่วยอัจฉริยะสำหรับช่วยให้นายหน้าประกันเข้าใจลูกค้าในเชิงลึก
-                จัดลำดับความสำคัญ วางแผนเข้าพบ และตัดสินใจได้อย่างมั่นใจ
+                ผู้ช่วยอัจฉริยะสำหรับช่วยให้นายหน้าประกันเข้าใจลูกค้า
+                จัดลำดับความสำคัญ และตัดสินใจได้อย่างมีประสิทธิภาพ
               </p>
 
               {/* 4 Flagship Feature Pillars */}
@@ -326,8 +323,7 @@ export function OnboardingWelcomeModal() {
                       e.currentTarget.style.transform = "none";
                     }}
                   >
-                    <span>🚀 เริ่มทัวร์แนะนำระบบ (10 ขั้นตอน)</span>
-                    <span aria-hidden="true">→</span>
+                    <span>เริ่มแนะนำระบบ →</span>
                   </button>
                 </div>
               </div>

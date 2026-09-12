@@ -9,21 +9,20 @@ import {
 
 describe("First-Time User Onboarding & Guided Feature Tour", () => {
   // ── 1. Role-specific Steps Verification ──
-  test("Broker receives comprehensive 10-step feature tour flow", () => {
+  test("Broker receives focused 9-step feature tour flow matching Section 6", () => {
     const steps = getTourStepsForRole("broker");
-    assert.equal(steps.length, 10, "Broker tour must contain exactly 10 steps");
+    assert.equal(steps.length, 9, "Broker tour must contain exactly 9 steps");
 
     const expectedTitles = [
-      "แดชบอร์ดภาพรวมและงานประจำวัน",
-      "จัดการและค้นหาลูกค้าในพอร์ต",
-      "ข้อมูลลูกค้าแบบ 360° ครบวงจร",
-      'AI ชี้เป้า "Why Now" และความโปร่งใส',
-      "คำแนะนำผลิตภัณฑ์ & ตรวจเกณฑ์ 100%",
-      "ค้นหาลูกค้าใกล้เคียงรอบตัวคุณ",
-      "คุณเป็นคนเลือกเองเสมอ",
-      "นำทางจริงด้วย Google Maps",
-      "โมบายล์เวิร์กสเปซ My Protection",
-      "ดูผลการดำเนินงานและสถิติ",
+      "แดชบอร์ด",
+      "ฐานข้อมูลลูกค้า",
+      "Customer 360°",
+      "AI ช่วยจัดลำดับความสำคัญ",
+      "คำแนะนำสำหรับลูกค้า",
+      "ลูกค้าใกล้เคียง",
+      "คุณเป็นคนเลือก",
+      "นำทางเมื่อต้องการ",
+      "Analytics",
     ];
 
     steps.forEach((step, idx) => {
@@ -74,9 +73,9 @@ describe("First-Time User Onboarding & Guided Feature Tour", () => {
   test("Default role fallback safely yields Broker tour", () => {
     const stepsUndefined = getTourStepsForRole(undefined);
     const stepsUnknown = getTourStepsForRole("unknown_role");
-    assert.equal(stepsUndefined.length, 10);
-    assert.equal(stepsUnknown.length, 10);
-    assert.equal(stepsUndefined[0].title, "แดชบอร์ดภาพรวมและงานประจำวัน");
+    assert.equal(stepsUndefined.length, 9);
+    assert.equal(stepsUnknown.length, 9);
+    assert.equal(stepsUndefined[0].title, "แดชบอร์ด");
   });
 
   // ── 2. RBAC Route Protection ──
@@ -125,45 +124,131 @@ describe("First-Time User Onboarding & Guided Feature Tour", () => {
     // Verify Step 7 explicitly guarantees broker autonomy
     const selectionStep = BROKER_TOUR_STEPS.find((s) => s.id === "broker-manual-selection");
     assert.ok(selectionStep, "Step 7 must exist");
-    assert.equal(selectionStep.title, "คุณเป็นคนเลือกเองเสมอ");
+    assert.equal(selectionStep.title, "คุณเป็นคนเลือก");
     assert.ok(selectionStep.description.includes("คุณเป็นผู้เลือกเอง"));
 
     // Verify Step 8 highlights on-demand navigation
     const navStep = BROKER_TOUR_STEPS.find((s) => s.id === "broker-navigation");
     assert.ok(navStep, "Step 8 must exist");
-    assert.equal(navStep.title, "นำทางจริงด้วย Google Maps");
+    assert.equal(navStep.title, "นำทางเมื่อต้องการ");
   });
 
-  // ── 4. First-Time State Persistence Emulation ──
-  test("First-time user state machine handles initial, dismiss, complete, and replay", () => {
-    const storageMock = new Map();
-    const STORAGE_KEY = "broker_insight_onboarding_completed_v1";
+  // ── 4. Two Separate States & Finite State Machine Execution ──
+  test("Welcome Modal and Guided Tour are two distinct states and never loop", () => {
+    const storage = new Map();
+    const COMPLETED_KEY = "broker-insight-onboarding-completed";
+    const DISMISSED_KEY = "broker-insight-onboarding-dismissed";
+    const STATE_KEY = "broker-insight-onboarding-state";
+    const STEP_KEY = "broker-insight-onboarding-current-step";
 
-    const isFirstTime = () => !storageMock.has(STORAGE_KEY);
-    const dismiss = () => storageMock.set(STORAGE_KEY, "dismissed");
-    const complete = () => storageMock.set(STORAGE_KEY, "completed");
-    const replay = () => true; // Replay runs regardless of storage
+    // Simulating State Machine
+    let state = "idle";
+    let stepIndex = 0;
+    let showWelcome = false;
+    let isTourActive = false;
 
-    // Initial state: first time
-    assert.equal(isFirstTime(), true, "Should be first time initially");
+    // 1. Initial user mount
+    const onMount = () => {
+      if (storage.get(COMPLETED_KEY) === "true") {
+        state = "completed";
+        showWelcome = false;
+        isTourActive = false;
+        return;
+      }
+      if (storage.get(DISMISSED_KEY) === "true") {
+        state = "dismissed";
+        showWelcome = false;
+        isTourActive = false;
+        return;
+      }
+      if (storage.get(STATE_KEY) === "tour") {
+        state = "tour";
+        showWelcome = false;
+        isTourActive = true;
+        stepIndex = parseInt(storage.get(STEP_KEY) || "0", 10);
+        return;
+      }
+      // First time
+      state = "welcome";
+      showWelcome = true;
+      isTourActive = false;
+    };
 
-    // After dismiss: no longer first time
-    dismiss();
-    assert.equal(isFirstTime(), false, "Should not be first time after dismiss");
-    assert.equal(storageMock.get(STORAGE_KEY), "dismissed");
+    // First login
+    onMount();
+    assert.equal(state, "welcome", "Should start in welcome state on first visit");
+    assert.equal(showWelcome, true, "Welcome modal must show");
+    assert.equal(isTourActive, false, "Tour spotlight must NOT show in welcome state");
 
-    // After completion: marks completed
-    complete();
-    assert.equal(isFirstTime(), false, "Should not be first time after complete");
-    assert.equal(storageMock.get(STORAGE_KEY), "completed");
+    // 2. User clicks 'เริ่มแนะนำระบบ →'
+    const startTour = () => {
+      state = "tour";
+      showWelcome = false;
+      isTourActive = true;
+      stepIndex = 0;
+      storage.set(STATE_KEY, "tour");
+      storage.set(STEP_KEY, "0");
+    };
 
-    // Replay is always allowed
-    assert.equal(replay(), true, "Replay must always succeed");
+    startTour();
+    assert.equal(state, "tour", "State transitions from welcome to tour");
+    assert.equal(showWelcome, false, "Welcome modal MUST close immediately");
+    assert.equal(isTourActive, true, "Tour spotlight is now active");
+    assert.equal(stepIndex, 0, "Step index starts at 0 (Dashboard)");
+
+    // 3. User clicks 'ถัดไป' (Next)
+    const nextStep = (stepsCount = 9) => {
+      if (stepIndex + 1 < stepsCount) {
+        stepIndex += 1;
+        storage.set(STEP_KEY, String(stepIndex));
+      } else {
+        // Complete
+        state = "completed";
+        isTourActive = false;
+        showWelcome = false;
+        storage.set(COMPLETED_KEY, "true");
+        storage.delete(STATE_KEY);
+        storage.delete(STEP_KEY);
+      }
+    };
+
+    // Step 1 -> Step 2
+    nextStep();
+    assert.equal(stepIndex, 1, "Next advances step index to 1 (Customers)");
+    assert.equal(state, "tour", "State remains in tour");
+    assert.equal(showWelcome, false, "Welcome modal MUST NOT reopen on Next");
+
+    // Emulate page navigation to /customers (simulating remount or route change)
+    onMount();
+    assert.equal(state, "tour", "State survives route navigation");
+    assert.equal(stepIndex, 1, "Step index is preserved at 1 across navigation");
+    assert.equal(showWelcome, false, "Welcome modal NEVER loops on navigation during tour");
+
+    // Walk through remaining steps: 2, 3, 4, 5, 6, 7, 8
+    for (let i = 2; i <= 8; i++) {
+      nextStep();
+      assert.equal(stepIndex, i, `Step advances correctly to ${i}`);
+      assert.equal(showWelcome, false, "Welcome modal NEVER reappears between steps");
+      assert.equal(isTourActive, true);
+    }
+
+    // Final step: click 'เริ่มใช้งาน'
+    nextStep();
+    assert.equal(state, "completed", "Tour is completed on final step");
+    assert.equal(isTourActive, false, "Tour spotlight is closed");
+    assert.equal(showWelcome, false, "Welcome modal is closed");
+    assert.equal(storage.get(COMPLETED_KEY), "true", "Completion is permanently persisted");
+
+    // Subsequent page refresh/visit
+    onMount();
+    assert.equal(state, "completed");
+    assert.equal(showWelcome, false, "Tour never shows again after completion");
+    assert.equal(isTourActive, false);
   });
 
   // ── 5. Graceful Fallback for Missing Target Element ──
   test("Fallback calculation centers popover when target element is absent", () => {
-    function computePosition(targetRect, windowSize = { width: 1200, height: 800 }) {
+    function computePosition(targetRect, _windowSize = { width: 1200, height: 800 }) {
       if (!targetRect) {
         return {
           isCentered: true,

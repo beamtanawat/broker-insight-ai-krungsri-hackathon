@@ -4,9 +4,16 @@ import { usePathname, useRouter } from "next/navigation";
 import type { User } from "@/types";
 import { TourStep, getTourStepsForRole } from "@/lib/onboardingSteps";
 
-const ONBOARDING_STORAGE_KEY = "broker_insight_onboarding_completed_v1";
+export const ONBOARDING_COMPLETED_KEY = "broker-insight-onboarding-completed";
+export const ONBOARDING_DISMISSED_KEY = "broker-insight-onboarding-dismissed";
+export const ONBOARDING_STATE_KEY = "broker-insight-onboarding-state";
+export const ONBOARDING_STEP_KEY = "broker-insight-onboarding-current-step";
+export const LEGACY_STORAGE_KEY = "broker_insight_onboarding_completed_v1";
+
+export type OnboardingState = "idle" | "welcome" | "tour" | "completed" | "dismissed";
 
 interface OnboardingTourContextType {
+  onboardingState: OnboardingState;
   isTourActive: boolean;
   showWelcome: boolean;
   currentStepIndex: number;
@@ -15,11 +22,14 @@ interface OnboardingTourContextType {
   totalSteps: number;
   targetRect: DOMRect | null;
   isNavigating: boolean;
+  userRole: string;
+  setUserRole: (role: string) => void;
   startTour: (roleOverride?: string, startIndex?: number) => void;
   jumpToStep: (index: number) => void;
   nextStep: () => void;
   prevStep: () => void;
   skipTour: () => void;
+  completeTour: () => void;
   replayTour: (roleOverride?: string) => void;
   closeWelcome: () => void;
   showFeatureCatalog: boolean;
@@ -30,7 +40,7 @@ interface OnboardingTourContextType {
 const OnboardingTourContext = createContext<OnboardingTourContextType | null>(null);
 
 interface OnboardingTourProviderProps {
-  user: User | null;
+  user?: User | null;
   children: React.ReactNode;
 }
 
@@ -38,10 +48,20 @@ export function OnboardingTourProvider({ user, children }: OnboardingTourProvide
   const router = useRouter();
   const pathname = usePathname();
 
-  const userRole = user?.role || "broker";
+  const [userRole, setUserRole] = useState<string>(user?.role || "broker");
   const [roleOverride, setRoleOverride] = useState<string | null>(null);
-  const steps = useMemo(() => getTourStepsForRole(roleOverride || userRole), [roleOverride, userRole]);
 
+  // Sync role if user changes
+  useEffect(() => {
+    if (user?.role) {
+      setUserRole(user.role);
+    }
+  }, [user?.role]);
+
+  const activeRole = roleOverride || userRole;
+  const steps = useMemo(() => getTourStepsForRole(activeRole), [activeRole]);
+
+  const [onboardingState, setOnboardingState] = useState<OnboardingState>("idle");
   const [isTourActive, setIsTourActive] = useState(false);
   const [showWelcome, setShowWelcome] = useState(false);
   const [showFeatureCatalog, setShowFeatureCatalog] = useState(false);
@@ -50,23 +70,57 @@ export function OnboardingTourProvider({ user, children }: OnboardingTourProvide
   const [isNavigating, setIsNavigating] = useState(false);
 
   const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const hasInitializedRef = useRef(false);
 
-  // Check if first-time user on mount
+  // Check state & persistence on client mount
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || hasInitializedRef.current) return;
+    hasInitializedRef.current = true;
+
     try {
-      const stored = localStorage.getItem(ONBOARDING_STORAGE_KEY);
-      if (!stored) {
-        // First time user: show welcome modal after brief delay for smooth mount
-        const timer = setTimeout(() => {
-          setShowWelcome(true);
-        }, 500);
-        return () => clearTimeout(timer);
+      const isCompleted =
+        localStorage.getItem(ONBOARDING_COMPLETED_KEY) === "true" ||
+        localStorage.getItem(LEGACY_STORAGE_KEY) === "completed";
+      const isDismissed =
+        localStorage.getItem(ONBOARDING_DISMISSED_KEY) === "true" ||
+        localStorage.getItem(LEGACY_STORAGE_KEY) === "dismissed";
+
+      if (isCompleted) {
+        setOnboardingState("completed");
+        setShowWelcome(false);
+        setIsTourActive(false);
+        return;
       }
+
+      if (isDismissed) {
+        setOnboardingState("dismissed");
+        setShowWelcome(false);
+        setIsTourActive(false);
+        return;
+      }
+
+      const savedState = localStorage.getItem(ONBOARDING_STATE_KEY);
+      const savedStep = parseInt(localStorage.getItem(ONBOARDING_STEP_KEY) || "0", 10);
+
+      if (savedState === "tour") {
+        setOnboardingState("tour");
+        setIsTourActive(true);
+        setShowWelcome(false);
+        const validStep = isNaN(savedStep) ? 0 : Math.max(0, Math.min(savedStep, steps.length - 1));
+        setCurrentStepIndex(validStep);
+        return;
+      }
+
+      // First time user: show welcome modal after brief delay
+      setOnboardingState("welcome");
+      const timer = setTimeout(() => {
+        setShowWelcome(true);
+      }, 400);
+      return () => clearTimeout(timer);
     } catch {
-      // LocalStorage access failsafe (e.g. private mode)
+      // LocalStorage access failsafe
     }
-  }, []);
+  }, [steps.length]);
 
   const currentStep = useMemo(() => {
     if (!isTourActive || currentStepIndex < 0 || currentStepIndex >= steps.length) {
@@ -85,10 +139,8 @@ export function OnboardingTourProvider({ user, children }: OnboardingTourProvide
     const el = document.querySelector(currentStep.targetSelector);
     if (el) {
       const rect = el.getBoundingClientRect();
-      // Ensure element is actually rendered with dimensions
       if (rect.width > 0 && rect.height > 0) {
         if (shouldScroll) {
-          // Check if partially out of viewport
           const isVisible =
             rect.top >= 80 &&
             rect.bottom <= window.innerHeight - 80 &&
@@ -97,7 +149,6 @@ export function OnboardingTourProvider({ user, children }: OnboardingTourProvide
 
           if (!isVisible) {
             el.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
-            // Re-measure after smooth scrolling starts settling
             setTimeout(() => {
               const updatedRect = el.getBoundingClientRect();
               setTargetRect(updatedRect);
@@ -112,35 +163,32 @@ export function OnboardingTourProvider({ user, children }: OnboardingTourProvide
     return false;
   }, [currentStep]);
 
-  // Manage target detection & polling on step or route change
+  // Target detection & polling on step or route change
   useEffect(() => {
     if (!isTourActive || !currentStep) {
       setTargetRect(null);
       return;
     }
 
-    // Clear any previous polling loop
     if (pollIntervalRef.current) {
       clearInterval(pollIntervalRef.current);
       pollIntervalRef.current = null;
     }
 
-    // Immediate attempt with auto-scroll
     const found = locateAndMeasureTarget(true);
 
     if (!found) {
-      // If not immediately found (e.g. page transition), poll for up to 2.5 seconds
       const startTime = Date.now();
       pollIntervalRef.current = setInterval(() => {
         const success = locateAndMeasureTarget(true);
-        if (success || Date.now() - startTime > 2500) {
+        if (success || Date.now() - startTime > 3000) {
           if (pollIntervalRef.current) {
             clearInterval(pollIntervalRef.current);
             pollIntervalRef.current = null;
           }
           setIsNavigating(false);
         }
-      }, 80);
+      }, 70);
     }
 
     function handleScrollOrResize() {
@@ -160,58 +208,97 @@ export function OnboardingTourProvider({ user, children }: OnboardingTourProvide
     };
   }, [isTourActive, currentStep, pathname, locateAndMeasureTarget]);
 
+  // Start Tour
   const startTour = useCallback((override?: string, startIndex = 0) => {
     if (override) {
       setRoleOverride(override);
     }
-    const tourSteps = getTourStepsForRole(override || userRole);
+    const roleForSteps = override || activeRole;
+    const tourSteps = getTourStepsForRole(roleForSteps);
+
+    // Explicit state transition: welcome -> tour
+    setOnboardingState("tour");
     setShowWelcome(false);
     setShowFeatureCatalog(false);
+    setIsTourActive(true);
+
     const validIndex = Math.max(0, Math.min(startIndex, tourSteps.length - 1));
     setCurrentStepIndex(validIndex);
-    setIsTourActive(true);
+
+    try {
+      localStorage.setItem(ONBOARDING_STATE_KEY, "tour");
+      localStorage.setItem(ONBOARDING_STEP_KEY, String(validIndex));
+    } catch {}
 
     const targetStep = tourSteps[validIndex];
     if (targetStep?.route && pathname !== targetStep.route) {
       setIsNavigating(true);
       router.push(targetStep.route);
     }
-  }, [userRole, pathname, router]);
+  }, [activeRole, pathname, router]);
 
+  // Jump to Step
   const jumpToStep = useCallback((index: number) => {
     if (index < 0 || index >= steps.length) return;
     const targetStep = steps[index];
     setCurrentStepIndex(index);
+
+    try {
+      localStorage.setItem(ONBOARDING_STEP_KEY, String(index));
+    } catch {}
+
     if (targetStep?.route && pathname !== targetStep.route) {
       setIsNavigating(true);
       router.push(targetStep.route);
     }
   }, [steps, pathname, router]);
 
+  // Complete Tour
+  const completeTour = useCallback(() => {
+    setOnboardingState("completed");
+    setIsTourActive(false);
+    setShowWelcome(false);
+    setShowFeatureCatalog(false);
+    setTargetRect(null);
+
+    try {
+      localStorage.setItem(ONBOARDING_COMPLETED_KEY, "true");
+      localStorage.setItem(LEGACY_STORAGE_KEY, "completed");
+      localStorage.removeItem(ONBOARDING_STATE_KEY);
+      localStorage.removeItem(ONBOARDING_STEP_KEY);
+    } catch {}
+  }, []);
+
+  // Next Step
   const nextStep = useCallback(() => {
     if (currentStepIndex + 1 < steps.length) {
       const nextIndex = currentStepIndex + 1;
       const nextStepObj = steps[nextIndex];
       setCurrentStepIndex(nextIndex);
 
+      try {
+        localStorage.setItem(ONBOARDING_STEP_KEY, String(nextIndex));
+      } catch {}
+
       if (nextStepObj?.route && pathname !== nextStepObj.route) {
         setIsNavigating(true);
         router.push(nextStepObj.route);
       }
     } else {
-      // Completed tour!
-      setIsTourActive(false);
-      try {
-        localStorage.setItem(ONBOARDING_STORAGE_KEY, "completed");
-      } catch {}
+      completeTour();
     }
-  }, [currentStepIndex, steps, pathname, router]);
+  }, [currentStepIndex, steps, pathname, router, completeTour]);
 
+  // Prev Step
   const prevStep = useCallback(() => {
     if (currentStepIndex > 0) {
       const prevIndex = currentStepIndex - 1;
       const prevStepObj = steps[prevIndex];
       setCurrentStepIndex(prevIndex);
+
+      try {
+        localStorage.setItem(ONBOARDING_STEP_KEY, String(prevIndex));
+      } catch {}
 
       if (prevStepObj?.route && pathname !== prevStepObj.route) {
         setIsNavigating(true);
@@ -220,21 +307,25 @@ export function OnboardingTourProvider({ user, children }: OnboardingTourProvide
     }
   }, [currentStepIndex, steps, pathname, router]);
 
+  // Skip Tour
   const skipTour = useCallback(() => {
+    setOnboardingState("dismissed");
     setIsTourActive(false);
     setShowWelcome(false);
     setShowFeatureCatalog(false);
+    setTargetRect(null);
+
     try {
-      localStorage.setItem(ONBOARDING_STORAGE_KEY, "dismissed");
+      localStorage.setItem(ONBOARDING_DISMISSED_KEY, "true");
+      localStorage.setItem(LEGACY_STORAGE_KEY, "dismissed");
+      localStorage.removeItem(ONBOARDING_STATE_KEY);
+      localStorage.removeItem(ONBOARDING_STEP_KEY);
     } catch {}
   }, []);
 
   const closeWelcome = useCallback(() => {
-    setShowWelcome(false);
-    try {
-      localStorage.setItem(ONBOARDING_STORAGE_KEY, "dismissed");
-    } catch {}
-  }, []);
+    skipTour();
+  }, [skipTour]);
 
   const replayTour = useCallback((roleOverride?: string) => {
     startTour(roleOverride, 0);
@@ -253,6 +344,7 @@ export function OnboardingTourProvider({ user, children }: OnboardingTourProvide
   return (
     <OnboardingTourContext.Provider
       value={{
+        onboardingState,
         isTourActive,
         showWelcome,
         currentStepIndex,
@@ -261,11 +353,14 @@ export function OnboardingTourProvider({ user, children }: OnboardingTourProvide
         totalSteps: steps.length,
         targetRect: (!isTourActive || !currentStep) ? null : targetRect,
         isNavigating,
+        userRole,
+        setUserRole,
         startTour,
         jumpToStep,
         nextStep,
         prevStep,
         skipTour,
+        completeTour,
         replayTour,
         closeWelcome,
         showFeatureCatalog,

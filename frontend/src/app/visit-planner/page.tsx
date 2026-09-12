@@ -465,7 +465,7 @@ export default function VisitPlannerPage() {
           className="nearby-main-grid"
         >
           {/* Column 1: รายชื่อลูกค้าใกล้คุณ */}
-          <div data-tour="customer-selection-action" style={{ display: "flex", flexDirection: "column" }} className="col-nearby-list">
+          <div data-tour="customer-selection" id="tour-customer-selection-action" style={{ display: "flex", flexDirection: "column" }} className="col-nearby-list">
             <NearbyCustomerList
               customers={pagedCandidates}
               selectedCustomerId={selectedCustomer?.customer_id ?? null}
@@ -486,7 +486,7 @@ export default function VisitPlannerPage() {
 
           {/* Column 2: แผนที่ลูกค้ารอบตัว (Proximity Map) */}
           {viewMode === "map" && (
-            <div data-tour="nearby-customers-map" style={{ display: "flex", flexDirection: "column" }} className="col-nearby-map">
+            <div data-tour="nearby-customers" id="tour-nearby-customers-map" style={{ display: "flex", flexDirection: "column" }} className="col-nearby-map">
               <NearbyMapVisualizer
                 brokerLocation={brokerLocation}
                 radiusKm={selectedRadius}
@@ -501,7 +501,7 @@ export default function VisitPlannerPage() {
           )}
 
           {/* Column 3: ข้อมูลลูกค้า / เส้นทาง (Customer Detail & Decision Panel) */}
-          <div data-tour="navigation-preview-action" style={{ display: "flex", flexDirection: "column" }} className="col-nearby-detail">
+          <div data-tour="navigation" id="tour-navigation-preview-action" style={{ display: "flex", flexDirection: "column" }} className="col-nearby-detail">
             <CustomerDecisionPanel
               selectedCustomer={selectedCustomer}
               brokerLocation={brokerLocation}

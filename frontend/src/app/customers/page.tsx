@@ -438,7 +438,7 @@ function CustomersContent() {
       </div>
 
       {/* ── Customer List Table (Desktop View) & Cards (Mobile View) ── */}
-      <div data-tour="customer-table">
+      <div data-tour="customers" id="tour-customer-table">
         <Card noPadding>
         {loading ? (
           <TableSkeleton rows={8} cols={6} />

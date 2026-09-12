@@ -415,7 +415,26 @@ export function GuidedTourSpotlight() {
             </div>
           )}
 
-          {/* Step Title with Icon */}
+          {/* Step Title with Icon & Final Step Headline */}
+          {isLastStep && (
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                backgroundColor: "#DCFCE7",
+                color: "#15803D",
+                fontSize: "12px",
+                fontWeight: 700,
+                padding: "3px 10px",
+                borderRadius: "999px",
+                marginBottom: "8px",
+              }}
+            >
+              <span>🎉 พร้อมเริ่มใช้งานแล้ว</span>
+            </div>
+          )}
+
           <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
             <span style={{ fontSize: "22px", flexShrink: 0 }}>{currentStep.icon || "💡"}</span>
             <h3
@@ -442,7 +461,9 @@ export function GuidedTourSpotlight() {
               margin: "0 0 12px 0",
             }}
           >
-            {currentStep.description}
+            {isLastStep
+              ? `${currentStep.description} ตอนนี้คุณรู้จักฟีเจอร์หลักของ Broker Insight AI แล้ว`
+              : currentStep.description}
           </p>
 
           {/* Key Highlight Pill */}
@@ -560,7 +581,7 @@ export function GuidedTourSpotlight() {
                   e.currentTarget.style.transform = "none";
                 }}
               >
-                <span>{isLastStep ? "เข้าใจแล้ว เริ่มใช้งาน" : "ถัดไป"}</span>
+                <span>{isLastStep ? "เริ่มใช้งาน" : "ถัดไป"}</span>
                 <span aria-hidden="true">{isLastStep ? "✓" : "→"}</span>
               </button>
             </div>
