@@ -142,7 +142,7 @@ export function TodayTasksTable({
           style={{
             fontSize: "0.8125rem",
             fontWeight: 700,
-            color: "#2563EB",
+            color: "#5a4544",
             textDecoration: "none",
             display: "flex",
             alignItems: "center",
@@ -180,7 +180,7 @@ export function TodayTasksTable({
                   checked={selectedIds.length === tasks.length}
                   onChange={toggleSelectAll}
                   aria-label="เลือกงานทั้งหมด"
-                  style={{ cursor: "pointer", accentColor: "#2563EB" }}
+                  style={{ cursor: "pointer", accentColor: "#5a4544" }}
                 />
               </th>
               <th style={{ padding: "12px 14px", width: "90px" }}>
@@ -223,7 +223,7 @@ export function TodayTasksTable({
                       checked={isSelected}
                       onChange={() => toggleSelectRow(task.id)}
                       aria-label={`เลือก ${task.taskType} - ${task.customerName}`}
-                      style={{ cursor: "pointer", accentColor: "#2563EB" }}
+                      style={{ cursor: "pointer", accentColor: "#5a4544" }}
                     />
                   </td>
 
@@ -294,9 +294,9 @@ export function TodayTasksTable({
                         fontWeight: 700,
                         padding: "3px 8px",
                         borderRadius: "4px",
-                        backgroundColor: isPending ? "#FEF2F2" : "#EFF6FF",
-                        color: isPending ? "#DC2626" : "#2563EB",
-                        border: `1px solid ${isPending ? "#FECACA" : "#BFDBFE"}`,
+                        backgroundColor: isPending ? "#FEF2F2" : "#FAF7F6",
+                        color: isPending ? "#DC2626" : "#5a4544",
+                        border: `1px solid ${isPending ? "#FECACA" : "#E2DAD9"}`,
                         whiteSpace: "nowrap",
                       }}
                     >
@@ -313,9 +313,9 @@ export function TodayTasksTable({
                           display: "inline-flex",
                           alignItems: "center",
                           gap: "4px",
-                          backgroundColor: "#EFF6FF",
-                          border: "1px solid #BFDBFE",
-                          color: "#1D4ED8",
+                          backgroundColor: "#FAF7F6",
+                          border: "1px solid #E2DAD9",
+                          color: "#5a4544",
                           borderRadius: "6px",
                           padding: "5px 10px",
                           fontSize: "0.75rem",
@@ -323,8 +323,8 @@ export function TodayTasksTable({
                           cursor: "pointer",
                           transition: "background-color 0.15s ease",
                         }}
-                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#DBEAFE")}
-                        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#EFF6FF")}
+                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#F1ECEB")}
+                        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#FAF7F6")}
                       >
                         <span>{task.actionIcon}</span>
                         <span>{task.actionLabel}</span>

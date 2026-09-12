@@ -292,13 +292,13 @@ export default function VisitPlannerPage() {
               width: "36px",
               height: "36px",
               borderRadius: "10px",
-              background: "linear-gradient(135deg, #1D4ED8 0%, #2563EB 100%)",
+              background: "linear-gradient(135deg, #4a3837 0%, #5a4544 100%)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               fontSize: "1.125rem",
               flexShrink: 0,
-              boxShadow: "0 2px 6px rgba(29,78,216,0.3)",
+              boxShadow: "0 2px 6px rgba(90,69,68,0.3)",
             }}
           >
             📍
@@ -364,14 +364,14 @@ export default function VisitPlannerPage() {
               fontSize: "0.8125rem",
               fontWeight: 700,
               border: "none",
-              backgroundColor: viewMode === "map" ? "#1D4ED8" : "transparent",
+              backgroundColor: viewMode === "map" ? "#5a4544" : "transparent",
               color: viewMode === "map" ? "#ffffff" : "#64748B",
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
               gap: "5px",
               transition: "all 0.15s ease",
-              boxShadow: viewMode === "map" ? "0 2px 6px rgba(29,78,216,0.3)" : "none",
+              boxShadow: viewMode === "map" ? "0 2px 6px rgba(90,69,68,0.3)" : "none",
             }}
           >
             <span>🗺️</span>

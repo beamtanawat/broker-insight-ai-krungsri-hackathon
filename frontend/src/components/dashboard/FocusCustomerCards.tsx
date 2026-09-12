@@ -34,7 +34,7 @@ const DEFAULT_FOCUS_CUSTOMERS: FocusCustomerItem[] = [
     name: "ณัฐพร วาริน",
     ref: "KS-00001",
     initial: "ณ",
-    avatarBg: "#2563EB", // Blue
+    avatarBg: "#5a4544", // Brown
     priorityScore: 88,
     priorityLevel: "high",
     priorityLabel: "สูง",
@@ -123,7 +123,7 @@ export function FocusCustomerCards({ customers }: FocusCustomerCardsProps) {
           style={{
             fontSize: "0.8125rem",
             fontWeight: 700,
-            color: "#2563EB",
+            color: "#5a4544",
             textDecoration: "none",
             display: "flex",
             alignItems: "center",

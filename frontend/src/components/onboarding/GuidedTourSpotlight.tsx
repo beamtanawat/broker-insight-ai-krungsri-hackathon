@@ -221,7 +221,7 @@ export function GuidedTourSpotlight() {
         <div
           style={{
             height: "5px",
-            background: "linear-gradient(90deg, #FECB00 0%, #F59E0B 40%, #2563EB 100%)",
+            background: "linear-gradient(90deg, #FECB00 0%, #F59E0B 40%, #5a4544 100%)",
             borderTopLeftRadius: "16px",
             borderTopRightRadius: "16px",
           }}
@@ -250,19 +250,19 @@ export function GuidedTourSpotlight() {
                   gap: "6px",
                   fontSize: "12px",
                   fontWeight: 700,
-                  color: "#1D4ED8",
-                  backgroundColor: "#EFF6FF",
-                  border: "1px solid #BFDBFE",
+                  color: "#5a4544",
+                  backgroundColor: "#F9F7F6",
+                  border: "1px solid #E2DAD9",
                   padding: "3px 10px",
                   borderRadius: "999px",
                   cursor: "pointer",
                   transition: "all 0.15s ease",
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#DBEAFE")}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#EFF6FF")}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#F1ECEB")}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#F9F7F6")}
               >
                 <span>ขั้นตอนที่ {currentStepIndex + 1} จาก {totalSteps}</span>
-                <span style={{ fontSize: "12px", color: "#3B82F6" }}>▾</span>
+                <span style={{ fontSize: "12px", color: "#5a4544" }}>▾</span>
               </button>
 
               {/* Step Dropdown Menu */}
@@ -358,7 +358,7 @@ export function GuidedTourSpotlight() {
                   background: "none",
                   border: "none",
                   fontSize: "12px",
-                  color: "#2563EB",
+                  color: "#5a4544",
                   fontWeight: 700,
                   cursor: "pointer",
                   padding: "2px 6px",
@@ -564,14 +564,14 @@ export function GuidedTourSpotlight() {
                   padding: "8px 20px",
                   borderRadius: "8px",
                   border: "none",
-                  backgroundColor: isLastStep ? "#16A34A" : "#2563EB",
+                  backgroundColor: isLastStep ? "#16A34A" : "#5a4544",
                   color: "#ffffff",
                   fontSize: "13px",
                   fontWeight: 800,
                   cursor: "pointer",
                   boxShadow: isLastStep
                     ? "0 3px 10px rgba(22, 163, 74, 0.35)"
-                    : "0 3px 10px rgba(37, 99, 235, 0.35)",
+                    : "0 3px 10px rgba(90, 69, 68, 0.35)",
                   transition: "all 0.15s ease",
                   maxWidth: "280px",
                   whiteSpace: "nowrap",

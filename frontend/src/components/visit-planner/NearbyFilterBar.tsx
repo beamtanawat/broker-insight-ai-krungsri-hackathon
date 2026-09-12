@@ -42,8 +42,8 @@ function FilterPill({ label, icon, value, onChange, options }: FilterPillProps) 
         display: "flex",
         alignItems: "center",
         gap: "5px",
-        backgroundColor: isActive ? "#EFF6FF" : "#F8FAFC",
-        border: `1px solid ${isActive ? "#BFDBFE" : "#E2E8F0"}`,
+        backgroundColor: isActive ? "#FAF7F6" : "#F8FAFC",
+        border: `1px solid ${isActive ? "#E2DAD9" : "#E2E8F0"}`,
         borderRadius: "10px",
         padding: "6px 12px",
         transition: "all 0.15s ease",
@@ -58,7 +58,7 @@ function FilterPill({ label, icon, value, onChange, options }: FilterPillProps) 
         <span
           style={{
             fontSize: "0.75rem",
-            color: isActive ? "#1E40AF" : "#94A3B8",
+            color: isActive ? "#5a4544" : "#94A3B8",
             fontWeight: 600,
             lineHeight: 1,
             textTransform: "uppercase",
@@ -76,7 +76,7 @@ function FilterPill({ label, icon, value, onChange, options }: FilterPillProps) 
             outline: "none",
             fontSize: "0.8125rem",
             fontWeight: 700,
-            color: isActive ? "#1D4ED8" : "#334155",
+            color: isActive ? "#5a4544" : "#334155",
             cursor: "pointer",
             padding: 0,
             lineHeight: 1.2,
@@ -140,7 +140,7 @@ export function NearbyFilterBar({
 
   // Location status widget styles by state
   const locationStyles = {
-    requesting: { bg: "#EFF6FF", border: "#93C5FD", iconBg: "#3B82F6", labelColor: "#1E40AF" },
+    requesting: { bg: "#FAF7F6", border: "#E2DAD9", iconBg: "#5a4544", labelColor: "#4a3837" },
     success: { bg: isStale ? "#FFFBEB" : "#F0FDF4", border: isStale ? "#FCD34D" : "#86EFAC", iconBg: isStale ? "#D97706" : "#16A34A", labelColor: isStale ? "#92400E" : "#166534" },
     denied: { bg: "#FEF2F2", border: "#FCA5A5", iconBg: "#DC2626", labelColor: "#991B1B" },
     error: { bg: "#FEF2F2", border: "#FCA5A5", iconBg: "#DC2626", labelColor: "#991B1B" },
@@ -460,8 +460,9 @@ export function NearbyFilterBar({
             style={{
               fontSize: "0.75rem",
               fontWeight: 700,
-              backgroundColor: "#DBEAFE",
-              color: "#1D4ED8",
+              backgroundColor: "#FAF7F6",
+              color: "#5a4544",
+              border: "1px solid #E2DAD9",
               padding: "2px 8px",
               borderRadius: "20px",
             }}

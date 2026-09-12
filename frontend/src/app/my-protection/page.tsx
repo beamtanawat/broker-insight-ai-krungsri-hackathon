@@ -90,8 +90,8 @@ const ATTENTION_CUSTOMERS = [
     id: "d82e838c-63fb-47a3-9428-f15dc4d68883",
     name: "ณัฐพร วาริน",
     ref: "KS-00001",
-    avatarBg: "#DBEAFE",
-    avatarColor: "#1E40AF",
+    avatarBg: "#F2ECEB",
+    avatarColor: "#5a4544",
     avatarChar: "ณ",
     score: 88,
     priorityLevel: "สูง",
@@ -148,12 +148,12 @@ function PriorityDonutChart() {
             strokeDasharray={`${s4} ${circumference}`}
             strokeDashoffset={o4}
           />
-          {/* Blue 20.2% */}
+          {/* Brown 20.2% */}
           <circle
             cx={size / 2}
             cy={size / 2}
             r={radius}
-            stroke="#3B82F6"
+            stroke="#5a4544"
             strokeWidth={strokeWidth}
             fill="none"
             strokeDasharray={`${s3} ${circumference}`}
@@ -215,7 +215,7 @@ function PriorityDonutChart() {
         </div>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <span style={{ display: "flex", alignItems: "center", gap: "3px" }}>
-            <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#3B82F6" }} />
+            <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#5a4544" }} />
             Priority 65
           </span>
           <span style={{ fontWeight: 700 }}>20.2%</span>
@@ -755,7 +755,7 @@ export default function MyProtectionPage() {
                       width: "32px",
                       height: "32px",
                       borderRadius: "8px",
-                      backgroundColor: "#EFF6FF",
+                      backgroundColor: "#FAF7F6",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -937,7 +937,7 @@ export default function MyProtectionPage() {
                       width: "32px",
                       height: "32px",
                       borderRadius: "8px",
-                      backgroundColor: "#EFF6FF",
+                      backgroundColor: "#FAF7F6",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -1039,7 +1039,7 @@ export default function MyProtectionPage() {
               <div style={{ fontSize: "0.875rem", fontWeight: 800, color: "#0F172A" }}>
                 ลูกค้าที่ควรให้ความสนใจวันนี้
               </div>
-              <Link href="/customers" style={{ fontSize: "0.75rem", color: "#2563EB", fontWeight: 700, textDecoration: "none" }}>
+              <Link href="/customers" style={{ fontSize: "0.75rem", color: "#5a4544", fontWeight: 700, textDecoration: "none" }}>
                 ดูทั้งหมด ›
               </Link>
             </div>
@@ -1170,7 +1170,7 @@ export default function MyProtectionPage() {
               <span>📅</span>
               <span>{activeTab === "reports" ? "งานติดตามของวันนี้ (4 รายการ)" : "งานที่ต้องทำวันนี้ (4 รายการ)"}</span>
             </div>
-            <span style={{ fontSize: "0.75rem", color: "#2563EB", fontWeight: 700, cursor: "pointer" }}>
+            <span style={{ fontSize: "0.75rem", color: "#5a4544", fontWeight: 700, cursor: "pointer" }}>
               {activeTab === "reports" ? "ดูงานทั้งหมด ›" : "ดูทั้งหมด ›"}
             </span>
           </div>
@@ -1210,7 +1210,7 @@ export default function MyProtectionPage() {
                       width: "15px",
                       height: "15px",
                       borderRadius: "4px",
-                      accentColor: "#2563EB",
+                      accentColor: "#5a4544",
                       cursor: "pointer",
                       flexShrink: 0,
                     }}
@@ -1296,7 +1296,7 @@ export default function MyProtectionPage() {
                           : t.status === "scheduled"
                           ? "#DCFCE7"
                           : t.status === "in_progress"
-                          ? "#EFF6FF"
+                          ? "#FAF7F6"
                           : "#FEE2E2",
                       color:
                         t.status === "completed" || t.completed
@@ -1304,7 +1304,7 @@ export default function MyProtectionPage() {
                           : t.status === "scheduled"
                           ? "#16A34A"
                           : t.status === "in_progress"
-                          ? "#2563EB"
+                          ? "#5a4544"
                           : "#DC2626",
                     }}
                   >

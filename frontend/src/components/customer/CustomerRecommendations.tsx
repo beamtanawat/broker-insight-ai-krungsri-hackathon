@@ -134,8 +134,8 @@ export function CustomerRecommendations({
       {customer.external_ref === "KS-00002" && (
         <div
           style={{
-            backgroundColor: "#eff6ff",
-            border: "1px solid #bfdbfe",
+            backgroundColor: "#FAF7F6",
+            border: "1px solid #E2DAD9",
             borderRadius: "12px",
             padding: "14px 18px",
             display: "flex",
@@ -143,7 +143,7 @@ export function CustomerRecommendations({
             alignItems: "center",
             flexWrap: "wrap",
             gap: "12px",
-            boxShadow: "0 2px 8px rgba(37, 99, 235, 0.08)",
+            boxShadow: "0 2px 8px rgba(90, 69, 68, 0.08)",
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
@@ -152,7 +152,7 @@ export function CustomerRecommendations({
                 width: "40px",
                 height: "40px",
                 borderRadius: "10px",
-                backgroundColor: "#dbeafe",
+                backgroundColor: "#F2ECEB",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -163,13 +163,13 @@ export function CustomerRecommendations({
               📱
             </div>
             <div>
-              <div style={{ fontSize: "14px", fontWeight: 800, color: "#1e40af", display: "flex", alignItems: "center", gap: "8px" }}>
+              <div style={{ fontSize: "14px", fontWeight: 800, color: "#4a3837", display: "flex", alignItems: "center", gap: "8px" }}>
                 <span>ลูกค้า Gen Z รายนี้มีประวัติสำรวจความต้องการความคุ้มครองผ่านช่องทางดิจิทัล</span>
-                <span style={{ fontSize: "12px", backgroundColor: "#2563eb", color: "#ffffff", padding: "1px 7px", borderRadius: "999px" }}>
+                <span style={{ fontSize: "12px", backgroundColor: "#5a4544", color: "#ffffff", padding: "1px 7px", borderRadius: "999px" }}>
                   Digital Intent
                 </span>
               </div>
-              <div style={{ fontSize: "12px", color: "#3b82f6", marginTop: "2px" }}>
+              <div style={{ fontSize: "12px", color: "#735a59", marginTop: "2px" }}>
                 🔔 <strong>Why now trigger:</strong> ต่อประกันรถยนต์ใน 21 วัน และกำลังทบทวนช่องว่างประกันกลุ่มบริษัท (ไม่ต้องการซื้อประกันชีวิต)
               </div>
             </div>

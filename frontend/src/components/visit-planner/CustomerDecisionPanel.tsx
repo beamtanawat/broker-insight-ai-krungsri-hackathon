@@ -70,7 +70,7 @@ function ScoreGauge({ score }: { score: number }) {
 }
 
 const PRODUCT_COLORS: Record<string, { bg: string; color: string; label: string }> = {
-  Motor: { bg: "#EFF6FF", color: "#2563EB", label: "Motor (รถยนต์)" },
+  Motor: { bg: "#FAF7F6", color: "#5a4544", label: "Motor (รถยนต์)" },
   Health: { bg: "#F0FDF4", color: "#16A34A", label: "Health (สุขภาพ)" },
   Savings: { bg: "#F0FDFA", color: "#0D9488", label: "Savings (ออมเงิน)" },
   Protection: { bg: "#FFF7ED", color: "#EA580C", label: "Protection (คุ้มครอง)" },
@@ -336,7 +336,7 @@ export function CustomerDecisionPanel({
           <div style={{ backgroundColor: "#F8FAFC", borderRadius: "12px", padding: "14px", border: "1px solid #E2E8F0" }}>
             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
               <div style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
-                <div style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: "#2563EB", marginTop: "4px", flexShrink: 0, boxShadow: "0 0 0 3px #DBEAFE" }} />
+                <div style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: "#5a4544", marginTop: "4px", flexShrink: 0, boxShadow: "0 0 0 3px #F2ECEB" }} />
                 <div>
                   <div style={{ fontSize: "0.75rem", color: "#94A3B8", fontWeight: 600, textTransform: "uppercase" }}>จาก</div>
                   <div style={{ fontSize: "0.8125rem", fontWeight: 700, color: "#334155" }}>
@@ -362,14 +362,14 @@ export function CustomerDecisionPanel({
 
           {/* Distance & Time */}
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
-            <div style={{ backgroundColor: "#EFF6FF", borderRadius: "12px", padding: "14px 16px", border: "1px solid #BFDBFE", textAlign: "center" }}>
-              <div style={{ fontSize: "0.75rem", color: "#3B82F6", fontWeight: 700, marginBottom: "4px" }}>
+            <div style={{ backgroundColor: "#FAF7F6", borderRadius: "12px", padding: "14px 16px", border: "1px solid #E2DAD9", textAlign: "center" }}>
+              <div style={{ fontSize: "0.75rem", color: "#5a4544", fontWeight: 700, marginBottom: "4px" }}>
                 {isBackendData ? "ระยะทาง (ถนน)" : "ระยะทาง (ประมาณ)"}
               </div>
-              <div style={{ fontSize: "1.5rem", fontWeight: 900, color: "#1D4ED8", lineHeight: 1 }}>
+              <div style={{ fontSize: "1.5rem", fontWeight: 900, color: "#5a4544", lineHeight: 1 }}>
                 {displayDistKm}
               </div>
-              <div style={{ fontSize: "0.75rem", color: "#3B82F6", fontWeight: 600 }}>กิโลเมตร</div>
+              <div style={{ fontSize: "0.75rem", color: "#5a4544", fontWeight: 600 }}>กิโลเมตร</div>
             </div>
             <div style={{ backgroundColor: "#F0FDF4", borderRadius: "12px", padding: "14px 16px", border: "1px solid #BBF7D0", textAlign: "center" }}>
               <div style={{ fontSize: "0.75rem", color: "#16A34A", fontWeight: 700, marginBottom: "4px" }}>เวลาโดยประมาณ</div>
@@ -633,8 +633,8 @@ export function CustomerDecisionPanel({
               style={{
                 flex: 1,
                 background: navLoading
-                  ? "linear-gradient(135deg, #93C5FD 0%, #6EA8FE 100%)"
-                  : "linear-gradient(135deg, #1D4ED8 0%, #2563EB 100%)",
+                  ? "linear-gradient(135deg, #A89B9A 0%, #8C7E7D 100%)"
+                  : "linear-gradient(135deg, #4a3837 0%, #5a4544 100%)",
                 color: "#ffffff",
                 border: "none",
                 borderRadius: "10px",
@@ -646,7 +646,7 @@ export function CustomerDecisionPanel({
                 alignItems: "center",
                 justifyContent: "center",
                 gap: "6px",
-                boxShadow: "0 2px 8px rgba(29,78,216,0.3)",
+                boxShadow: "0 2px 8px rgba(90,69,68,0.3)",
                 transition: "all 0.15s ease",
               }}
             >
@@ -816,9 +816,9 @@ export function CustomerDecisionPanel({
                 padding: "10px 16px",
                 fontSize: "0.8125rem",
                 fontWeight: 700,
-                color: isActive ? "#2563EB" : "#94A3B8",
+                color: isActive ? "#5a4544" : "#94A3B8",
                 border: "none",
-                borderBottom: isActive ? "2px solid #2563EB" : "2px solid transparent",
+                borderBottom: isActive ? "2px solid #5a4544" : "2px solid transparent",
                 backgroundColor: "transparent",
                 cursor: "pointer",
                 transition: "all 0.15s ease",
@@ -856,7 +856,7 @@ export function CustomerDecisionPanel({
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                 <div style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
-                  <div style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: "#2563EB", marginTop: "4px", flexShrink: 0, boxShadow: "0 0 0 3px #DBEAFE" }} />
+                  <div style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: "#5a4544", marginTop: "4px", flexShrink: 0, boxShadow: "0 0 0 3px #F2ECEB" }} />
                   <div>
                     <div style={{ fontSize: "0.75rem", color: "#94A3B8", fontWeight: 600, textTransform: "uppercase" }}>จุดเริ่มต้น</div>
                     <div style={{ fontSize: "0.8125rem", fontWeight: 700, color: "#334155" }}>
@@ -885,10 +885,10 @@ export function CustomerDecisionPanel({
 
             {/* Distance & Time from backend */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
-              <div style={{ backgroundColor: "#EFF6FF", borderRadius: "12px", padding: "14px 16px", border: "1px solid #BFDBFE", textAlign: "center" }}>
-                <div style={{ fontSize: "0.75rem", color: "#3B82F6", fontWeight: 700, marginBottom: "4px" }}>ระยะทาง (ถนน)</div>
-                <div style={{ fontSize: "1.5rem", fontWeight: 900, color: "#1D4ED8", lineHeight: 1 }}>{displayDistKm}</div>
-                <div style={{ fontSize: "0.75rem", color: "#3B82F6", fontWeight: 600 }}>กิโลเมตร</div>
+              <div style={{ backgroundColor: "#FAF7F6", borderRadius: "12px", padding: "14px 16px", border: "1px solid #E2DAD9", textAlign: "center" }}>
+                <div style={{ fontSize: "0.75rem", color: "#5a4544", fontWeight: 700, marginBottom: "4px" }}>ระยะทาง (ถนน)</div>
+                <div style={{ fontSize: "1.5rem", fontWeight: 900, color: "#4a3837", lineHeight: 1 }}>{displayDistKm}</div>
+                <div style={{ fontSize: "0.75rem", color: "#5a4544", fontWeight: 600 }}>กิโลเมตร</div>
               </div>
               <div style={{ backgroundColor: "#F0FDF4", borderRadius: "12px", padding: "14px 16px", border: "1px solid #BBF7D0", textAlign: "center" }}>
                 <div style={{ fontSize: "0.75rem", color: "#16A34A", fontWeight: 700, marginBottom: "4px" }}>เวลาโดยประมาณ</div>
@@ -914,11 +914,11 @@ export function CustomerDecisionPanel({
 
             {/* AI rec action */}
             {recAction && (
-              <div style={{ backgroundColor: "#EFF6FF", border: "1px solid #BFDBFE", borderRadius: "8px", padding: "10px 12px" }}>
-                <div style={{ fontSize: "0.75rem", fontWeight: 800, color: "#1E40AF", marginBottom: "4px" }}>
+              <div style={{ backgroundColor: "#FAF7F6", border: "1px solid #E2DAD9", borderRadius: "8px", padding: "10px 12px" }}>
+                <div style={{ fontSize: "0.75rem", fontWeight: 800, color: "#4a3837", marginBottom: "4px" }}>
                   AI แนะนำการดำเนินการ
                 </div>
-                <div style={{ fontSize: "0.8125rem", color: "#1E3A8A", lineHeight: "var(--lh-reading, 1.7)", fontFamily: "var(--font-reading-thai)" }}>{recAction}</div>
+                <div style={{ fontSize: "0.8125rem", color: "#291f1e", lineHeight: "var(--lh-reading, 1.7)", fontFamily: "var(--font-reading-thai)" }}>{recAction}</div>
               </div>
             )}
           </div>
@@ -939,7 +939,7 @@ export function CustomerDecisionPanel({
               <InfoRow
                 label="ระยะทาง"
                 value={`${displayDistKm} กม.${isBackendData ? " (ถนน)" : " (ประมาณ)"} · ~${displayTimeMins} นาที`}
-                valueColor="#2563EB"
+                valueColor="#5a4544"
               />
               {selectedCustomer.phone && (
                 <InfoRow label="เบอร์โทร" value={selectedCustomer.phone} />
@@ -1046,21 +1046,21 @@ export function CustomerDecisionPanel({
             {/* AI Insight — framed as decision support, not command */}
             <div
               style={{
-                background: "linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%)",
-                border: "1px solid #BFDBFE",
+                background: "linear-gradient(135deg, #FAF7F6 0%, #F2ECEB 100%)",
+                border: "1px solid #E2DAD9",
                 borderRadius: "12px",
                 padding: "12px 14px",
               }}
             >
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "6px" }}>
-                <span style={{ fontSize: "0.8125rem", fontWeight: 800, color: "#1E40AF", display: "flex", alignItems: "center", gap: "5px" }}>
+                <span style={{ fontSize: "0.8125rem", fontWeight: 800, color: "#4a3837", display: "flex", alignItems: "center", gap: "5px" }}>
                   <span>🤖</span><span>AI วิเคราะห์ว่า</span>
                 </span>
                 <span
                   style={{
                     fontSize: "0.75rem",
                     fontWeight: 900,
-                    backgroundColor: "#2563EB",
+                    backgroundColor: "#5a4544",
                     color: "#ffffff",
                     padding: "2px 6px",
                     borderRadius: "4px",
@@ -1070,12 +1070,12 @@ export function CustomerDecisionPanel({
                   AI INSIGHT
                 </span>
               </div>
-              <p style={{ margin: 0, fontSize: "0.8125rem", fontFamily: "var(--font-reading-thai)", color: "#1E3A8A", lineHeight: "var(--lh-reading, 1.7)" }}>
+              <p style={{ margin: 0, fontSize: "0.8125rem", fontFamily: "var(--font-reading-thai)", color: "#291f1e", lineHeight: "var(--lh-reading, 1.7)" }}>
                 {selectedCustomer.ai_note ||
                   "ลูกค้ารายนี้มีความสำคัญสูงตามการวิเคราะห์ของ AI — คุณเป็นผู้ตัดสินใจว่าจะเข้าพบหรือไม่"}
               </p>
               {recAction && (
-                <div style={{ marginTop: "6px", fontSize: "0.8125rem", fontFamily: "var(--font-reading-thai)", color: "#1E40AF", fontWeight: 600, lineHeight: "var(--lh-reading, 1.7)" }}>
+                <div style={{ marginTop: "6px", fontSize: "0.8125rem", fontFamily: "var(--font-reading-thai)", color: "#4a3837", fontWeight: 600, lineHeight: "var(--lh-reading, 1.7)" }}>
                   💡 การดำเนินการที่แนะนำ: {recAction}
                 </div>
               )}

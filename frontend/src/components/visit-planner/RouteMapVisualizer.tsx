@@ -334,9 +334,9 @@ export function RouteMapVisualizer({
         <defs>
           {/* Animated gradient for route line */}
           <linearGradient id="routeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#2563eb" />
+            <stop offset="0%" stopColor="#5a4544" />
             <stop offset="50%" stopColor="#fecb00" />
-            <stop offset="100%" stopColor="#2563eb" />
+            <stop offset="100%" stopColor="#5a4544" />
           </linearGradient>
 
           {/* Marker Shadow Filter */}
@@ -423,7 +423,7 @@ export function RouteMapVisualizer({
             <path
               d={routePathD}
               fill="none"
-              stroke="#2563eb"
+              stroke="#5a4544"
               strokeWidth="7"
               strokeLinecap="round"
               strokeLinejoin="round"

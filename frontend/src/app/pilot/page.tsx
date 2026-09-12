@@ -297,7 +297,7 @@ export default function PilotEvaluationPage() {
         <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-6)" }}>
           {/* Summary KPIs */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "var(--space-4)" }}>
-            <Card className="hover-lift" noPadding style={{ borderTop: "3px solid #3b82f6" }}>
+            <Card className="hover-lift" noPadding style={{ borderTop: "3px solid #5a4544" }}>
               <div style={{ padding: "18px 20px" }}>
                 <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)" }}>
                   ผู้เข้าร่วมทดสอบนำร่อง

@@ -268,7 +268,7 @@ export function ProposalOnePagerModal({
               </div>
               <div>
                 <span style={{ color: "#64748b", display: "block" }}>คะแนนความพร้อม AI:</span>
-                <strong style={{ color: priorityLevel === "high" ? "#dc2626" : "#2563eb" }}>
+                <strong style={{ color: priorityLevel === "high" ? "#dc2626" : "#5a4544" }}>
                   {priorityScore}/100 ({priorityLevel === "high" ? "ความสำคัญสูง" : "ปานกลาง"})
                 </strong>
               </div>
@@ -322,10 +322,10 @@ export function ProposalOnePagerModal({
 
             <div
               style={{
-                border: "2px solid #2563eb",
+                border: "2px solid #5a4544",
                 borderRadius: "8px",
                 padding: "18px 20px",
-                backgroundColor: "#f0f7ff",
+                backgroundColor: "#FAF7F6",
               }}
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "10px" }}>
@@ -334,8 +334,8 @@ export function ProposalOnePagerModal({
                     style={{
                       fontSize: "12px",
                       fontWeight: 700,
-                      color: "#1d4ed8",
-                      backgroundColor: "#dbeafe",
+                      color: "#5a4544",
+                      backgroundColor: "#F2ECEB",
                       padding: "2px 8px",
                       borderRadius: "4px",
                     }}
@@ -352,7 +352,7 @@ export function ProposalOnePagerModal({
 
                 <div style={{ textAlign: "right" }}>
                   <div style={{ fontSize: "12px", color: "#64748b" }}>วงเงินความคุ้มครอง:</div>
-                  <div style={{ fontSize: "16px", fontWeight: 800, color: "#1e3a8a" }}>
+                  <div style={{ fontSize: "16px", fontWeight: 800, color: "#4a3837" }}>
                     {primaryRec?.coverage_range || "฿500,000 - ฿5,000,000"}
                   </div>
                   <div style={{ fontSize: "12px", color: "#15803d", fontWeight: 700, marginTop: "2px" }}>
@@ -362,8 +362,8 @@ export function ProposalOnePagerModal({
               </div>
 
               {/* Core Benefits */}
-              <div style={{ marginTop: "14px", paddingTop: "14px", borderTop: "1px dashed #bfdbfe", fontSize: "12px" }}>
-                <strong style={{ color: "#1e3a8a", display: "block", marginBottom: "6px" }}>จุดเด่นสำคัญของแผนความคุ้มครองนี้:</strong>
+              <div style={{ marginTop: "14px", paddingTop: "14px", borderTop: "1px dashed #E2DAD9", fontSize: "12px" }}>
+                <strong style={{ color: "#4a3837", display: "block", marginBottom: "6px" }}>จุดเด่นสำคัญของแผนความคุ้มครองนี้:</strong>
                 <ul style={{ margin: 0, paddingLeft: "18px", color: "#334155", display: "flex", flexDirection: "column", gap: "4px" }}>
                   <li>คุ้มครองครอบคลุมสอดคล้องกับโครงสร้างรายได้และเป้าหมายความมั่นคงของครอบครัว</li>
                   <li>สิทธิประโยชน์ทางภาษีสามารถนำเบี้ยประกันไปลดหย่อนภาษีเงินได้บุคคลธรรมดาสูงสุดตามเกณฑ์กรมสรรพากร</li>
@@ -378,7 +378,7 @@ export function ProposalOnePagerModal({
                   padding: "10px 14px",
                   backgroundColor: "#ffffff",
                   borderRadius: "6px",
-                  border: "1px solid #bfdbfe",
+                  border: "1px solid #E2DAD9",
                   fontSize: "12px",
                 }}
               >

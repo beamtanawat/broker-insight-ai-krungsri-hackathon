@@ -34,8 +34,8 @@ export function DashboardMetricsRow({
       trend: "↑ 27% จากสัปดาห์ที่แล้ว",
       trendColor: "#16A34A",
       icon: "📅",
-      iconBg: "#DBEAFE",
-      iconColor: "#2563EB",
+      iconBg: "#F2ECEB",
+      iconColor: "#5a4544",
       href: "/dashboard#tasks",
     },
     {

@@ -42,13 +42,13 @@ const OUTCOME_CONFIG: Record<
     dotColor: "#f59e0b",
   },
   action: {
-    bg: "rgba(37, 99, 235, 0.12)",
-    border: "rgba(37, 99, 235, 0.35)",
-    text: "#1e40af",
-    icon: "🔵",
+    bg: "rgba(90, 69, 68, 0.12)",
+    border: "rgba(90, 69, 68, 0.35)",
+    text: "#4a3837",
+    icon: "🟤",
     defaultLabel: "ต้องดำเนินการ (Action)",
     description: "ถึงจังหวะเวลาเร่งด่วน เช่น ใกล้หมดอายุ หรือมี Gap สำคัญที่ต้องตัดสินใจ",
-    dotColor: "#2563eb",
+    dotColor: "#5a4544",
   },
 };
 
@@ -245,12 +245,12 @@ export function TrustedAdvisorCard({
       {whyNowTrigger && (
         <div
           style={{
-            backgroundColor: "#eff6ff",
-            border: "1px solid #bfdbfe",
+            backgroundColor: "#FAF7F6",
+            border: "1px solid #E2DAD9",
             borderRadius: "10px",
             padding: "10px 14px",
             fontSize: "13px",
-            color: "#1e40af",
+            color: "#4a3837",
             fontWeight: 600,
             display: "flex",
             alignItems: "center",
@@ -291,7 +291,7 @@ export function TrustedAdvisorCard({
             <button
               onClick={onActionClick}
               style={{
-                backgroundColor: outcome === "action" ? "#2563eb" : outcome === "review" ? "#d97706" : "#059669",
+                backgroundColor: outcome === "action" ? "#5a4544" : outcome === "review" ? "#d97706" : "#059669",
                 color: "#ffffff",
                 border: "none",
                 borderRadius: "8px",
@@ -376,7 +376,7 @@ export function TrustedAdvisorFrameworkBanner() {
             👤 Gen Z Customer
           </span>
           <span style={{ color: "#94a3b8" }}>→</span>
-          <span style={{ backgroundColor: "#eff6ff", padding: "3px 8px", borderRadius: "6px", fontWeight: 600, color: "#1d4ed8" }}>
+          <span style={{ backgroundColor: "#FAF7F6", border: "1px solid #E2DAD9", padding: "3px 8px", borderRadius: "6px", fontWeight: 600, color: "#5a4544" }}>
             📱 Digital Experience (My Protection)
           </span>
           <span style={{ color: "#94a3b8" }}>→</span>

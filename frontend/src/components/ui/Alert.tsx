@@ -17,7 +17,7 @@ const ALERT_STYLES: Record<AlertVariant, { bg: string; border: string; text: str
     bg: "var(--info-bg)",
     border: "var(--info-border)",
     text: "var(--info-text)",
-    titleColor: "#1e40af",
+    titleColor: "#4a3837",
     defaultIcon: "ℹ️",
   },
   success: {

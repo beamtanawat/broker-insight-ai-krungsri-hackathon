@@ -93,7 +93,7 @@ export function OnboardingWelcomeModal() {
         <div
           style={{
             height: "6px",
-            background: "linear-gradient(90deg, #FECB00 0%, #F59E0B 40%, #2563EB 100%)",
+            background: "linear-gradient(90deg, #FECB00 0%, #F59E0B 40%, #5a4544 100%)",
           }}
         />
 
@@ -245,9 +245,9 @@ export function OnboardingWelcomeModal() {
                       style={{
                         fontSize: "12px",
                         fontWeight: 800,
-                        color: "#1D4ED8",
-                        backgroundColor: "#EFF6FF",
-                        border: "1px solid #BFDBFE",
+                        color: "#5a4544",
+                        backgroundColor: "#F9F7F6",
+                        border: "1px solid #E2DAD9",
                         padding: "3px 10px",
                         borderRadius: "999px",
                       }}
@@ -339,21 +339,21 @@ export function OnboardingWelcomeModal() {
                       gap: "6px",
                       padding: "6px 14px",
                       borderRadius: "6px",
-                      border: "1px solid #2563EB",
-                      backgroundColor: "#EFF6FF",
-                      color: "#1D4ED8",
+                      border: "1px solid #5a4544",
+                      backgroundColor: "#F9F7F6",
+                      color: "#5a4544",
                       fontSize: "12.5px",
                       fontWeight: 700,
                       cursor: "pointer",
                       transition: "all 0.15s ease",
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = "#DBEAFE";
-                      e.currentTarget.style.borderColor = "#1D4ED8";
+                      e.currentTarget.style.backgroundColor = "#F1ECEB";
+                      e.currentTarget.style.borderColor = "#483736";
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = "#EFF6FF";
-                      e.currentTarget.style.borderColor = "#2563EB";
+                      e.currentTarget.style.backgroundColor = "#F9F7F6";
+                      e.currentTarget.style.borderColor = "#5a4544";
                     }}
                   >
                     <span>🚀 สลับไปดูฟีเจอร์นี้บนหน้าจอจริง</span>
@@ -520,7 +520,7 @@ export function OnboardingWelcomeModal() {
                     background: "none",
                     border: "none",
                     fontSize: "12.5px",
-                    color: "#2563EB",
+                    color: "#5a4544",
                     fontWeight: 700,
                     cursor: "pointer",
                   }}
@@ -595,8 +595,8 @@ export function OnboardingWelcomeModal() {
                         style={{
                           fontSize: "12px",
                           fontWeight: 700,
-                          color: "#1D4ED8",
-                          backgroundColor: "#EFF6FF",
+                          color: "#5a4544",
+                          backgroundColor: "#F9F7F6",
                           padding: "1px 6px",
                           borderRadius: "4px",
                         }}
@@ -613,7 +613,7 @@ export function OnboardingWelcomeModal() {
                       <span style={{ fontSize: "12px", color: "#16A34A", fontWeight: 700 }}>
                         ✓ {item.highlights[0]}
                       </span>
-                      <span style={{ fontSize: "12px", color: "#2563EB", fontWeight: 800 }}>
+                      <span style={{ fontSize: "12px", color: "#5a4544", fontWeight: 800 }}>
                         ดูหน้าจริง →
                       </span>
                     </div>

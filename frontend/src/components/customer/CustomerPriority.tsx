@@ -230,7 +230,7 @@ export function CustomerPriority({
                   border: "1px solid var(--border-subtle)",
                   borderRadius: "var(--radius-md)",
                   backgroundColor: item.severity === "high" ? "#fffbeb" : "var(--bg-surface-subtle)",
-                  borderLeft: `4px solid ${item.severity === "high" ? "#d97706" : item.severity === "medium" ? "#3b82f6" : "var(--slate-300)"}`,
+                  borderLeft: `4px solid ${item.severity === "high" ? "#d97706" : item.severity === "medium" ? "#5a4544" : "var(--slate-300)"}`,
                   display: "flex",
                   flexDirection: "column",
                   gap: "8px",

@@ -69,9 +69,9 @@ const VARIANT_STYLES: Record<BadgeVariant, { bg: string; text: string; border: s
     border: "var(--slate-300)",
   },
   ai: {
-    bg: "#eff6ff",
-    text: "#1e40af",
-    border: "#bfdbfe",
+    bg: "#FAF7F6",
+    text: "#4a3837",
+    border: "#E2DAD9",
   },
   gold: {
     bg: "rgba(254, 203, 0, 0.16)",

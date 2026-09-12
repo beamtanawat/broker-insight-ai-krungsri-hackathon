@@ -132,7 +132,7 @@ export function NearbyMapVisualizer({
             type="checkbox"
             checked={showRadius}
             onChange={(e) => setShowRadius(e.target.checked)}
-            style={{ cursor: "pointer", accentColor: "#2563EB" }}
+            style={{ cursor: "pointer", accentColor: "#5a4544" }}
           />
           <span>แสดงรัศมี {radiusKm || 10} กม.</span>
         </label>
@@ -289,7 +289,7 @@ export function NearbyMapVisualizer({
               justifyContent: "center",
               fontSize: "1rem",
               cursor: "pointer",
-              color: "#2563EB",
+              color: "#5a4544",
             }}
           >
             🧭
@@ -399,8 +399,8 @@ export function NearbyMapVisualizer({
                 cx={CENTER_X}
                 cy={CENTER_Y}
                 r={RADIUS_5KM_PX}
-                fill="rgba(59, 130, 246, 0.04)"
-                stroke="#60A5FA"
+                fill="rgba(90, 69, 68, 0.04)"
+                stroke="#735a59"
                 strokeWidth="1.5"
                 strokeDasharray="4 4"
               />
@@ -411,7 +411,7 @@ export function NearbyMapVisualizer({
                 width="36"
                 height="16"
                 rx="4"
-                fill="#2563EB"
+                fill="#5a4544"
               />
               <text
                 x={CENTER_X}
@@ -429,8 +429,8 @@ export function NearbyMapVisualizer({
                 cx={CENTER_X}
                 cy={CENTER_Y}
                 r={RADIUS_10KM_PX}
-                fill="rgba(59, 130, 246, 0.06)"
-                stroke="#3B82F6"
+                fill="rgba(90, 69, 68, 0.06)"
+                stroke="#5a4544"
                 strokeWidth="2"
                 strokeDasharray="6 4"
               />
@@ -441,7 +441,7 @@ export function NearbyMapVisualizer({
                 width="40"
                 height="16"
                 rx="4"
-                fill="#2563EB"
+                fill="#5a4544"
               />
               <text
                 x={CENTER_X + RADIUS_10KM_PX + 8}
@@ -460,8 +460,8 @@ export function NearbyMapVisualizer({
           <g transform={`translate(${CENTER_X}, ${CENTER_Y})`}>
             <title>{`ตำแหน่งของคุณ: ${brokerLocation.name || "มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าลาดกระบัง"}`}</title>
             {/* Pulse Ring */}
-            <circle cx="0" cy="0" r="24" fill="none" stroke="#3B82F6" strokeWidth="1.5" opacity="0.4" />
-            <circle cx="0" cy="0" r="14" fill="#2563EB" stroke="#ffffff" strokeWidth="2.5" />
+            <circle cx="0" cy="0" r="24" fill="none" stroke="#5a4544" strokeWidth="1.5" opacity="0.4" />
+            <circle cx="0" cy="0" r="14" fill="#5a4544" stroke="#ffffff" strokeWidth="2.5" />
             <circle cx="0" cy="0" r="5" fill="#ffffff" />
 
             {/* Label Pill */}
@@ -471,7 +471,7 @@ export function NearbyMapVisualizer({
               width="96"
               height="20"
               rx="10"
-              fill="#1D4ED8"
+              fill="#4a3837"
               stroke="#ffffff"
               strokeWidth="1.5"
             />
@@ -506,7 +506,7 @@ export function NearbyMapVisualizer({
                       y1={CENTER_Y}
                       x2={targetCoord.x}
                       y2={targetCoord.y}
-                      stroke="#2563EB"
+                      stroke="#5a4544"
                       strokeWidth="7"
                       strokeOpacity="0.2"
                       strokeLinecap="round"
@@ -517,7 +517,7 @@ export function NearbyMapVisualizer({
                       y1={CENTER_Y}
                       x2={targetCoord.x}
                       y2={targetCoord.y}
-                      stroke="#2563EB"
+                      stroke="#5a4544"
                       strokeWidth="3.5"
                       strokeDasharray="8 5"
                       strokeLinecap="round"
@@ -530,7 +530,7 @@ export function NearbyMapVisualizer({
                         width="64"
                         height="22"
                         rx="11"
-                        fill="#1D4ED8"
+                        fill="#4a3837"
                         stroke="#ffffff"
                         strokeWidth="2"
                         style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.2))" }}
@@ -574,7 +574,7 @@ export function NearbyMapVisualizer({
                           cy="0"
                           r="22"
                           fill="none"
-                          stroke={navActive ? "#2563EB" : "#EF4444"}
+                          stroke={navActive ? "#5a4544" : "#EF4444"}
                           strokeWidth="2.5"
                           strokeDasharray="4 3"
                           opacity="0.9"
@@ -623,11 +623,11 @@ export function NearbyMapVisualizer({
                       height="46"
                       rx="8"
                       fill="#ffffff"
-                      stroke={navActive ? "#2563EB" : "#E2E8F0"}
+                      stroke={navActive ? "#5a4544" : "#E2E8F0"}
                       strokeWidth={navActive ? "2" : "1"}
                     />
                     {/* Downward Pointer Triangle */}
-                    <polygon points="-6,14 6,14 0,22" fill="#ffffff" stroke={navActive ? "#2563EB" : "#E2E8F0"} strokeWidth="1" />
+                    <polygon points="-6,14 6,14 0,22" fill="#ffffff" stroke={navActive ? "#5a4544" : "#E2E8F0"} strokeWidth="1" />
                     <polygon points="-5,14 5,14 0,21" fill="#ffffff" />
 
                     {/* Customer Name */}
@@ -652,7 +652,7 @@ export function NearbyMapVisualizer({
                       fontWeight="600"
                     >
                       {navActive ? (
-                        <tspan fill="#2563EB" fontWeight="800">กำลังนำทาง</tspan>
+                        <tspan fill="#5a4544" fontWeight="800">กำลังนำทาง</tspan>
                       ) : (
                         <>คะแนน <tspan fill="#DC2626" fontWeight="800">{selectedCustomer.priority_score || 94}</tspan></>
                       )} • {selectedCustomer.distance_km || 2.1} กม.

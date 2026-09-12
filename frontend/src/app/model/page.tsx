@@ -337,7 +337,7 @@ export default function AIHealthAndMonitoringPage() {
                 overflow: "hidden",
               }}
             >
-              <div style={{ height: "4px", backgroundColor: "#2563eb" }} />
+              <div style={{ height: "4px", backgroundColor: "#5a4544" }} />
               <div style={{ padding: "18px 20px" }}>
                 <div style={{ fontSize: "14px", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", letterSpacing: "0.05em" }}>
                   Brier Score / ECE (Calibration)

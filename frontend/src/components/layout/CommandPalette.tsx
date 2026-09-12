@@ -43,7 +43,7 @@ const COMMAND_ITEMS: CommandItem[] = [
     icon: "💰",
     href: "/customers/f535562e-8f70-4711-bbd0-7e092606cdd7",
     badge: "วางแผนบำนาญ",
-    badgeColor: "#2563eb",
+    badgeColor: "#5a4544",
   },
   {
     id: "ks-00006",

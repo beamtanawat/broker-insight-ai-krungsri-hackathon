@@ -231,7 +231,7 @@ export default function AnalyticsDashboardPage() {
         </Card>
 
         {/* KPI 4: Total AI Workflows */}
-        <Card className="hover-lift" noPadding style={{ borderTop: "3px solid #3b82f6" }}>
+        <Card className="hover-lift" noPadding style={{ borderTop: "3px solid #5a4544" }}>
           <div style={{ padding: "18px 20px" }}>
             <div style={{ fontSize: "var(--fs-base)", fontWeight: 700, textTransform: "uppercase", color: "var(--slate-500)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <span>การใช้งาน AI สนับสนุน</span>

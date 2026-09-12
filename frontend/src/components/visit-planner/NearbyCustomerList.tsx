@@ -86,7 +86,7 @@ function getPriorityBadge(level?: string | null, score?: number | null) {
 }
 
 const PRODUCT_STYLES: Record<string, { bg: string; color: string }> = {
-  Motor: { bg: "#EFF6FF", color: "#2563EB" },
+  Motor: { bg: "#FAF7F6", color: "#5a4544" },
   Health: { bg: "#F0FDF4", color: "#16A34A" },
   Savings: { bg: "#F0FDFA", color: "#0D9488" },
   Protection: { bg: "#FFF7ED", color: "#EA580C" },
@@ -147,7 +147,7 @@ export function NearbyCustomerList({
               width: "30px",
               height: "30px",
               borderRadius: "8px",
-              backgroundColor: "#EFF6FF",
+              backgroundColor: "#FAF7F6",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -291,7 +291,7 @@ export function NearbyCustomerList({
             </div>
             <div style={{ fontSize: "0.8125rem", color: "#64748B", maxWidth: "240px", lineHeight: 1.5 }}>
               ยังไม่พบลูกค้าที่อยู่ภายในรัศมี 
-              <strong style={{ color: "#1D4ED8" }}>{radiusKm !== null && radiusKm !== undefined ? `${radiusKm} กม.` : "10 กม."}</strong>
+              <strong style={{ color: "#5a4544" }}>{radiusKm !== null && radiusKm !== undefined ? `${radiusKm} กม.` : "10 กม."}</strong>
                จากตำแหน่งของคุณ
             </div>
             {onIncreaseRadius && (
@@ -300,7 +300,7 @@ export function NearbyCustomerList({
                 onClick={onIncreaseRadius}
                 style={{
                   marginTop: "4px",
-                  background: "linear-gradient(135deg, #1D4ED8 0%, #2563EB 100%)",
+                  background: "linear-gradient(135deg, #4a3837 0%, #5a4544 100%)",
                   color: "#ffffff",
                   border: "none",
                   borderRadius: "8px",
@@ -308,7 +308,7 @@ export function NearbyCustomerList({
                   fontSize: "0.8125rem",
                   fontWeight: 700,
                   cursor: "pointer",
-                  boxShadow: "0 2px 6px rgba(29,78,216,0.3)",
+                  boxShadow: "0 2px 6px rgba(90,69,68,0.3)",
                 }}
               >
                 + เพิ่มรัศมีการค้นหา
@@ -336,13 +336,13 @@ export function NearbyCustomerList({
                 style={{
                   backgroundColor: isSelected
                     ? navActive
-                      ? "#EFF6FF"
+                      ? "#FAF7F6"
                       : "#F5F3FF"
                     : "#ffffff",
                   borderRadius: "12px",
                   border: isSelected
                     ? navActive
-                      ? "2px solid #2563EB"
+                      ? "2px solid #5a4544"
                       : "2px solid #8B5CF6"
                     : "1px solid #F1F5F9",
                   padding: "11px 12px",
@@ -353,7 +353,7 @@ export function NearbyCustomerList({
                   transition: "all 0.15s ease",
                   boxShadow: isSelected
                     ? navActive
-                      ? "0 2px 12px rgba(37,99,235,0.2)"
+                      ? "0 2px 12px rgba(90,69,68,0.2)"
                       : "0 2px 12px rgba(139,92,246,0.15)"
                     : "0 1px 2px rgba(0,0,0,0.02)",
                   position: "relative",
@@ -382,7 +382,7 @@ export function NearbyCustomerList({
                       top: "16%",
                       bottom: "16%",
                       width: "3px",
-                      backgroundColor: navActive ? "#2563EB" : "#8B5CF6",
+                      backgroundColor: navActive ? "#5a4544" : "#8B5CF6",
                       borderRadius: "0 2px 2px 0",
                     }}
                   />
@@ -461,7 +461,7 @@ export function NearbyCustomerList({
                           display: "flex",
                           alignItems: "center",
                           gap: "2px",
-                          color: "#2563EB",
+                          color: "#5a4544",
                           fontWeight: 600,
                         }}
                       >
@@ -532,11 +532,11 @@ export function NearbyCustomerList({
                     style={{
                       backgroundColor: isSelected
                         ? navActive
-                          ? "#2563EB"
+                          ? "#5a4544"
                           : "#8B5CF6"
-                        : "#EFF6FF",
-                      color: isSelected ? "#ffffff" : "#2563EB",
-                      border: isSelected ? "none" : "1px solid #BFDBFE",
+                        : "#FAF7F6",
+                      color: isSelected ? "#ffffff" : "#5a4544",
+                      border: isSelected ? "none" : "1px solid #E2DAD9",
                       borderRadius: "6px",
                       padding: "4px 10px",
                       fontSize: "0.75rem",
@@ -612,7 +612,7 @@ export function NearbyCustomerList({
               onClick={() => onPageChange(p)}
               style={{
                 border: p === currentPage ? "none" : "1px solid #E2E8F0",
-                backgroundColor: p === currentPage ? "#2563EB" : "#ffffff",
+                backgroundColor: p === currentPage ? "#5a4544" : "#ffffff",
                 color: p === currentPage ? "#ffffff" : "#475569",
                 borderRadius: "6px",
                 width: "26px",

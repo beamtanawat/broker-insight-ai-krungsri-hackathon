@@ -264,7 +264,7 @@ export default function DashboardPage() {
                   แสดง {filteredQueue.slice(0, 10).length} จากทั้งหมด {filteredQueue.length} รายชื่อ
                 </span>
                 <Link href="/customers">
-                  <Button variant="ghost" size="sm" style={{ color: "#1D4ED8", fontWeight: 700 }}>
+                  <Button variant="ghost" size="sm" style={{ color: "#5a4544", fontWeight: 700 }}>
                     ดูลูกค้าทั้งหมด ({customers.length}) →
                   </Button>
                 </Link>
@@ -296,7 +296,7 @@ export default function DashboardPage() {
                             href={`/customers/${c.id}`}
                             style={{
                               fontWeight: 700,
-                              color: "#1D4ED8",
+                              color: "#5a4544",
                               fontSize: "0.8125rem",
                               textDecoration: "none",
                             }}
@@ -333,7 +333,7 @@ export default function DashboardPage() {
                         <div style={{ maxWidth: "280px", lineHeight: "var(--lh-reading, 1.7)" }}>
                           {c.why_now ? (
                             <div style={{ fontSize: "0.75rem", fontFamily: "var(--font-reading-thai)", color: "#0B1E36" }}>
-                              <span style={{ color: "#2563EB", fontWeight: 700, marginRight: "4px", fontFamily: "var(--font-ui-thai)" }}>🔔 Why now:</span>
+                              <span style={{ color: "#5a4544", fontWeight: 700, marginRight: "4px", fontFamily: "var(--font-ui-thai)" }}>🔔 Why now:</span>
                               <span>{c.why_now}</span>
                             </div>
                           ) : (
@@ -517,7 +517,7 @@ export default function DashboardPage() {
                         กำหนด: {fu.renewal_date || fu.last_contact_date || "-"}
                       </span>
                       <Link href={`/customers/${fu.customer_id}`}>
-                        <Button variant="outline" size="sm" style={{ padding: "0 10px", height: "26px", fontSize: "12px", color: "#1D4ED8" }}>
+                        <Button variant="outline" size="sm" style={{ padding: "0 10px", height: "26px", fontSize: "12px", color: "#5a4544" }}>
                           เปิดงาน →
                         </Button>
                       </Link>
