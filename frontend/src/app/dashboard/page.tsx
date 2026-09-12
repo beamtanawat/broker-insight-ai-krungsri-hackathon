@@ -341,28 +341,6 @@ export default function DashboardPage() {
                               {c.score_short_reason || "พร้อมวิเคราะห์ความต้องการ"}
                             </div>
                           )}
-                          {c.external_ref === "KS-00002" && (
-                            <div style={{ marginTop: "4px" }}>
-                              <Link
-                                href="/my-protection"
-                                style={{
-                                  fontSize: "12px",
-                                  fontWeight: 700,
-                                  color: "#1D4ED8",
-                                  backgroundColor: "#EFF6FF",
-                                  border: "1px solid #BFDBFE",
-                                  borderRadius: "4px",
-                                  padding: "2px 6px",
-                                  textDecoration: "none",
-                                  display: "inline-flex",
-                                  alignItems: "center",
-                                  gap: "3px",
-                                }}
-                              >
-                                📱 เปิดดูหน้า My Protection (มุมมองลูกค้า) →
-                              </Link>
-                            </div>
-                          )}
                         </div>
                       </TableCell>
 

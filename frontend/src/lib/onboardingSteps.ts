@@ -311,16 +311,6 @@ export const FEATURE_CATALOG_ITEMS: FeatureCatalogItem[] = [
     highlights: ["พิกัดสดจากอุปกรณ์ Live GPS", "คำนวณเวลาเดินทางและระยะทางจริง", "นายหน้าเป็นผู้ตัดสินใจเข้าพบเอง"],
   },
   {
-    id: "feat-mobile-companion",
-    title: "โมบายล์เวิร์กสเปซ My Protection",
-    subtitle: "จำลองสมาร์ตโฟน iPhone มีทั้งแดชบอร์ดและกราฟรายงานพอร์ต",
-    icon: "📱",
-    route: "/my-protection",
-    stepIndex: 8,
-    tag: "Mobile Companion",
-    highlights: ["สัดส่วน Priority Donut Chart", "เกจความคืบหน้า KYC", "Renewal 30 วัน Bar Chart"],
-  },
-  {
     id: "feat-analytics",
     title: "ศูนย์วิเคราะห์ข้อมูลธุรกิจ",
     subtitle: "Coverage Gap, Conversion Rate, และสถิติการทำงาน",

@@ -164,7 +164,7 @@ export function CustomerRecommendations({
             </div>
             <div>
               <div style={{ fontSize: "14px", fontWeight: 800, color: "#1e40af", display: "flex", alignItems: "center", gap: "8px" }}>
-                <span>ลูกค้า Gen Z รายนี้เข้ามาสำรวจความต้องการผ่านหน้า My Protection แล้ว</span>
+                <span>ลูกค้า Gen Z รายนี้มีประวัติสำรวจความต้องการความคุ้มครองผ่านช่องทางดิจิทัล</span>
                 <span style={{ fontSize: "12px", backgroundColor: "#2563eb", color: "#ffffff", padding: "1px 7px", borderRadius: "999px" }}>
                   Digital Intent
                 </span>
@@ -174,11 +174,6 @@ export function CustomerRecommendations({
               </div>
             </div>
           </div>
-          <Link href="/my-protection" style={{ textDecoration: "none" }}>
-            <Button variant="primary" size="sm" leftIcon="📱">
-              เปิดดูมุมมองลูกค้า (My Protection) →
-            </Button>
-          </Link>
         </div>
       )}
 
