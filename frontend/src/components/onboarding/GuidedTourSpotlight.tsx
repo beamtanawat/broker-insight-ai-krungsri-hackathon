@@ -288,7 +288,7 @@ export function GuidedTourSpotlight() {
                   className="custom-scrollbar"
                 >
                   <div style={{ padding: "6px 8px", fontSize: "12px", fontWeight: 800, color: "#64748B", borderBottom: "1px solid #F1F5F9" }}>
-                    เลือกขั้นตอนที่ต้องการดู:
+                    เลือกฟีเจอร์ที่ต้องการเรียนรู้:
                   </div>
                   {steps.map((s, idx) => {
                     const isCurrent = idx === currentStepIndex;
@@ -390,7 +390,7 @@ export function GuidedTourSpotlight() {
                 onMouseEnter={(e) => (e.currentTarget.style.color = "#0F172A")}
                 onMouseLeave={(e) => (e.currentTarget.style.color = "#94A3B8")}
               >
-                ✕ ปิดทัวร์
+                ✕ ปิดคำแนะนำ
               </button>
             </div>
           </div>
@@ -412,7 +412,7 @@ export function GuidedTourSpotlight() {
               }}
             >
               <span className="spin" style={{ display: "inline-block" }}>⚡</span>
-              <span>กำลังเปิดหน้านี้และจัดตำแหน่ง...</span>
+              <span>กำลังสลับไปยังหน้าจอจริงและจัดตำแหน่ง...</span>
             </div>
           )}
 
@@ -432,7 +432,7 @@ export function GuidedTourSpotlight() {
                 marginBottom: "8px",
               }}
             >
-              <span>🎉 พร้อมเริ่มใช้งานแล้ว</span>
+              <span>🎉 ยินดีด้วยครับ! ทำความรู้จักครบทุกฟีเจอร์แล้ว</span>
             </div>
           )}
 
@@ -463,7 +463,7 @@ export function GuidedTourSpotlight() {
             }}
           >
             {isLastStep
-              ? `${currentStep.description} คุณได้เรียนรู้ฟีเจอร์สำคัญครบถ้วนแล้ว พร้อมเริ่มต้นใช้งานจริงได้อย่างมั่นใจ!`
+              ? `${currentStep.description} คุณได้ทำความรู้จักฟีเจอร์สำคัญครบถ้วนแล้ว พร้อมเริ่มต้นใช้งานจริงได้อย่างมั่นใจครับ!`
               : currentStep.description}
           </p>
 

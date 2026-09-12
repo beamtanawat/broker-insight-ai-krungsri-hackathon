@@ -221,7 +221,7 @@ export function OnboardingWelcomeModal() {
                     margin: 0,
                   }}
                 >
-                  ระบบผู้ช่วย AI ที่พัฒนาขึ้นเพื่อช่วยให้คุณดูแลลูกค้าได้รวดเร็วและตรงจุด ศึกษาฟีเจอร์สำคัญทีละขั้นตอน หรือกดเริ่มนำชมบนหน้าจอจริงได้ทันที
+                  ยินดีต้อนรับครับ! ระบบ Broker Insight AI พัฒนาขึ้นเพื่อเป็นผู้ช่วยคู่คิด ช่วยให้คุณเริ่มต้นวันได้อย่างมั่นใจ เข้าใจความต้องการของลูกค้าอย่างลึกซึ้ง และทำงานได้อย่างคุ้มค่าเวลา มาทำความรู้จักฟีเจอร์สำคัญกันครับ
                 </p>
               </div>
 
@@ -313,7 +313,7 @@ export function OnboardingWelcomeModal() {
                   }}
                 >
                   <div style={{ fontSize: "12px", fontWeight: 700, color: "#64748B", textTransform: "uppercase", marginBottom: "6px", letterSpacing: "0.03em" }}>
-                    จุดเด่นและความสามารถสำคัญ:
+                    จุดเด่นที่จะช่วยให้การทำงานของคุณง่ายขึ้น:
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
                     {currentFeature.highlights.map((h, idx) => (
@@ -328,7 +328,7 @@ export function OnboardingWelcomeModal() {
                 {/* Feature-specific Action: Jump into Real Screen */}
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: "4px" }}>
                   <span style={{ fontSize: "12px", color: "#64748B" }}>
-                    💡 คุณเป็นผู้พิจารณาและตัดสินใจดำเนินการเองในทุกขั้นตอน
+                    💡 คุณเป็นผู้ตัดสินใจเลือกเองเสมอ โดย AI ทำหน้าที่เป็นผู้ช่วยเตรียมข้อมูล
                   </span>
                   <button
                     type="button"
@@ -437,7 +437,7 @@ export function OnboardingWelcomeModal() {
                     transition: "all 0.15s ease",
                   }}
                 >
-                  <span>{isLastFeature ? "เริ่มสำรวจหน้าจอจริง 🎉" : "ฟีเจอร์ถัดไป →"}</span>
+                  <span>{isLastFeature ? "พร้อมเริ่มใช้งานบนหน้าจอจริง 🎉" : "ฟีเจอร์ถัดไป →"}</span>
                 </button>
               </div>
 
@@ -464,7 +464,7 @@ export function OnboardingWelcomeModal() {
                     padding: "6px 10px",
                   }}
                 >
-                  เข้าสู่หน้าทำงานเลย
+                  ข้ามไปหน้าทำงานเลย
                 </button>
 
                 <button
@@ -494,7 +494,7 @@ export function OnboardingWelcomeModal() {
                     e.currentTarget.style.transform = "none";
                   }}
                 >
-                  <span>🌟 เริ่มทัวร์ครบทุกฟีเจอร์บนหน้าจอจริง →</span>
+                  <span>🌟 เริ่มแนะนำทุกฟีเจอร์บนหน้าจอจริง (ตามลำดับ) →</span>
                 </button>
               </div>
             </>
@@ -539,7 +539,7 @@ export function OnboardingWelcomeModal() {
                   margin: "0 0 16px 0",
                 }}
               >
-                เลือกฟีเจอร์ที่คุณสนใจ เพื่อสลับไปยังหน้าจอจริงและรับชมคำแนะนำได้ทันที:
+                เลือกฟีเจอร์ที่คุณต้องการทำความเข้าใจ เพื่อสลับไปยังหน้าจอจริงและรับชมคำแนะนำได้ทันทีครับ:
               </p>
 
               {/* 9 Feature Catalog Cards Grid */}
@@ -644,7 +644,7 @@ export function OnboardingWelcomeModal() {
                     padding: "6px 10px",
                   }}
                 >
-                  เข้าสู่หน้าทำงานเลย
+                  ข้ามไปหน้าทำงานเลย
                 </button>
 
                 <button
@@ -667,7 +667,7 @@ export function OnboardingWelcomeModal() {
                   onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#162E4F")}
                   onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#0B1E36")}
                 >
-                  <span>เริ่มเดินทัวร์หน้าจอจริงตามลำดับ (9 ขั้นตอน)</span>
+                  <span>เริ่มแนะนำทุกฟีเจอร์บนหน้าจอจริง (ตามลำดับ 9 ขั้นตอน)</span>
                   <span>→</span>
                 </button>
               </div>
