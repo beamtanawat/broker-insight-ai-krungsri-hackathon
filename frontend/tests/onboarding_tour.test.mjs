@@ -6,6 +6,10 @@ import {
   ADMIN_TOUR_STEPS,
   getTourStepsForRole,
 } from "../src/lib/onboardingSteps.ts";
+import {
+  calculateTourPopoverPosition,
+  isRectOverlapping,
+} from "../src/lib/onboardingPlacement.ts";
 
 describe("First-Time User Onboarding & Guided Feature Tour", () => {
   // ── 1. Role-specific Steps Verification ──
@@ -312,4 +316,140 @@ describe("First-Time User Onboarding & Guided Feature Tour", () => {
     assert.equal(onboardingState, "welcome");
     assert.equal(sessionStorage.get("trigger_welcome_onboarding"), undefined, "Trigger flag is consumed");
   });
+
+  // ── 7. Screen Viewport Overflow Prevention (No Cutoff / Clipping) ──
+  test("Popover coordinates remain strictly within screen boundaries on desktop", () => {
+    const windowSize = { width: 1280, height: 800 };
+    const cardDimensions = { width: 440, height: 350 };
+    const margin = 16;
+
+    // Target near right edge
+    const rightEdgeTarget = { top: 300, bottom: 350, left: 1100, right: 1250, width: 150, height: 50 };
+    const posRight = calculateTourPopoverPosition({
+      targetRect: rightEdgeTarget,
+      windowSize,
+      cardDimensions,
+      preferredPlacement: "bottom",
+      margin,
+    });
+
+    assert.ok(posRight.left >= margin, `Left (${posRight.left}) must be >= margin (${margin})`);
+    assert.ok(
+      posRight.left + posRight.maxWidth <= windowSize.width - margin + 1,
+      `Right edge (${posRight.left + posRight.maxWidth}) must not exceed viewport width`
+    );
+    assert.ok(posRight.top >= margin, "Top must be >= margin");
+    assert.ok(posRight.top + (posRight.maxHeight || 350) <= windowSize.height - margin + 1, "Bottom must not exceed viewport height");
+
+    // Target near bottom edge
+    const bottomEdgeTarget = { top: 720, bottom: 780, left: 400, right: 600, width: 200, height: 60 };
+    const posBottom = calculateTourPopoverPosition({
+      targetRect: bottomEdgeTarget,
+      windowSize,
+      cardDimensions,
+      preferredPlacement: "bottom",
+      margin,
+    });
+
+    assert.equal(posBottom.placement, "top", "Must flip to 'top' when target is near bottom edge");
+    assert.ok(posBottom.top >= margin, `Flipped top (${posBottom.top}) must not overflow top edge`);
+    assert.ok(posBottom.top + (posBottom.maxHeight || 350) <= bottomEdgeTarget.top, "Must sit above target");
+  });
+
+  // ── 8. Strict Target Feature Non-Obstruction (Never Cover Target Element) ──
+  test("Popover bounding box NEVER intersects or covers the highlighted target feature", () => {
+    const windowSize = { width: 1440, height: 900 };
+    const cardDimensions = { width: 440, height: 340 };
+
+    // Test cases representing various features across the app
+    const testFeatures = [
+      { name: "Dashboard Hero Banner", rect: { top: 80, bottom: 220, left: 280, right: 1100, width: 820, height: 140 }, pref: "bottom" },
+      { name: "Customer Table", rect: { top: 260, bottom: 620, left: 280, right: 1200, width: 920, height: 360 }, pref: "top" },
+      { name: "Customer 360 Profile Header", rect: { top: 90, bottom: 240, left: 300, right: 1000, width: 700, height: 150 }, pref: "bottom" },
+      { name: "AI Insight Why-Now Card", rect: { top: 320, bottom: 580, left: 780, right: 1200, width: 420, height: 260 }, pref: "left" },
+      { name: "Nearby Radar Map", rect: { top: 160, bottom: 600, left: 500, right: 1100, width: 600, height: 440 }, pref: "right" },
+      { name: "Manual Selection Action Button", rect: { top: 620, bottom: 680, left: 400, right: 700, width: 300, height: 60 }, pref: "top" },
+      { name: "Google Maps Navigation Preview", rect: { top: 700, bottom: 760, left: 550, right: 850, width: 300, height: 60 }, pref: "top" },
+    ];
+
+    testFeatures.forEach(({ name, rect, pref }) => {
+      const result = calculateTourPopoverPosition({
+        targetRect: rect,
+        windowSize,
+        cardDimensions,
+        preferredPlacement: pref,
+      });
+
+      const effectiveHeight = Math.min(cardDimensions.height, result.maxHeight || cardDimensions.height);
+      const popoverBox = {
+        top: result.top,
+        bottom: result.top + effectiveHeight,
+        left: result.left,
+        right: result.left + result.maxWidth,
+      };
+
+      const overlaps = isRectOverlapping(popoverBox, rect, 2);
+      assert.equal(
+        overlaps,
+        false,
+        `Tour popover must NOT overlap feature '${name}' (target: ${JSON.stringify(rect)}, popover: ${JSON.stringify(popoverBox)})`
+      );
+    });
+  });
+
+  // ── 9. Multi-directional Fallback Cascade ──
+  test("Auto-placement cascade falls back across 4 directions when preferred direction is blocked", () => {
+    const windowSize = { width: 1024, height: 768 };
+    const cardDimensions = { width: 420, height: 340 };
+
+    // Target fills entire top half: preferred 'top' is blocked, should fall back to 'bottom'
+    const topBlocked = { top: 30, bottom: 320, left: 100, right: 900, width: 800, height: 290 };
+    const resTop = calculateTourPopoverPosition({
+      targetRect: topBlocked,
+      windowSize,
+      cardDimensions,
+      preferredPlacement: "top",
+    });
+    assert.equal(resTop.placement, "bottom", "Must fall back to bottom when top is crowded");
+    assert.ok(resTop.top >= topBlocked.bottom + 10, "Bottom placement sits below target");
+
+    // Target fills entire bottom half: preferred 'bottom' is blocked, should fall back to 'top'
+    const bottomBlocked = { top: 450, bottom: 740, left: 100, right: 900, width: 800, height: 290 };
+    const resBottom = calculateTourPopoverPosition({
+      targetRect: bottomBlocked,
+      windowSize,
+      cardDimensions,
+      preferredPlacement: "bottom",
+    });
+    assert.equal(resBottom.placement, "top", "Must fall back to top when bottom is crowded");
+    assert.ok(resBottom.top + (resBottom.maxHeight || 340) <= bottomBlocked.top, "Top placement sits above target");
+  });
+
+  // ── 10. Mobile Responsiveness and Target Clearance ──
+  test("Mobile viewports dock gracefully without covering active feature targets", () => {
+    const mobileSize = { width: 375, height: 667 };
+    const cardDimensions = { width: 350, height: 280 };
+
+    // Target in lower half: should dock at top
+    const lowerTarget = { top: 400, bottom: 480, left: 20, right: 350, width: 330, height: 80 };
+    const resMobileLower = calculateTourPopoverPosition({
+      targetRect: lowerTarget,
+      windowSize: mobileSize,
+      cardDimensions,
+    });
+    assert.equal(resMobileLower.isMobile, true);
+    assert.equal(resMobileLower.placement, "top");
+    assert.ok(resMobileLower.top <= 20, "Must dock near top on mobile when target is in lower screen");
+
+    // Target in upper half: should dock at bottom
+    const upperTarget = { top: 60, bottom: 140, left: 20, right: 350, width: 330, height: 80 };
+    const resMobileUpper = calculateTourPopoverPosition({
+      targetRect: upperTarget,
+      windowSize: mobileSize,
+      cardDimensions,
+    });
+    assert.equal(resMobileUpper.isMobile, true);
+    assert.equal(resMobileUpper.placement, "bottom");
+  });
 });
+

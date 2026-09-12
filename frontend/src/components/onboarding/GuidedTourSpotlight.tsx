@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState, useRef, useMemo } from "react";
 import { useOnboardingTour } from "@/context/OnboardingTourContext";
+import { calculateTourPopoverPosition, type PopoverPositionResult } from "@/lib/onboardingPlacement";
 
 export function GuidedTourSpotlight() {
   const {
@@ -20,6 +21,7 @@ export function GuidedTourSpotlight() {
 
   const [windowSize, setWindowSize] = useState({ width: 1200, height: 800 });
   const [showStepDropdown, setShowStepDropdown] = useState(false);
+  const [measuredCardSize, setMeasuredCardSize] = useState({ width: 440, height: 350 });
   const popoverRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -31,6 +33,28 @@ export function GuidedTourSpotlight() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  // Measure actual card DOM dimensions via ResizeObserver
+  useEffect(() => {
+    if (!popoverRef.current) return;
+    const updateSize = () => {
+      if (popoverRef.current) {
+        const rect = popoverRef.current.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          setMeasuredCardSize((prev) => {
+            if (Math.abs(prev.width - rect.width) > 3 || Math.abs(prev.height - rect.height) > 3) {
+              return { width: Math.round(rect.width), height: Math.round(rect.height) };
+            }
+            return prev;
+          });
+        }
+      }
+    };
+    updateSize();
+    const observer = new ResizeObserver(updateSize);
+    observer.observe(popoverRef.current);
+    return () => observer.disconnect();
+  }, [currentStepIndex, currentStep, isNavigating]);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -66,87 +90,17 @@ export function GuidedTourSpotlight() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isTourActive, nextStep, prevStep, skipTour]);
 
-  // Compute Popover coordinates with smart auto-flip
-  const popoverPosition = useMemo(() => {
-    const isMobile = windowSize.width < 768;
-    if (isMobile) {
-      return {
-        isMobile: true,
-        style: {
-          position: "fixed" as const,
-          bottom: "16px",
-          left: "12px",
-          right: "12px",
-          zIndex: 10002,
-        },
-      };
-    }
-
-    const cardWidth = 440;
-    const cardHeight = 310;
-    const offset = 16;
-
-    // Default centered position if no target found or currently navigating
-    if (!targetRect) {
-      return {
-        isMobile: false,
-        style: {
-          position: "fixed" as const,
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          zIndex: 10002,
-          maxWidth: `${cardWidth}px`,
-          width: "100%",
-        },
-      };
-    }
-
-    let placement = currentStep?.placement || "bottom";
-
-    // Smart auto-flip if clipping viewport
-    if (placement === "bottom" && targetRect.bottom + cardHeight + offset > windowSize.height - 20) {
-      placement = "top";
-    } else if (placement === "top" && targetRect.top - cardHeight - offset < 20) {
-      placement = "bottom";
-    } else if (placement === "right" && targetRect.right + cardWidth + offset > windowSize.width - 20) {
-      placement = "left";
-    } else if (placement === "left" && targetRect.left - cardWidth - offset < 20) {
-      placement = "right";
-    }
-
-    let top = 0;
-    let left = 0;
-
-    if (placement === "bottom") {
-      top = targetRect.bottom + offset;
-      left = targetRect.left + (targetRect.width / 2) - (cardWidth / 2);
-    } else if (placement === "top") {
-      top = targetRect.top - cardHeight - offset;
-      left = targetRect.left + (targetRect.width / 2) - (cardWidth / 2);
-    } else if (placement === "left") {
-      top = targetRect.top + (targetRect.height / 2) - (cardHeight / 2);
-      left = targetRect.left - cardWidth - offset;
-    } else if (placement === "right") {
-      top = targetRect.top + (targetRect.height / 2) - (cardHeight / 2);
-      left = targetRect.right + offset;
-    }
-
-    // Clamp within viewport margins
-    top = Math.max(20, Math.min(windowSize.height - cardHeight - 20, top));
-    left = Math.max(20, Math.min(windowSize.width - cardWidth - 20, left));
-
-    return {
-      isMobile: false,
-      style: {
-        position: "fixed" as const,
-        top: `${top}px`,
-        left: `${left}px`,
-        zIndex: 10002,
-        width: `${cardWidth}px`,
-      },
-    };
-  }, [windowSize, targetRect, currentStep]);
+  // Compute Popover coordinates with guaranteed non-overlap and screen clamp
+  const popoverPosition: PopoverPositionResult = useMemo(() => {
+    return calculateTourPopoverPosition({
+      targetRect,
+      windowSize,
+      cardDimensions: measuredCardSize,
+      preferredPlacement: currentStep?.placement || "bottom",
+      margin: 16,
+      offset: 16,
+    });
+  }, [windowSize, targetRect, measuredCardSize, currentStep]);
 
   if (!isTourActive || !currentStep) return null;
 
@@ -202,6 +156,49 @@ export function GuidedTourSpotlight() {
         />
       )}
 
+      {/* ── Directional Callout Anchor Indicator ── */}
+      {!popoverPosition.isMobile && targetRect && popoverPosition.placement !== "center" && (
+        <div
+          aria-hidden="true"
+          style={{
+            position: "fixed",
+            zIndex: 10003,
+            pointerEvents: "none",
+            width: "12px",
+            height: "12px",
+            backgroundColor: "#ffffff",
+            ...(popoverPosition.placement === "bottom" && {
+              top: `${popoverPosition.top - 6}px`,
+              left: `${Math.max(popoverPosition.left + 24, Math.min(popoverPosition.left + popoverPosition.maxWidth - 36, targetRect.left + targetRect.width / 2 - 6))}px`,
+              borderLeft: "1px solid rgba(226, 232, 240, 0.95)",
+              borderTop: "1px solid rgba(226, 232, 240, 0.95)",
+              transform: "rotate(45deg)",
+            }),
+            ...(popoverPosition.placement === "top" && {
+              top: `${popoverPosition.top + (popoverRef.current?.offsetHeight || 340) - 6}px`,
+              left: `${Math.max(popoverPosition.left + 24, Math.min(popoverPosition.left + popoverPosition.maxWidth - 36, targetRect.left + targetRect.width / 2 - 6))}px`,
+              borderRight: "1px solid rgba(226, 232, 240, 0.95)",
+              borderBottom: "1px solid rgba(226, 232, 240, 0.95)",
+              transform: "rotate(45deg)",
+            }),
+            ...(popoverPosition.placement === "right" && {
+              left: `${popoverPosition.left - 6}px`,
+              top: `${Math.max(popoverPosition.top + 24, Math.min(popoverPosition.top + (popoverRef.current?.offsetHeight || 340) - 36, targetRect.top + targetRect.height / 2 - 6))}px`,
+              borderLeft: "1px solid rgba(226, 232, 240, 0.95)",
+              borderBottom: "1px solid rgba(226, 232, 240, 0.95)",
+              transform: "rotate(45deg)",
+            }),
+            ...(popoverPosition.placement === "left" && {
+              left: `${popoverPosition.left + popoverPosition.maxWidth - 6}px`,
+              top: `${Math.max(popoverPosition.top + 24, Math.min(popoverPosition.top + (popoverRef.current?.offsetHeight || 340) - 36, targetRect.top + targetRect.height / 2 - 6))}px`,
+              borderRight: "1px solid rgba(226, 232, 240, 0.95)",
+              borderTop: "1px solid rgba(226, 232, 240, 0.95)",
+              transform: "rotate(45deg)",
+            }),
+          }}
+        />
+      )}
+
       {/* ── Guided Popover Card ── */}
       <div
         ref={popoverRef}
@@ -211,11 +208,13 @@ export function GuidedTourSpotlight() {
           borderRadius: "16px",
           border: "1px solid rgba(226, 232, 240, 0.95)",
           boxShadow: "0 24px 48px -12px rgba(11, 30, 54, 0.45), 0 4px 12px -2px rgba(11, 30, 54, 0.15)",
-          overflow: "visible",
+          overflowY: "auto",
+          overflowX: "hidden",
           animation: "scaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
           display: "flex",
           flexDirection: "column",
         }}
+        className="custom-scrollbar"
       >
         {/* Krungsri Brand Accent Strip */}
         <div

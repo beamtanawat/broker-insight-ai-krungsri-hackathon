@@ -158,30 +158,57 @@ export function OnboardingTourProvider({ user, children }: OnboardingTourProvide
       return false;
     }
 
-    const el = document.querySelector(currentStep.targetSelector);
-    if (el) {
-      const rect = el.getBoundingClientRect();
-      if (rect.width > 0 && rect.height > 0) {
-        if (shouldScroll) {
-          const isVisible =
-            rect.top >= 80 &&
-            rect.bottom <= window.innerHeight - 80 &&
-            rect.left >= 40 &&
-            rect.right <= window.innerWidth - 40;
+    const selectors = currentStep.targetSelector.split(",").map((s) => s.trim());
+    let targetEl: Element | null = null;
+    let targetRectVal: DOMRect | null = null;
 
-          if (!isVisible) {
-            el.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
-            setTimeout(() => {
-              const updatedRect = el.getBoundingClientRect();
-              setTargetRect(updatedRect);
-            }, 300);
+    for (const selector of selectors) {
+      try {
+        const candidates = document.querySelectorAll(selector);
+        for (let i = 0; i < candidates.length; i++) {
+          const candidate = candidates[i];
+          const r = candidate.getBoundingClientRect();
+          if (r.width > 0 && r.height > 0) {
+            targetEl = candidate;
+            targetRectVal = r;
+            break;
           }
         }
-        setTargetRect(rect);
-        setIsNavigating(false);
-        return true;
+      } catch {
+        // Fallback for query selector syntax issues
       }
+      if (targetEl && targetRectVal) break;
     }
+
+    if (targetEl && targetRectVal) {
+      if (shouldScroll) {
+        // Evaluate if element is in a comfortable reading viewport window
+        // Leave ample headroom (>120px) and bottom clearance (>260px) for tour popovers
+        const hasAmpleRoom =
+          targetRectVal.top >= 100 &&
+          targetRectVal.bottom <= window.innerHeight - 180 &&
+          targetRectVal.left >= 30 &&
+          targetRectVal.right <= window.innerWidth - 30;
+
+        if (!hasAmpleRoom) {
+          targetEl.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+          // Multiple settling measurements to handle smooth scroll inertia
+          const timers = [120, 250, 450].map((delay) =>
+            setTimeout(() => {
+              if (targetEl) {
+                const updatedRect = targetEl.getBoundingClientRect();
+                setTargetRect(updatedRect);
+              }
+            }, delay)
+          );
+          // Return cleanup if needed
+        }
+      }
+      setTargetRect(targetRectVal);
+      setIsNavigating(false);
+      return true;
+    }
+
     return false;
   }, [currentStep]);
 
