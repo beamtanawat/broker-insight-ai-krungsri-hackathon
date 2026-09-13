@@ -33,7 +33,7 @@ const INITIAL_TASKS: TaskItem[] = [
     icon: "📞",
     title: "โทรติดตาม",
     subtitle: "เรื่องต่ออายุกรมธรรม์รถยนต์",
-    customerName: "ณัฐชา 'เฟิร์ส' ประเสริฐกิจการ",
+    customerName: "ณัฐชา 'เพิร์ล' ประเสริฐกิจการ",
     customerId: "KS-00002",
     status: "pending",
     completed: false,
@@ -66,7 +66,7 @@ const INITIAL_TASKS: TaskItem[] = [
     icon: "📊",
     title: "ติดตามแผนบำนาญ",
     subtitle: "อัปเดตแผนการลงทุน",
-    customerName: "ธนภูมิ อิ่มเปี่ยม",
+    customerName: "ธนภูมิ ยิ้มแย้ม",
     customerId: "KS-00005",
     status: "in_progress",
     completed: false,
@@ -76,7 +76,7 @@ const INITIAL_TASKS: TaskItem[] = [
 const ATTENTION_CUSTOMERS = [
   {
     id: "c0c0f992-b06d-4b9f-bbc6-9b4458a79491",
-    name: "ณัฐชา 'เฟิร์ส' ประเสริฐกิจการ",
+    name: "ณัฐชา 'เพิร์ล' ประเสริฐกิจการ",
     ref: "KS-00002",
     avatarBg: "#FEF08A",
     avatarColor: "#854D0E",
@@ -108,7 +108,7 @@ const ATTENTION_CUSTOMERS = [
     score: 76,
     priorityLevel: "กลาง",
     triggerIcon: "🏠",
-    triggerText: "มีสินเชื่อบ้าน 5.5 ล้าน ใช้ประกันคุ้มครองวงเงิน",
+    triggerText: "มีสินเชื่อบ้าน 5.5 ล้านบาท ไร้ประกันคุ้มครองวงเงิน (MRTA)",
   },
 ];
 
@@ -429,10 +429,13 @@ export default function MyProtectionPage() {
         {/* Divider */}
         <div style={{ width: "1px", height: "22px", backgroundColor: "rgba(255,255,255,0.2)", margin: "0 4px" }} />
 
-        {/* System Title */}
-        <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.2 }}>
-          <span style={{ fontSize: "0.75rem", fontWeight: 800, color: "#ffffff" }}>Broker Insight AI</span>
-          <span style={{ fontSize: "0.75rem", color: "#94A3B8" }}>Krungsri Financial Advisory</span>
+        {/* System Title with Official Logo */}
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <img
+            src="/broker-insight-logo.png"
+            alt="Broker Insight AI"
+            style={{ height: "24px", width: "auto", display: "block", borderRadius: "4px" }}
+          />
         </div>
       </div>
 

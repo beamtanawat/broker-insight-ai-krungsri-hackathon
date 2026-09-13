@@ -91,9 +91,11 @@ async def mock_insurance(external_ref: str):
     policies = []
     for i in range(num_policies):
         renewal = _random_date_future(5, 500)
+        p_type = random.choice(policy_types)
+        prefix = "KLI" if "ชีวิต" in p_type else ("KHA" if "สุขภาพ" in p_type else ("KPA" if "อุบัติเหตุ" in p_type else "KMR"))
         policies.append({
-            "policy_id": f"POL-{external_ref[-4:]}-{i+1:02d}",
-            "type": random.choice(policy_types),
+            "policy_id": f"{prefix}-2024-{random.randint(100000, 999999)}",
+            "type": p_type,
             "status": "มีผลบังคับ",
             "renewal_date": renewal,
             "premium_status": random.choice(["ชำระเรียบร้อย", "ชำระเรียบร้อย", "ค้างชำระ"]),

@@ -396,6 +396,7 @@ async def seed_database(num_customers: int = 250, force_reseed: bool = False):
                         "code": "KRUNGSRI-HEALTH-MAX",
                         "name": "กรุงศรี เฮลท์ แม็กซ์ เหมาจ่าย (Health Max 5M)",
                         "type": "Health protection (ประกันสุขภาพ)",
+                        "policy_number": "KHA-2024-789012",
                         "coverage": 5000000.0,
                         "premium": 48500.0,
                         "days_left": 14,
@@ -406,6 +407,7 @@ async def seed_database(num_customers: int = 250, force_reseed: bool = False):
                         "code": "KRUNGSRI-LIFE-01",
                         "name": "กรุงศรี ไลฟ์ พลัส 90/20 (Life Plus)",
                         "type": "Life protection (ประกันชีวิต)",
+                        "policy_number": "KLI-2023-456789",
                         "coverage": 3000000.0,
                         "premium": 65000.0,
                         "days_left": 210,
@@ -494,6 +496,7 @@ async def seed_database(num_customers: int = 250, force_reseed: bool = False):
                         "code": "KRUNGSRI-MOTOR-01",
                         "name": "กรุงศรี มอเตอร์ แคร์ ชั้น 1 (Honda City e:HEV)",
                         "type": "Motor insurance (ประกันภัยรถยนต์)",
+                        "policy_number": "KM-2025-089124",
                         "coverage": 650000.0,
                         "premium": 18500.0,
                         "days_left": 21,
@@ -504,6 +507,7 @@ async def seed_database(num_customers: int = 250, force_reseed: bool = False):
                         "code": "GROUP-HEALTH-CORP",
                         "name": "สวัสดิการประกันสุขภาพกลุ่มบริษัท (Corporate Group Health)",
                         "type": "Health protection (ประกันกลุ่มบริษัท)",
+                        "policy_number": "KPA-2024-512089",
                         "coverage": 50000.0,
                         "premium": 0.0,
                         "days_left": 240,
@@ -1277,9 +1281,25 @@ async def seed_database(num_customers: int = 250, force_reseed: bool = False):
             # Policies
             for p_idx, p_data in enumerate(policies_data):
                 ren_date = today + timedelta(days=p_data["days_left"])
+                p_type = p_data.get("type", "")
+                if "รถยนต์" in p_type or "Motor" in p_type:
+                    prefix = "KM"
+                elif "สุขภาพ" in p_type or "Health" in p_type:
+                    prefix = "KHA"
+                elif "บำนาญ" in p_type or "Pension" in p_type or "Retire" in p_type:
+                    prefix = "KSP"
+                elif "สะสมทรัพย์" in p_type or "Saving" in p_type:
+                    prefix = "KSV"
+                elif "อุบัติเหตุ" in p_type or "PA" in p_type:
+                    prefix = "KPA"
+                elif "คุ้มครองสินเชื่อ" in p_type or "MRTA" in p_type:
+                    prefix = "KMR"
+                else:
+                    prefix = "KLI"
+                pol_number = p_data.get("policy_number") or f"{prefix}-{ren_date.year - 1}-{random.randint(100000, 999999)}"
                 pol = InsurancePolicy(
                     customer_id=customer.id,
-                    policy_number=f"POL-{ext_ref}-{p_idx+1:02d}",
+                    policy_number=pol_number,
                     policy_type=p_data["type"],
                     coverage_amount=p_data["coverage"],
                     premium_amount=p_data["premium"],

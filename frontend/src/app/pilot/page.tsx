@@ -11,7 +11,7 @@ import { PageHeader } from "@/components/domain";
 
 const SCENARIOS = [
   { id: "scenario_a", name: "สถานการณ์ A: ลูกค้าความสำคัญสูง (High Priority)", ref: "KS-00001", desc: "กรมธรรม์ใกล้ครบกำหนดต่ออายุใน 14 วัน, ระดับความสัมพันธ์ Platinum, AI Score 92/100", badge: "high" as const },
-  { id: "scenario_b", name: "สถานการณ์ B: ลูกค้าความสำคัญปานกลาง (Medium Priority)", ref: "KS-00002", desc: "ครบกำหนดต่ออายุใน 65 วัน, ระดับความสัมพันธ์ Gold, AI Score 58/100", badge: "medium" as const },
+  { id: "scenario_b", name: "สถานการณ์ B: ต่ออายุกรมธรรม์รถยนต์ (Motor Renewal)", ref: "KS-00002", desc: "ประกันภัยรถยนต์ Type 1 ครบกำหนดต่ออายุใน 21 วัน, ระดับความสัมพันธ์ Silver, AI Score 89/100", badge: "high" as const },
   { id: "scenario_c", name: "สถานการณ์ C: ลูกค้าความสำคัญต่ำ (Low Priority)", ref: "KS-00003", desc: "เพิ่งติดต่อเมื่อ 7 วันก่อน, กรมธรรม์ยังเหลือ 280 วัน, AI Score 22/100", badge: "low" as const },
   { id: "scenario_d", name: "สถานการณ์ D: ช่องว่างความคุ้มครอง (Protection Gap)", ref: "KS-00004", desc: "มีภาระสินเชื่อบ้าน 5.5 ล้านบาท แต่ความคุ้มครองเดิมเพียง 5 แสนบาท → แนะนำ MRTA", badge: "warning" as const },
   { id: "scenario_e", name: "สถานการณ์ E: ทบทวนความคุ้มครองเดิม (Coverage Review)", ref: "KS-00005", desc: "มี 3 กรมธรรม์ active, วัยใกล้เกษียณอายุ 52 ปี → แนะนำ Smart Pension & Health Max", badge: "info" as const },

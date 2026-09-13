@@ -9,7 +9,7 @@
 | Timestamp | Screen / Route | Action | Narration (English / Thai) |
 |---|---|---|---|
 | **00:00 - 00:15** | `/login` → `/dashboard` | Click Quick-Fill "Broker" → Sign In | *"In commercial insurance, brokers manage hundreds of accounts and waste hours deciding who to call first. Broker Insight AI instantly prioritizes the queue using calibrated machine learning."* |
-| **00:15 - 00:35** | `/dashboard` | View Priority Customer Queue → Click Customer `KS-00001` | *"On the dashboard, brokers immediately see today's high-priority opportunities, urgent renewal deadlines, and overdue tasks. Let's open Khun Somchai (KS-00001), scored 92/100."* |
+| **00:15 - 00:35** | `/dashboard` | View Priority Customer Queue → Click Customer `KS-00001` | *"On the dashboard, brokers immediately see today's high-priority opportunities, urgent renewal deadlines, and overdue tasks. Let's open Khun Nattaporn Warin (KS-00001), scored 92/100."* |
 | **00:35 - 00:55** | `/customers/{id}` (Tab 2: Priority) | Inspect PriorityScore & Top Drivers | *"Instead of a black-box number, the broker sees the top 3 drivers: policy expiring in 14 days, platinum tier, and low contact frequency. Technical SHAP attributions are available in a slide-out drawer."* |
 | **00:55 - 01:15** | `/customers/{id}` (Tab 3: Recommend) | Review Top Match & Click [เห็นชอบ (Approve)] | *"In Recommendations, AI identifies a Protection Gap and matches Krungsri Health Max. Hard eligibility gates ensure zero compliance violations. The broker clicks 'เห็นชอบ' (Approve) to confirm."* |
 | **01:15 - 01:30** | `/customers/{id}` (Tab 4 & 5) | View Copilot opening & Create Task | *"Under Prep, the LLM Copilot generates tailored conversation starters and probing questions with quick copy buttons. Under Tasks, a follow-up is scheduled. The broker is ready in under 2 minutes."* |
@@ -53,7 +53,9 @@
 
 | Scenario ID | Test Persona | Key Conditions | Demonstrated Feature |
 |---|---|---|---|
-| **Scenario A** | Khun Somchai (KS-00001) | Platinum, renewal in 14 days, high score (92) | Primary Priority, SHAP Explainability & Top Recommendation |
-| **Scenario D** | Khun Apinya (KS-00004) | Home loan 5.5M, existing coverage only 500k | Protection Gap Analysis & MRTA recommendation |
-| **Scenario G** | Khun Wichai (KS-00007) | Simulated external network disconnection | Offline Rule-Based Fallback Engine preservation |
-| **Scenario H** | Khun Prasert (KS-00008) | Senior citizen aged 68 years | Hard Eligibility Gate pre-filtering (Safety guarantee) |
+| **Scenario A** | Khun Nattaporn Warin (KS-00001) | Platinum, renewal in 14 days, high score (92) | Primary Priority, SHAP Explainability & Top Recommendation |
+| **Scenario B** | Khun Natcha Pearl (KS-00002) | Motor Type 1 renewal in 21 days, Silver, score (89) | Motor Expiry Urgency & Cross-sell Opportunity |
+| **Scenario D** | Khun Wipa Chaiyo (KS-00004) | Home loan 5.5M, existing coverage only 500k | Protection Gap Analysis & MRTA recommendation |
+| **Scenario E** | Khun Thanapoom Yimyaem (KS-00005) | AUM 14.2M, age 52, retirement planning | Smart Pension 85/60 & High-AUM Wealth Advisory |
+| **Scenario G** | Khun Arnon Kawnah (KS-00007) | Simulated external network disconnection | Offline Rule-Based Fallback Engine preservation |
+| **Scenario H** | Khun Nattaporn Thaweepol (KS-00008) | Senior citizen aged 68 years | Hard Eligibility Gate pre-filtering (Safety guarantee) |

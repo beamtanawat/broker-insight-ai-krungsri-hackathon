@@ -63,44 +63,110 @@ export function Sidebar({ user, collapsed = false, onToggleCollapse, onMobileClo
       {/* Brand Header */}
       <div
         style={{
-          padding: collapsed ? "16px 8px" : "20px 20px",
+          padding: collapsed ? "16px 8px" : "16px 14px",
           display: "flex",
           alignItems: "center",
-          gap: "12px",
+          justifyContent: collapsed ? "center" : "flex-start",
           borderBottom: "1px solid rgba(255,255,255,0.08)",
           minHeight: "72px",
           background: "linear-gradient(180deg, rgba(254, 203, 0, 0.06) 0%, transparent 100%)",
         }}
       >
-        <div
+        <Link
+          href="/dashboard"
           style={{
-            width: "38px",
-            height: "38px",
-            borderRadius: "10px",
-            backgroundColor: "var(--krungsri-yellow)",
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
-            fontSize: "20px",
-            color: "#3b2c2b",
-            fontWeight: 900,
-            flexShrink: 0,
-            boxShadow: "0 0 14px rgba(254, 203, 0, 0.4)",
+            textDecoration: "none",
+            width: "100%",
+            justifyContent: collapsed ? "center" : "flex-start",
           }}
+          title="Broker Insight AI"
         >
-          ⚡
-        </div>
-        {!collapsed && (
-          <div style={{ overflow: "hidden" }}>
-            <div style={{ fontWeight: 800, color: "white", fontSize: "1.0rem", letterSpacing: "-0.01em", whiteSpace: "nowrap" }}>
-              Broker Insight <span style={{ color: "var(--krungsri-yellow)" }}>AI</span>
+          {collapsed ? (
+            <div
+              style={{
+                width: "42px",
+                height: "42px",
+                borderRadius: "10px",
+                backgroundColor: "#001c35",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 2px 10px rgba(0,0,0,0.35)",
+                border: "1px solid rgba(255,255,255,0.12)",
+                overflow: "hidden",
+              }}
+            >
+              <img
+                src="/broker-insight-icon.png"
+                alt="Broker Insight AI"
+                style={{
+                  width: "32px",
+                  height: "auto",
+                  display: "block",
+                }}
+              />
             </div>
-            <div style={{ fontSize: "0.75rem", color: "var(--slate-400)", whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: "6px", marginTop: "2px" }}>
-              <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#22c55e", display: "inline-block", boxShadow: "0 0 6px #22c55e" }} />
-              Krungsri Financial Advisory
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "4px",
+                width: "100%",
+              }}
+            >
+              <div
+                style={{
+                  padding: "6px 10px",
+                  borderRadius: "10px",
+                  backgroundColor: "#001c35",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "flex-start",
+                  boxShadow: "0 2px 12px rgba(0,0,0,0.35)",
+                  border: "1px solid rgba(255,255,255,0.12)",
+                  width: "fit-content",
+                }}
+              >
+                <img
+                  src="/broker-insight-logo.png"
+                  alt="Broker Insight AI"
+                  style={{
+                    height: "34px",
+                    width: "auto",
+                    display: "block",
+                  }}
+                />
+              </div>
+              <div
+                style={{
+                  fontSize: "0.75rem",
+                  color: "var(--slate-400)",
+                  whiteSpace: "nowrap",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  paddingLeft: "4px",
+                  marginTop: "2px",
+                }}
+              >
+                <span
+                  style={{
+                    width: "6px",
+                    height: "6px",
+                    borderRadius: "50%",
+                    backgroundColor: "#22c55e",
+                    display: "inline-block",
+                    boxShadow: "0 0 6px #22c55e",
+                  }}
+                />
+                Krungsri Financial Advisory
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </Link>
       </div>
 
       {/* Navigation Sections */}

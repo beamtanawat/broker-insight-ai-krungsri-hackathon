@@ -67,7 +67,7 @@ const DEFAULT_TODAY_TASKS: TaskItem[] = [
     taskType: "ต่ออายุกรมธรรม์",
     taskIcon: "📄",
     description: "ติดตามการต่ออายุประกันชีวิต",
-    customerName: "ธนภูมิ อิ่มเปี่ยม",
+    customerName: "ธนภูมิ ยิ้มแย้ม",
     customerRef: "KS-00005",
     customerId: "f535562e-8f70-4711-bbd0-7e092606cdd7",
     status: "in_progress",

@@ -55,7 +55,7 @@ const DEFAULT_FOCUS_CUSTOMERS: FocusCustomerItem[] = [
   },
   {
     id: "f535562e-8f70-4711-bbd0-7e092606cdd7",
-    name: "ธนภูมิ อิ่มเปี่ยม",
+    name: "ธนภูมิ ยิ้มแย้ม",
     ref: "KS-00005",
     initial: "ธ",
     avatarBg: "#10B981", // Green
@@ -63,7 +63,7 @@ const DEFAULT_FOCUS_CUSTOMERS: FocusCustomerItem[] = [
     priorityLevel: "medium",
     priorityLabel: "กลาง",
     icon: "📈",
-    reason: "งานแผนบำนาญ AUM สูง ควรติดตามต่อเนื่อง",
+    reason: "วางแผนบำนาญ Smart Pension AUM 14.2M ควรติดตามต่อเนื่อง",
   },
 ];
 

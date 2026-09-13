@@ -17,7 +17,7 @@
 - **Speaker**: 
   > *"Broker Insight AI solves this by aggregating real customer signals into a real LightGBM prioritization model with TreeSHAP explainability. Here on the Dashboard, customers are automatically ranked by contact urgency."*
 - **Action on Screen**:
-  - Point to **High-Priority** customer (e.g. `กนกวรรณ รุ่งเรือง` - Score 92/100).
+  - Point to **High-Priority** customer (e.g. `ณัฐพร วาริน` (KS-00001) - Score 92/100).
   - Click on the customer to open the **Customer 360° Profile** (`/customers/[id]`).
   - Click **"⚡ Run AI Analysis"**.
   - Show the **SHAP Factor Breakdown** (Positive impacts: High mortgage debt, significant monthly savings; Negative impacts: Existing life policy).
