@@ -78,15 +78,15 @@ export default function LoginPage() {
           ========================================================================= */}
       <section
         aria-label="Broker Insight AI — ข้อมูลระบบและสถาปัตยกรรม"
+        className="login-brand-panel"
         style={{
           flex: "1 1 55%",
-          minWidth: "340px",
-          minHeight: "100vh",
+          width: "100%",
           position: "relative",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          padding: "clamp(40px, 6vw, 72px) clamp(32px, 6vw, 64px)",
+          padding: "clamp(32px, 5vw, 72px) clamp(20px, 5vw, 64px)",
           color: "#ffffff",
           overflow: "hidden",
         }}
@@ -227,6 +227,7 @@ export default function LoginPage() {
 
         {/* Center: Premium Translucent Information Card */}
         <div
+          className="login-info-card"
           style={{
             position: "relative",
             zIndex: 2,
@@ -379,6 +380,7 @@ export default function LoginPage() {
 
         {/* Bottom Institutional Disclaimer */}
         <div
+          className="login-brand-footer"
           style={{
             position: "relative",
             zIndex: 2,
@@ -406,16 +408,16 @@ export default function LoginPage() {
           ========================================================================= */}
       <section
         aria-label="เข้าสู่ระบบ Broker Insight AI"
+        className="login-form-panel"
         style={{
           flex: "1 1 45%",
-          minWidth: "320px",
-          minHeight: "100vh",
+          width: "100%",
           backgroundColor: "#fcfcfd",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          padding: "clamp(40px, 6vw, 80px) clamp(24px, 5vw, 64px)",
+          padding: "clamp(32px, 6vw, 80px) clamp(18px, 5vw, 64px)",
           position: "relative",
         }}
       >
@@ -888,7 +890,7 @@ export default function LoginPage() {
         </div>
       </section>
 
-      {/* Global CSS for Button Spinner */}
+      {/* Global CSS for Button Spinner & Mobile Layout Adaptation */}
       <style jsx global>{`
         @keyframes spin {
           0% {
@@ -896,6 +898,30 @@ export default function LoginPage() {
           }
           100% {
             transform: rotate(360deg);
+          }
+        }
+        @media (min-width: 1024px) {
+          .login-brand-panel {
+            min-height: 100vh;
+          }
+          .login-form-panel {
+            min-height: 100vh;
+          }
+        }
+        @media (max-width: 1023px) {
+          .login-brand-panel {
+            min-height: auto !important;
+            padding: 28px 20px 24px !important;
+          }
+          .login-info-card {
+            display: none !important;
+          }
+          .login-brand-footer {
+            display: none !important;
+          }
+          .login-form-panel {
+            min-height: auto !important;
+            padding: 28px 18px 48px !important;
           }
         }
       `}</style>
