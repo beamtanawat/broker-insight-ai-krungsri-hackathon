@@ -1,0 +1,97 @@
+.shell {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  background: var(--canvas);
+  padding: 24px;
+}
+
+.card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  padding: 36px 32px 28px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.brandMark {
+  display: grid;
+  width: 50px;
+  height: 50px;
+  place-items: center;
+  border-radius: 16px;
+  color: #fff;
+  background: var(--teal-dark);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(7,93,91,0.3);
+}
+
+.title { font-size: var(--fs-2xl); font-weight: 800; margin-top: 2px; }
+.sub   { font-size: var(--fs-sm); color: var(--ink-soft); margin-top: 3px; }
+
+.form { display: grid; gap: 16px; }
+
+.label {
+  display: grid;
+  gap: 6px;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.input {
+  padding: 10px 13px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  font: inherit;
+  font-size: var(--fs-base);
+  color: var(--ink);
+  background: var(--surface);
+  transition: border-color 150ms;
+}
+.input:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px rgba(11,120,117,0.15); }
+
+.error {
+  color: var(--high);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--high-soft);
+}
+
+.submit { width: 100%; padding: 11px; font-size: var(--fs-base); margin-top: 4px; }
+
+.demo { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
+.demoTitle { font-size: var(--fs-xs); font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+.demoBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-soft);
+  font-size: var(--fs-sm);
+  color: var(--ink-soft);
+  text-align: left;
+  margin-bottom: 6px;
+  cursor: pointer;
+  transition: border-color 150ms, background 150ms;
+}
+.demoBtn:hover { border-color: var(--teal-mid); background: var(--teal-soft); }
+
+.disclaimer { margin-top: 18px; font-size: var(--fs-xs); color: var(--muted); text-align: center; line-height: 1.55; }

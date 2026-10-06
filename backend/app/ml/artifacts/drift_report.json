@@ -1,0 +1,322 @@
+{
+  "report_id": "drift_report_20260830_042439",
+  "evaluated_at": "2026-08-30T04:24:39.349845+00:00",
+  "baseline_sample_count": 1200,
+  "current_sample_count": 300,
+  "is_small_sample": false,
+  "sample_warning": null,
+  "overall_data_drift_status": "stable",
+  "feature_drifts": [
+    {
+      "feature_name": "age",
+      "thai_label": "อายุของลูกค้า",
+      "psi_score": 0.0094,
+      "status": "stable",
+      "baseline_mean": 44.75,
+      "current_mean": 45.2,
+      "baseline_std": 11.31,
+      "current_std": 11.22,
+      "bin_breakdown": [
+        {
+          "bin_index": 1,
+          "expected_pct": 18.4,
+          "actual_pct": 16.3,
+          "psi_contribution": 0.0025
+        },
+        {
+          "bin_index": 2,
+          "expected_pct": 19.3,
+          "actual_pct": 22.0,
+          "psi_contribution": 0.0034
+        },
+        {
+          "bin_index": 3,
+          "expected_pct": 18.9,
+          "actual_pct": 17.0,
+          "psi_contribution": 0.002
+        },
+        {
+          "bin_index": 4,
+          "expected_pct": 22.1,
+          "actual_pct": 21.7,
+          "psi_contribution": 0.0001
+        },
+        {
+          "bin_index": 5,
+          "expected_pct": 21.2,
+          "actual_pct": 23.0,
+          "psi_contribution": 0.0014
+        }
+      ]
+    },
+    {
+      "feature_name": "income_band_numeric",
+      "thai_label": "ระดับรายได้เฉลี่ยต่อเดือน",
+      "psi_score": 0.0001,
+      "status": "stable",
+      "baseline_mean": 130.84,
+      "current_mean": 131.08,
+      "baseline_std": 81.38,
+      "current_std": 81.44,
+      "bin_breakdown": [
+        {
+          "bin_index": 1,
+          "expected_pct": 0.0,
+          "actual_pct": 0.0,
+          "psi_contribution": 0.0
+        },
+        {
+          "bin_index": 2,
+          "expected_pct": 24.9,
+          "actual_pct": 25.0,
+          "psi_contribution": 0.0
+        },
+        {
+          "bin_index": 3,
+          "expected_pct": 24.0,
+          "actual_pct": 23.7,
+          "psi_contribution": 0.0
+        },
+        {
+          "bin_index": 4,
+          "expected_pct": 24.8,
+          "actual_pct": 25.0,
+          "psi_contribution": 0.0
+        },
+        {
+          "bin_index": 5,
+          "expected_pct": 26.2,
+          "actual_pct": 26.3,
+          "psi_contribution": 0.0
+        }
+      ]
+    },
+    {
+      "feature_name": "total_assets",
+      "thai_label": "มูลค่าสินทรัพย์รวม",
+      "psi_score": 0.0097,
+      "status": "stable",
+      "baseline_mean": 4975722.5,
+      "current_mean": 4794090.0,
+      "baseline_std": 2924831.83,
+      "current_std": 2928080.07,
+      "bin_breakdown": [
+        {
+          "bin_index": 1,
+          "expected_pct": 20.0,
+          "actual_pct": 20.7,
+          "psi_contribution": 0.0002
+        },
+        {
+          "bin_index": 2,
+          "expected_pct": 20.0,
+          "actual_pct": 20.3,
+          "psi_contribution": 0.0001
+        },
+        {
+          "bin_index": 3,
+          "expected_pct": 20.0,
+          "actual_pct": 22.7,
+          "psi_contribution": 0.0033
+        },
+        {
+          "bin_index": 4,
+          "expected_pct": 20.0,
+          "actual_pct": 16.7,
+          "psi_contribution": 0.0061
+        },
+        {
+          "bin_index": 5,
+          "expected_pct": 20.0,
+          "actual_pct": 19.7,
+          "psi_contribution": 0.0001
+        }
+      ]
+    },
+    {
+      "feature_name": "total_liabilities",
+      "thai_label": "ภาระหนี้สินรวม",
+      "psi_score": 0.0218,
+      "status": "stable",
+      "baseline_mean": 1671740.0,
+      "current_mean": 1569633.33,
+      "baseline_std": 1966753.5,
+      "current_std": 1868633.22,
+      "bin_breakdown": [
+        {
+          "bin_index": 1,
+          "expected_pct": 0.0,
+          "actual_pct": 0.0,
+          "psi_contribution": 0.0
+        },
+        {
+          "bin_index": 2,
+          "expected_pct": 0.0,
+          "actual_pct": 0.0,
+          "psi_contribution": 0.0
+        },
+        {
+          "bin_index": 3,
+          "expected_pct": 60.0,
+          "actual_pct": 58.6,
+          "psi_contribution": 0.0003
+        },
+        {
+          "bin_index": 4,
+          "expected_pct": 20.0,
+          "actual_pct": 25.3,
+          "psi_contribution": 0.0126
+        },
+        {
+          "bin_index": 5,
+          "expected_pct": 20.0,
+          "actual_pct": 16.0,
+          "psi_contribution": 0.0089
+        }
+      ]
+    },
+    {
+      "feature_name": "monthly_savings",
+      "thai_label": "ยอดเงินออมต่อเดือน",
+      "psi_score": 0.029,
+      "status": "stable",
+      "baseline_mean": 42496.75,
+      "current_mean": 42965.67,
+      "baseline_std": 21613.66,
+      "current_std": 22193.02,
+      "bin_breakdown": [
+        {
+          "bin_index": 1,
+          "expected_pct": 20.0,
+          "actual_pct": 22.0,
+          "psi_contribution": 0.0019
+        },
+        {
+          "bin_index": 2,
+          "expected_pct": 19.9,
+          "actual_pct": 14.7,
+          "psi_contribution": 0.016
+        },
+        {
+          "bin_index": 3,
+          "expected_pct": 20.0,
+          "actual_pct": 24.0,
+          "psi_contribution": 0.0073
+        },
+        {
+          "bin_index": 4,
+          "expected_pct": 19.9,
+          "actual_pct": 17.7,
+          "psi_contribution": 0.0027
+        },
+        {
+          "bin_index": 5,
+          "expected_pct": 20.2,
+          "actual_pct": 21.7,
+          "psi_contribution": 0.0011
+        }
+      ]
+    },
+    {
+      "feature_name": "days_to_renewal",
+      "thai_label": "จำนวนวันก่อนถึงกำหนดต่ออายุกรมธรรม์",
+      "psi_score": 0.0228,
+      "status": "stable",
+      "baseline_mean": 229.74,
+      "current_mean": 233.93,
+      "baseline_std": 118.25,
+      "current_std": 117.37,
+      "bin_breakdown": [
+        {
+          "bin_index": 1,
+          "expected_pct": 19.7,
+          "actual_pct": 21.3,
+          "psi_contribution": 0.0014
+        },
+        {
+          "bin_index": 2,
+          "expected_pct": 20.2,
+          "actual_pct": 15.0,
+          "psi_contribution": 0.0153
+        },
+        {
+          "bin_index": 3,
+          "expected_pct": 19.9,
+          "actual_pct": 21.3,
+          "psi_contribution": 0.001
+        },
+        {
+          "bin_index": 4,
+          "expected_pct": 15.8,
+          "actual_pct": 18.7,
+          "psi_contribution": 0.005
+        },
+        {
+          "bin_index": 5,
+          "expected_pct": 24.5,
+          "actual_pct": 23.7,
+          "psi_contribution": 0.0003
+        }
+      ]
+    },
+    {
+      "feature_name": "contact_frequency_90d",
+      "thai_label": "ความถี่ในการติดต่อรอบ 90 วัน",
+      "psi_score": 0.0152,
+      "status": "stable",
+      "baseline_mean": 3.91,
+      "current_mean": 3.78,
+      "baseline_std": 2.57,
+      "current_std": 2.62,
+      "bin_breakdown": [
+        {
+          "bin_index": 1,
+          "expected_pct": 11.0,
+          "actual_pct": 14.7,
+          "psi_contribution": 0.0105
+        },
+        {
+          "bin_index": 2,
+          "expected_pct": 24.6,
+          "actual_pct": 22.3,
+          "psi_contribution": 0.0022
+        },
+        {
+          "bin_index": 3,
+          "expected_pct": 21.4,
+          "actual_pct": 20.3,
+          "psi_contribution": 0.0006
+        },
+        {
+          "bin_index": 4,
+          "expected_pct": 22.1,
+          "actual_pct": 23.3,
+          "psi_contribution": 0.0007
+        },
+        {
+          "bin_index": 5,
+          "expected_pct": 20.9,
+          "actual_pct": 19.3,
+          "psi_contribution": 0.0012
+        }
+      ]
+    }
+  ],
+  "prediction_drift": {
+    "metric_name": "customer_priority_distribution",
+    "psi_score": 0.0,
+    "status": "stable",
+    "baseline_high_priority_rate": 36.8,
+    "current_high_priority_rate": 33.3
+  },
+  "drift_interpretation_guide": {
+    "psi_scale": "PSI < 0.10 (Stable), 0.10 <= PSI < 0.25 (Moderate Drift), PSI >= 0.25 (Significant Drift)",
+    "data_drift_concept": "Data Drift P(X) represents shifts in input customer distributions (e.g. shifts in customer asset wealth or age brackets).",
+    "concept_drift_concept": "Concept Drift / Performance Degradation P(Y|X) occurs when the statistical relationship between customer signals and actual insurance needs changes over time."
+  },
+  "recommendations": [
+    "Baseline distributions remain stable with PSI < 0.10 across all 7 core monitored features.",
+    "Continue tracking rolling 30-day production batches as real broker interaction volume expands.",
+    "If any feature reaches PSI >= 0.25, initiate pipeline retraining with newly labeled customer cohort data."
+  ]
+}

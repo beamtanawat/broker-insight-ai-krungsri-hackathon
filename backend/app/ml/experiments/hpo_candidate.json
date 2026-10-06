@@ -1,0 +1,116 @@
+{
+  "search_method": "5-Fold Stratified Cross-Validation Bounded Grid Search",
+  "candidates_evaluated": [
+    {
+      "candidate_id": "HPO-CANDIDATE-1",
+      "params": {
+        "n_estimators": 80,
+        "learning_rate": 0.04,
+        "num_leaves": 23,
+        "max_depth": 4,
+        "min_child_samples": 20,
+        "colsample_bytree": 0.8
+      },
+      "cv_f1_mean": 0.8526,
+      "cv_f1_std": 0.0301,
+      "cv_roc_auc_mean": 0.9496,
+      "cv_precision_mean": 0.8923,
+      "cv_recall_mean": 0.8164
+    },
+    {
+      "candidate_id": "HPO-CANDIDATE-2",
+      "params": {
+        "n_estimators": 100,
+        "learning_rate": 0.05,
+        "num_leaves": 31,
+        "max_depth": 5,
+        "min_child_samples": 20,
+        "colsample_bytree": 1.0
+      },
+      "cv_f1_mean": 0.8578,
+      "cv_f1_std": 0.0283,
+      "cv_roc_auc_mean": 0.9492,
+      "cv_precision_mean": 0.8811,
+      "cv_recall_mean": 0.8361
+    },
+    {
+      "candidate_id": "HPO-CANDIDATE-3",
+      "params": {
+        "n_estimators": 120,
+        "learning_rate": 0.03,
+        "num_leaves": 31,
+        "max_depth": 5,
+        "min_child_samples": 25,
+        "colsample_bytree": 0.85,
+        "reg_alpha": 0.1,
+        "reg_lambda": 0.2
+      },
+      "cv_f1_mean": 0.8606,
+      "cv_f1_std": 0.0304,
+      "cv_roc_auc_mean": 0.9492,
+      "cv_precision_mean": 0.8965,
+      "cv_recall_mean": 0.8277
+    },
+    {
+      "candidate_id": "HPO-CANDIDATE-4",
+      "params": {
+        "n_estimators": 150,
+        "learning_rate": 0.03,
+        "num_leaves": 45,
+        "max_depth": 6,
+        "min_child_samples": 30,
+        "colsample_bytree": 0.8,
+        "reg_alpha": 0.2,
+        "reg_lambda": 0.5
+      },
+      "cv_f1_mean": 0.8612,
+      "cv_f1_std": 0.0317,
+      "cv_roc_auc_mean": 0.9503,
+      "cv_precision_mean": 0.8914,
+      "cv_recall_mean": 0.8335
+    },
+    {
+      "candidate_id": "HPO-CANDIDATE-5",
+      "params": {
+        "n_estimators": 60,
+        "learning_rate": 0.08,
+        "num_leaves": 15,
+        "max_depth": 3,
+        "min_child_samples": 15,
+        "colsample_bytree": 0.9
+      },
+      "cv_f1_mean": 0.8584,
+      "cv_f1_std": 0.0184,
+      "cv_roc_auc_mean": 0.95,
+      "cv_precision_mean": 0.8883,
+      "cv_recall_mean": 0.8306
+    }
+  ],
+  "best_candidate": {
+    "candidate_id": "HPO-CANDIDATE-4",
+    "params": {
+      "n_estimators": 150,
+      "learning_rate": 0.03,
+      "num_leaves": 45,
+      "max_depth": 6,
+      "min_child_samples": 30,
+      "colsample_bytree": 0.8,
+      "reg_alpha": 0.2,
+      "reg_lambda": 0.5
+    },
+    "cv_f1_mean": 0.8612,
+    "cv_f1_std": 0.0317,
+    "cv_roc_auc_mean": 0.9503,
+    "cv_precision_mean": 0.8914,
+    "cv_recall_mean": 0.8335
+  },
+  "holdout_test_metrics": {
+    "accuracy": 0.9,
+    "precision": 0.8478,
+    "recall": 0.8864,
+    "f1_score": 0.8667,
+    "roc_auc": 0.9564,
+    "brier_score": 0.0766,
+    "expected_calibration_error": 0.0494
+  }
+}

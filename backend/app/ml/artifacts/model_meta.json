@@ -1,0 +1,98 @@
+{
+  "model_name": "LightGBM Priority Classifier",
+  "model_version": "1.0.0",
+  "feature_columns": [
+    "age",
+    "income_band_numeric",
+    "relationship_tenure_months",
+    "relationship_tier_encoded",
+    "is_kyc_verified",
+    "total_assets",
+    "total_liabilities",
+    "monthly_savings",
+    "has_active_loan",
+    "num_financial_products",
+    "insurance_count",
+    "days_to_renewal",
+    "days_since_last_contact",
+    "contact_frequency_90d",
+    "transaction_activity_90d",
+    "existing_coverage_amount",
+    "has_overdue_followup"
+  ],
+  "feature_labels": {
+    "age": "อายุของลูกค้า",
+    "income_band_numeric": "ระดับรายได้เฉลี่ยต่อเดือน",
+    "relationship_tenure_months": "ระยะเวลาที่เป็นลูกค้า (เดือน)",
+    "relationship_tier_encoded": "ระดับความสัมพันธ์ (Tier)",
+    "is_kyc_verified": "สถานะยืนยันตัวตน KYC",
+    "total_assets": "มูลค่าสินทรัพย์รวม",
+    "total_liabilities": "ภาระหนี้สินรวม",
+    "monthly_savings": "ยอดเงินออมต่อเดือน",
+    "has_active_loan": "มีภาระสินเชื่อที่เปิดอยู่",
+    "num_financial_products": "จำนวนผลิตภัณฑ์ทางการเงินที่ถือครอง",
+    "insurance_count": "จำนวนกรมธรรม์ประกันที่มีผลบังคับ",
+    "days_to_renewal": "จำนวนวันก่อนถึงกำหนดต่ออายุกรมธรรม์",
+    "days_since_last_contact": "จำนวนวันนับจากการติดต่อครั้งล่าสุด",
+    "contact_frequency_90d": "ความถี่ในการติดต่อรอบ 90 วัน",
+    "transaction_activity_90d": "ความถี่การทำธุรกรรมรอบ 90 วัน",
+    "existing_coverage_amount": "ทุนประกันความคุ้มครองรวม",
+    "has_overdue_followup": "มีรายการติดตามค้างชำระ/เกินกำหนด"
+  },
+  "metrics": {
+    "model_name": "LightGBM Priority Classifier",
+    "model_version": "1.0.0",
+    "dataset_type": "Synthetic/Demonstration Data (Not Real Krungsri Production)",
+    "sample_count": 240,
+    "accuracy": 0.8917,
+    "precision": 0.8298,
+    "recall": 0.8864,
+    "f1_score": 0.8571,
+    "roc_auc": 0.9526,
+    "confusion_matrix": {
+      "true_negative": 136,
+      "false_positive": 16,
+      "false_negative": 10,
+      "true_positive": 78,
+      "matrix_raw": [
+        [
+          136,
+          16
+        ],
+        [
+          10,
+          78
+        ]
+      ]
+    },
+    "classification_report": {
+      "0": {
+        "precision": 0.9315068493150684,
+        "recall": 0.8947368421052632,
+        "f1-score": 0.912751677852349,
+        "support": 152.0
+      },
+      "1": {
+        "precision": 0.8297872340425532,
+        "recall": 0.8863636363636364,
+        "f1-score": 0.8571428571428571,
+        "support": 88.0
+      },
+      "accuracy": 0.8916666666666667,
+      "macro avg": {
+        "precision": 0.8806470416788108,
+        "recall": 0.8905502392344498,
+        "f1-score": 0.8849472674976031,
+        "support": 240.0
+      },
+      "weighted avg": {
+        "precision": 0.8942096570484795,
+        "recall": 0.8916666666666667,
+        "f1-score": 0.8923617769255353,
+        "support": 240.0
+      }
+    }
+  },
+  "is_synthetic": true,
+  "disclaimer": "Trained on synthetic data for hackathon prototype demonstration only."
+}

@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "registry_name": "Broker Insight AI Master Evidence Registry",
+  "registry_version": "1.0.0",
+  "last_updated": "2026-08-30T15:03:00Z",
+  "environment": "Local/Demo Benchmark & Synthetic Sandbox",
+  "ml": {
+    "model_name": "LightGBM Priority Classifier",
+    "model_version": "1.0.0",
+    "status": "promoted_champion",
+    "dataset_version": "synthetic_v1.0 (1,200 samples, 80/20 train/test split)",
+    "feature_count": 17,
+    "operating_threshold": 0.5,
+    "holdout_test_metrics": {
+      "accuracy": 0.9083,
+      "precision": 0.8587,
+      "recall": 0.8977,
+      "f1_score": 0.8778,
+      "roc_auc": 0.9564,
+      "brier_score": 0.0757,
+      "expected_calibration_error": 0.0445,
+      "confusion_matrix": {
+        "true_negative": 139,
+        "false_positive": 13,
+        "false_negative": 9,
+        "true_positive": 79
+      },
+      "source_file": "backend/app/ml/experiments/baseline.json",
+      "sample_count": 240
+    },
+    "cross_validation_metrics": {
+      "accuracy": 0.8917,
+      "precision": 0.8298,
+      "recall": 0.8864,
+      "f1_score": 0.8571,
+      "roc_auc": 0.9526,
+      "source_file": "backend/app/ml/artifacts/evaluation_metrics.json",
+      "sample_count": 240
+    },
+    "calibration": {
+      "selected_method": "platt_sigmoid",
+      "brier_score_calibrated": 0.0757,
+      "brier_score_uncalibrated": 0.0740,
+      "expected_calibration_error_holdout": 0.0445,
+      "expected_calibration_error_5fold_cv": 0.0811,
+      "log_loss": 0.2632,
+      "source_file": "backend/app/ml/artifacts/calibration_metrics.json"
+    },
+    "demographic_fairness": {
+      "disparate_impact_ratio": 0.96,
+      "statistical_parity_passed": true,
+      "source_file": "backend/app/ml/artifacts/fairness_report.json"
+    },
+    "evaluation_protocol": "Holdout 80/20 Test + 5-Fold Stratified Cross-Validation with Platt Sigmoid Scaling",
+    "evaluation_date": "2026-08-30T04:38:20Z"
+  },
+  "recommendation": {
+    "engine_version": "recommendation_engine_v1.1",
+    "status": "promoted_champion",
+    "dataset_version": "synthetic_v1.0 (Catalog of 12 Krungsri-branded insurance products)",
+    "eligibility_violation_rate_pct": 0.0,
+    "top_1_match_rate_pct": 100.0,
+    "top_k_match_rate_pct": 100.0,
+    "avg_latency_ms": 0.86,
+    "speedup_factor_vs_baseline": 1.4,
+    "weights": {
+      "need_weight": 0.5,
+      "base_weight": 0.25,
+      "fit_weight": 0.25
+    },
+    "evaluation_protocol": "Pre-Ranking Hard Eligibility Gating on 8 Deterministic Pilot Personas",
+    "evaluation_sample_count": 8,
+    "source_file": "backend/app/ml/experiments/recommendation_evaluation.json",
+    "evaluation_date": "2026-08-30T14:59:41Z"
+  },
+  "llm": {
+    "provider": "Google Generative AI",
+    "model": "gemini-1.5-flash",
+    "prompt_version": "v2.0-optimized",
+    "optimization_status": "promoted_champion",
+    "avg_input_tokens": 579.7,
+    "avg_output_tokens": 996.7,
+    "avg_total_tokens": 1576.3,
+    "token_reduction_pct": 16.6,
+    "avg_latency_ms": 2.35,
+    "p95_latency_ms": 3.61,
+    "cached_latency_ms": 0.15,
+    "cached_latency_reduction_pct": 95.8,
+    "estimated_cost_per_1k_requests_usd": 0.22946,
+    "cost_reduction_pct": 33.5,
+    "guardrail_failure_rate_pct": 0.0,
+    "structured_output_validity_pct": 100.0,
+    "quality_rubric_score": 3.7,
+    "offline_fallback_engine": "Deterministic rule-based synthesis",
+    "evaluation_protocol": "6 Representative Customer Persona Scenarios (Cold vs TTLCache Warm)",
+    "source_file": "backend/app/ml/experiments/llm_optimized.json",
+    "evaluation_date": "2026-08-30T04:59:05Z"
+  },
+  "e2e": {
+    "benchmark_version": "E2E Optimized v1.1",
+    "status": "promoted_champion",
+    "environment": "Local/Demo Benchmark (Darwin macOS / Python 3.14.7 / FastAPI / SQLite / Next.js 16)",
+    "total_cold_latency_ms": 57.4,
+    "total_warm_latency_ms": 34.2,
+    "workflow_p50_ms": 37.1,
+    "workflow_p95_ms": 64.8,
+    "workflow_p99_ms": 77.76,
+    "latency_reduction_warm_vs_cold_pct": 40.4,
+    "max_throughput_req_per_sec": 3480.0,
+    "error_rate_pct": 0.0,
+    "component_p95_latencies": {
+      "database_ms": 1.32,
+      "ml_pipeline_ms": 2.32,
+      "shap_explainability_ms": 1.25,
+      "llm_cold_ms": 10.09,
+      "llm_warm_cached_ms": 0.24,
+      "recommendation_ms": 0.20,
+      "serialization_ms": 0.03
+    },
+    "source_file": "backend/app/ml/experiments/e2e_optimized.json",
+    "evaluation_date": "2026-08-30T14:59:48Z"
+  },
+  "pilot": {
+    "pilot_version": "pilot_v1.0",
+    "instrumentation_status": "instrumentation_ready",
+    "participant_count": 0,
+    "session_count": 0,
+    "completed_sessions": 0,
+    "likert_score_summary": "Awaiting pilot data",
+    "avg_trust_score": null,
+    "avg_usability_score": null,
+    "evidence_declaration": "Pilot instrumentation and evaluation frameworks are fully built; human pilot evidence is not yet available in production.",
+    "source_file": "backend/app/routers/pilot.py",
+    "evaluation_date": "2026-08-30T15:00:00Z"
+  }
+}

@@ -100,7 +100,7 @@
     .relationship-label,
     .selected-label {
       color: var(--muted);
-      font-size: 10px;
+      font-size: 14px;
       font-weight: 800;
       letter-spacing: 0.02em;
       text-transform: uppercase;
@@ -142,7 +142,7 @@
       border-radius: 999px;
       color: var(--ink-soft);
       background: var(--surface-soft);
-      font-size: 11px;
+      font-size: 14px;
       font-weight: 800;
       line-height: 1.35;
       text-align: center;
@@ -187,7 +187,7 @@
       border-radius: 999px;
       color: var(--ink-soft);
       background: var(--surface-soft);
-      font-size: 10px;
+      font-size: 12px;
       font-weight: 800;
     }
 
@@ -255,7 +255,7 @@
       display: block;
       margin-top: -3px;
       color: var(--muted);
-      font-size: 9px;
+      font-size: 12px;
       text-align: right;
     }
 
@@ -273,7 +273,7 @@
       align-items: center;
       width: fit-content;
       border-radius: 999px;
-      font-size: 10px;
+      font-size: 12px;
       font-weight: 800;
     }
 
@@ -308,7 +308,7 @@
       padding-top: 14px;
       border-top: 1px solid var(--line);
       color: var(--muted);
-      font-size: 10px;
+      font-size: 12px;
       line-height: 1.55;
     }
 
@@ -379,7 +379,7 @@
       border-radius: 8px;
       color: var(--teal-dark);
       background: var(--teal-soft);
-      font-size: 10px;
+      font-size: 12px;
       font-weight: 800;
     }
 
@@ -402,7 +402,7 @@
       border-radius: 9px;
       color: var(--teal-dark);
       background: var(--teal-soft);
-      font-size: 10px;
+      font-size: 12px;
       font-weight: 800;
     }
 
@@ -424,7 +424,7 @@
     .info-label,
     .relationship-label {
       display: block;
-      font-size: 9px;
+      font-size: 12px;
       letter-spacing: 0.08em;
     }
 
@@ -438,7 +438,7 @@
       display: grid;
       grid-template-columns: 74px minmax(0, 1fr);
       gap: 6px;
-      font-size: 10px;
+      font-size: 12px;
       line-height: 1.35;
     }
 
@@ -457,7 +457,7 @@
       display: block;
       margin-top: 6px;
       color: var(--ink);
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 700;
       line-height: 1.35;
     }
@@ -487,7 +487,7 @@
 
     .score-value-box span {
       color: var(--teal);
-      font-size: 10px;
+      font-size: 12px;
       font-weight: 800;
     }
 
@@ -519,7 +519,7 @@
       position: relative;
       padding-left: 15px;
       color: var(--ink-soft);
-      font-size: 11px;
+      font-size: 12px;
       line-height: 1.55;
     }
 
@@ -539,7 +539,7 @@
     .ai-note,
     .discussion-note {
       color: var(--muted);
-      font-size: 10px;
+      font-size: 12px;
       line-height: 1.5;
     }
 
@@ -575,7 +575,7 @@
       border-radius: 11px;
       color: var(--teal-dark);
       background: var(--teal-soft);
-      font-size: 10px;
+      font-size: 12px;
       font-weight: 900;
       letter-spacing: 0.04em;
     }
@@ -634,6 +634,75 @@
 
     .relationship-item.engagement .relationship-value {
       color: var(--teal-dark);
+    }
+
+    /* ── Current Limitations Banner ── */
+    .limitations-banner {
+      margin-top: 20px;
+      padding: 16px 22px;
+      border: 1.5px solid #f3c4c0;
+      border-radius: var(--radius-lg);
+      background: var(--high-soft);
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .limitations-icon {
+      flex-shrink: 0;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: var(--high);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+      display: grid;
+      place-items: center;
+      margin-top: 1px;
+    }
+
+    .limitations-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .limitations-title {
+      margin: 0 0 8px;
+      color: var(--high);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .limitations-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 20px;
+    }
+
+    .limitations-list li {
+      position: relative;
+      padding-left: 14px;
+      color: var(--ink-soft);
+      font-size: 12.5px;
+      line-height: 1.5;
+    }
+
+    .limitations-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 7px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--high);
+      opacity: 0.7;
     }
 
     @media (max-height: 820px) and (min-width: 1120px) {
@@ -849,6 +918,20 @@
         </div>
       </section>
     </main>
+
+    <aside class="limitations-banner" aria-label="ข้อจำกัดปัจจุบันของต้นแบบ">
+      <div class="limitations-icon" aria-hidden="true">!</div>
+      <div class="limitations-body">
+        <p class="limitations-title">Current Limitations of this Prototype</p>
+        <ul class="limitations-list">
+          <li>No real AI service, database, authentication, or internal-system connection</li>
+          <li>No production user-role validation</li>
+          <li>No certified scoring or model-accuracy result</li>
+          <li>No product recommendation or automated sales-script generation</li>
+          <li>No public live demo while the Hackathon repository remains Private</li>
+        </ul>
+      </div>
+    </aside>
   </div>
 
   <script>

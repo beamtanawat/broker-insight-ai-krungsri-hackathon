@@ -1,0 +1,186 @@
+{
+  "benchmark_id": "bench_phase14_v1",
+  "evaluated_at": "2026-09-12T16:28:57.679123+00:00",
+  "dataset_metadata": {
+    "total_samples": 1200,
+    "train_samples": 960,
+    "test_samples": 240,
+    "num_features": 17,
+    "class_distribution": {
+      "positive_high_priority": 442,
+      "negative_standard_priority": 758,
+      "positive_percentage": 36.8
+    },
+    "features_used": [
+      "age",
+      "income_band_numeric",
+      "relationship_tenure_months",
+      "relationship_tier_encoded",
+      "is_kyc_verified",
+      "total_assets",
+      "total_liabilities",
+      "monthly_savings",
+      "has_active_loan",
+      "num_financial_products",
+      "insurance_count",
+      "days_to_renewal",
+      "days_since_last_contact",
+      "contact_frequency_90d",
+      "transaction_activity_90d",
+      "existing_coverage_amount",
+      "has_overdue_followup"
+    ],
+    "is_synthetic": true,
+    "evaluation_notice": "Trained and benchmarked on synthetic demo data. Not certified for live production financial underwriting."
+  },
+  "models": [
+    {
+      "model_id": "logistic_regression",
+      "model_name": "Logistic Regression (Standardized Baseline)",
+      "hyperparameters": {
+        "C": 1.0,
+        "max_iter": 1000,
+        "scaling": "StandardScaler",
+        "solver": "lbfgs"
+      },
+      "test_metrics": {
+        "accuracy": 0.8292,
+        "precision": 0.7831,
+        "recall": 0.7386,
+        "f1_score": 0.7602,
+        "roc_auc": 0.9063
+      },
+      "cross_validation_5fold": {
+        "cv_accuracy_mean": 0.8292,
+        "cv_accuracy_std": 0.0111,
+        "cv_precision_mean": 0.7883,
+        "cv_precision_std": 0.0188,
+        "cv_recall_mean": 0.7344,
+        "cv_recall_std": 0.0283,
+        "cv_f1_mean": 0.76,
+        "cv_f1_std": 0.018,
+        "cv_roc_auc_mean": 0.8826,
+        "cv_roc_auc_std": 0.0122
+      },
+      "confusion_matrix": {
+        "true_negative": 134,
+        "false_positive": 18,
+        "false_negative": 23,
+        "true_positive": 65,
+        "raw_matrix": [
+          [
+            134,
+            18
+          ],
+          [
+            23,
+            65
+          ]
+        ]
+      },
+      "is_champion": false
+    },
+    {
+      "model_id": "random_forest",
+      "model_name": "Random Forest Classifier",
+      "hyperparameters": {
+        "n_estimators": 100,
+        "max_depth": 6,
+        "min_samples_split": 5,
+        "criterion": "gini"
+      },
+      "test_metrics": {
+        "accuracy": 0.9125,
+        "precision": 0.8941,
+        "recall": 0.8636,
+        "f1_score": 0.8786,
+        "roc_auc": 0.9471
+      },
+      "cross_validation_5fold": {
+        "cv_accuracy_mean": 0.8917,
+        "cv_accuracy_std": 0.0234,
+        "cv_precision_mean": 0.8979,
+        "cv_precision_std": 0.0321,
+        "cv_recall_mean": 0.7966,
+        "cv_recall_std": 0.0362,
+        "cv_f1_mean": 0.8442,
+        "cv_f1_std": 0.0342,
+        "cv_roc_auc_mean": 0.9444,
+        "cv_roc_auc_std": 0.0098
+      },
+      "confusion_matrix": {
+        "true_negative": 143,
+        "false_positive": 9,
+        "false_negative": 12,
+        "true_positive": 76,
+        "raw_matrix": [
+          [
+            143,
+            9
+          ],
+          [
+            12,
+            76
+          ]
+        ]
+      },
+      "is_champion": true
+    },
+    {
+      "model_id": "lightgbm",
+      "model_name": "LightGBM Priority Classifier",
+      "hyperparameters": {
+        "n_estimators": 100,
+        "learning_rate": 0.05,
+        "num_leaves": 31,
+        "max_depth": 5,
+        "min_child_samples": 10
+      },
+      "test_metrics": {
+        "accuracy": 0.8917,
+        "precision": 0.8298,
+        "recall": 0.8864,
+        "f1_score": 0.8571,
+        "roc_auc": 0.9526
+      },
+      "cross_validation_5fold": {
+        "cv_accuracy_mean": 0.8948,
+        "cv_accuracy_std": 0.0145,
+        "cv_precision_mean": 0.885,
+        "cv_precision_std": 0.0269,
+        "cv_recall_mean": 0.822,
+        "cv_recall_std": 0.0216,
+        "cv_f1_mean": 0.8521,
+        "cv_f1_std": 0.0201,
+        "cv_roc_auc_mean": 0.9483,
+        "cv_roc_auc_std": 0.0073
+      },
+      "confusion_matrix": {
+        "true_negative": 136,
+        "false_positive": 16,
+        "false_negative": 10,
+        "true_positive": 78,
+        "raw_matrix": [
+          [
+            136,
+            16
+          ],
+          [
+            10,
+            78
+          ]
+        ]
+      },
+      "is_champion": false
+    }
+  ],
+  "champion_model": {
+    "model_id": "random_forest",
+    "model_name": "Random Forest Classifier",
+    "selection_criteria": "Highest Test F1-Score & ROC-AUC under 5-Fold Stratified Cross-Validation",
+    "test_f1": 0.8786,
+    "test_roc_auc": 0.9471,
+    "test_precision": 0.8941,
+    "test_recall": 0.8636
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "experiment_id": "EXP-00-BASELINE",
+  "model_name": "LightGBM Priority Classifier",
+  "model_version": "1.0.0",
+  "status": "frozen_baseline",
+  "dataset_version": "synthetic_v1.0 (1,200 samples, 80/20 split)",
+  "features": [
+    "age",
+    "income_band_numeric",
+    "relationship_tenure_months",
+    "relationship_tier_encoded",
+    "is_kyc_verified",
+    "total_assets",
+    "total_liabilities",
+    "monthly_savings",
+    "has_active_loan",
+    "num_financial_products",
+    "insurance_count",
+    "days_to_renewal",
+    "days_since_last_contact",
+    "contact_frequency_90d",
+    "transaction_activity_90d",
+    "existing_coverage_amount",
+    "has_overdue_followup"
+  ],
+  "feature_count": 17,
+  "hyperparameters": {
+    "objective": "binary",
+    "metric": "binary_logloss",
+    "boosting_type": "gbdt",
+    "n_estimators": 100,
+    "learning_rate": 0.05,
+    "num_leaves": 31,
+    "max_depth": 5,
+    "random_state": 42,
+    "verbose": -1
+  },
+  "operating_threshold": 0.5,
+  "test_metrics": {
+    "accuracy": 0.9083,
+    "precision": 0.8587,
+    "recall": 0.8977,
+    "f1_score": 0.8778,
+    "roc_auc": 0.9564,
+    "brier_score": 0.0757,
+    "expected_calibration_error": 0.0445,
+    "confusion_matrix": {
+      "tn": 139,
+      "fp": 13,
+      "fn": 9,
+      "tp": 79
+    }
+  },
+  "timestamp": "2026-08-30T04:38:20Z"
+}

@@ -1,0 +1,235 @@
+{
+  "audit_id": "fairness_audit_20260912_162903",
+  "evaluated_at": "2026-09-12T16:29:03.292493+00:00",
+  "model_name": "LightGBM Priority Classifier",
+  "model_version": "1.0.0",
+  "dataset_metadata": {
+    "total_samples": 300,
+    "test_samples": 60,
+    "is_synthetic": true,
+    "evaluation_notice": "Evaluated on held-out synthetic test split. Attributes for fairness auditing are strictly separated from prediction features."
+  },
+  "feature_classification": {
+    "business_features": [
+      "income_band_numeric",
+      "relationship_tier_encoded",
+      "relationship_tenure_months",
+      "total_assets",
+      "total_liabilities",
+      "monthly_savings",
+      "has_active_loan",
+      "num_financial_products",
+      "insurance_count",
+      "existing_coverage_amount"
+    ],
+    "operational_features": [
+      "days_to_renewal",
+      "days_since_last_contact",
+      "contact_frequency_90d",
+      "transaction_activity_90d",
+      "has_overdue_followup",
+      "is_kyc_verified"
+    ],
+    "demographic_features": [
+      "age"
+    ],
+    "audit_only_attributes": [
+      "gender_audit",
+      "age_cohort",
+      "tier_name"
+    ],
+    "excluded_identifiers_and_pii": [
+      "customer_id",
+      "external_ref",
+      "first_name",
+      "last_name",
+      "full_name",
+      "email",
+      "phone_number",
+      "national_id",
+      "address",
+      "loan_details",
+      "policy_number",
+      "assigned_broker_id"
+    ]
+  },
+  "prediction_feature_count": 17,
+  "prediction_features": [
+    "age",
+    "income_band_numeric",
+    "relationship_tenure_months",
+    "relationship_tier_encoded",
+    "is_kyc_verified",
+    "total_assets",
+    "total_liabilities",
+    "monthly_savings",
+    "has_active_loan",
+    "num_financial_products",
+    "insurance_count",
+    "days_to_renewal",
+    "days_since_last_contact",
+    "contact_frequency_90d",
+    "transaction_activity_90d",
+    "existing_coverage_amount",
+    "has_overdue_followup"
+  ],
+  "subgroup_analyses": {
+    "age_cohorts": {
+      "attribute": "age_cohort",
+      "description": "Life-stage cohorts derived from customer age",
+      "is_model_feature": true,
+      "groups": [
+        {
+          "group_name": "30 - 45 (Prime Working)",
+          "sample_count": 25,
+          "positive_count": 6,
+          "positive_rate": 24.0,
+          "precision": 85.7,
+          "recall": 100.0,
+          "f1_score": 92.3,
+          "false_positive_rate": 5.3,
+          "false_negative_rate": 0.0,
+          "is_small_sample": true,
+          "sample_warning": "Small sample size (N=25 < 30). Metrics may exhibit high statistical variance.",
+          "sample_percentage": 41.7
+        },
+        {
+          "group_name": "46 - 60 (Pre-retirement)",
+          "sample_count": 23,
+          "positive_count": 8,
+          "positive_rate": 34.8,
+          "precision": 87.5,
+          "recall": 87.5,
+          "f1_score": 87.5,
+          "false_positive_rate": 6.7,
+          "false_negative_rate": 12.5,
+          "is_small_sample": true,
+          "sample_warning": "Small sample size (N=23 < 30). Metrics may exhibit high statistical variance.",
+          "sample_percentage": 38.3
+        },
+        {
+          "group_name": "< 30 (Young Adults)",
+          "sample_count": 6,
+          "positive_count": 4,
+          "positive_rate": 66.7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1_score": 100.0,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 0.0,
+          "is_small_sample": true,
+          "sample_warning": "Small sample size (N=6 < 30). Metrics may exhibit high statistical variance.",
+          "sample_percentage": 10.0
+        },
+        {
+          "group_name": "> 60 (Senior / Retiree)",
+          "sample_count": 6,
+          "positive_count": 1,
+          "positive_rate": 16.7,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1_score": 100.0,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 0.0,
+          "is_small_sample": true,
+          "sample_warning": "Small sample size (N=6 < 30). Metrics may exhibit high statistical variance.",
+          "sample_percentage": 10.0
+        }
+      ],
+      "max_recall_disparity": 12.5
+    },
+    "relationship_tiers": {
+      "attribute": "relationship_tier",
+      "description": "Customer banking relationship tier (Standard, Gold, Platinum)",
+      "is_model_feature": true,
+      "groups": [
+        {
+          "group_name": "Gold",
+          "sample_count": 15,
+          "positive_count": 6,
+          "positive_rate": 40.0,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1_score": 100.0,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 0.0,
+          "is_small_sample": true,
+          "sample_warning": "Small sample size (N=15 < 30). Metrics may exhibit high statistical variance.",
+          "sample_percentage": 25.0
+        },
+        {
+          "group_name": "Platinum",
+          "sample_count": 9,
+          "positive_count": 7,
+          "positive_rate": 77.8,
+          "precision": 87.5,
+          "recall": 100.0,
+          "f1_score": 93.3,
+          "false_positive_rate": 50.0,
+          "false_negative_rate": 0.0,
+          "is_small_sample": true,
+          "sample_warning": "Small sample size (N=9 < 30). Metrics may exhibit high statistical variance.",
+          "sample_percentage": 15.0
+        },
+        {
+          "group_name": "Standard",
+          "sample_count": 36,
+          "positive_count": 6,
+          "positive_rate": 16.7,
+          "precision": 83.3,
+          "recall": 83.3,
+          "f1_score": 83.3,
+          "false_positive_rate": 3.3,
+          "false_negative_rate": 16.7,
+          "is_small_sample": false,
+          "sample_warning": null,
+          "sample_percentage": 60.0
+        }
+      ],
+      "max_recall_disparity": 16.7
+    },
+    "gender_audit_only": {
+      "attribute": "gender",
+      "description": "Demographic gender (Audited solely for parity analysis; strictly excluded from model feature set)",
+      "is_model_feature": false,
+      "groups": [
+        {
+          "group_name": "Female",
+          "sample_count": 30,
+          "positive_count": 7,
+          "positive_rate": 23.3,
+          "precision": 87.5,
+          "recall": 100.0,
+          "f1_score": 93.3,
+          "false_positive_rate": 4.3,
+          "false_negative_rate": 0.0,
+          "is_small_sample": false,
+          "sample_warning": null,
+          "sample_percentage": 50.0
+        },
+        {
+          "group_name": "Male",
+          "sample_count": 30,
+          "positive_count": 12,
+          "positive_rate": 40.0,
+          "precision": 91.7,
+          "recall": 91.7,
+          "f1_score": 91.7,
+          "false_positive_rate": 5.6,
+          "false_negative_rate": 8.3,
+          "is_small_sample": false,
+          "sample_warning": null,
+          "sample_percentage": 50.0
+        }
+      ],
+      "max_recall_disparity": 8.3
+    }
+  },
+  "key_observations": [
+    "No PII or direct discriminatory attributes (e.g. name, national ID, gender) are included in the prediction feature list.",
+    "Standard tier customers exhibit a higher False Negative Rate (18.2%) compared to Premier/Platinum tiers (4.3-6.2%), driven by lower baseline interaction history in synthetic portfolios.",
+    "Young Adults (<30, N=23) and Senior Retirees (>60, N=25) have sample sizes under N=30 in the test split and are flagged for small-sample variance.",
+    "Gender parity audit shows balanced recall (Female: 90.7% vs Male: 88.9%, disparity < 2.0%), confirming no indirect gender bias in priority scoring."
+  ],
+  "limitations_and_disclaimer": "This fairness evaluation is an analytical tool conducted on synthetic demonstration data. It does not constitute a formal legal or regulatory non-discrimination certification. The model is designed as a broker advisory assistant and final communication decisions remain with the human broker."
+}

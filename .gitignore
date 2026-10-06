@@ -1,16 +1,52 @@
-# Local environment and secrets
+# ── Secrets ──────────────────────────────────────────────────────
 .env
 .env.*
 !.env.example
 
-# Dependencies and generated output
+# ── Python ───────────────────────────────────────────────────────
+backend/.venv/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/**/*.pyc
+backend/.pytest_cache/
+backend/.ruff_cache/
+
+# ── ML Artifacts (large binaries) ────────────────────────────────
+backend/app/ml/artifacts/model.pkl
+backend/app/ml/artifacts/shap_explainer.pkl
+backend/app/ml/artifacts/synthetic_customers.csv
+
+# ── Next.js ──────────────────────────────────────────────────────
+frontend/.next/
+frontend/out/
+frontend/node_modules/
+frontend/frontend/
+
+# ── Docker volumes ───────────────────────────────────────────────
+pgdata/
+
+# ── Node general ─────────────────────────────────────────────────
 node_modules/
 dist/
 build/
 coverage/
 
-# Operating system and editor files
+# ── OS ───────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
+
+# ── Editor ───────────────────────────────────────────────────────
 .vscode/
 .idea/
+*.swp
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Local backup snapshots
+backend/backups/
+
+# Optional local runtime files
+*.log
