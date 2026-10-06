@@ -14,6 +14,7 @@ from app.models.user import User
 from app.models.customer import Customer
 from tests.conftest import TestAsyncSession
 from scripts.backup_restore import backup_database
+import scripts.backup_restore as backup_restore
 
 
 async def get_test_token(role: str = "broker") -> str:
@@ -161,16 +162,27 @@ async def test_pilot_model_registry_and_rollback():
 
 
 @pytest.mark.asyncio
-async def test_pilot_backup_structure_and_snapshot_metadata():
+async def test_pilot_backup_structure_and_snapshot_metadata(monkeypatch):
     """Verify that backup snapshot contains required metadata and table definitions."""
-    backups_dir = Path(__file__).parent.parent / "backups"
-    assert backups_dir.exists()
-    backup_files = list(backups_dir.glob("*.json"))
-    assert len(backup_files) > 0
-    with open(backup_files[0], "r", encoding="utf-8") as f:
-        import json
-        data = json.load(f)
+    monkeypatch.setattr(
+        backup_restore,
+        "AsyncSessionLocal",
+        TestAsyncSession,
+    )
+
+    backup_path = await backup_database("pytest")
+
+    try:
+        assert backup_path.exists()
+
+        with open(backup_path, "r", encoding="utf-8") as f:
+            import json
+
+            data = json.load(f)
+
         assert "metadata" in data
         assert "tables" in data
         assert "users" in data["tables"]
         assert "customers" in data["tables"]
+    finally:
+        backup_path.unlink(missing_ok=True)
